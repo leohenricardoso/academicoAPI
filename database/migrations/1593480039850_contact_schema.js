@@ -7,6 +7,10 @@ class ContactSchema extends Schema {
   up () {
     this.create('contacts', (table) => {
       table.increments()
+      table.string('name', 70).notNullable()
+      table.string('email', 200).notNullable()
+      table.string('subject', 100).notNullable()
+      table.string('message', 400).notNullable()
       table.timestamps()
     })
   }

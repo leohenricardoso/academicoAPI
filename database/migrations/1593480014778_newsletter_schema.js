@@ -7,6 +7,8 @@ class NewsletterSchema extends Schema {
   up () {
     this.create('newsletters', (table) => {
       table.increments()
+      table.string('email', 200).notNullable().unique()
+      table.boolean('active').notNullable()
       table.timestamps()
     })
   }

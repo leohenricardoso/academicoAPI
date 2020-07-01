@@ -7,6 +7,7 @@ class CourseCategorySchema extends Schema {
   up () {
     this.create('course_categories', (table) => {
       table.increments()
+      table.string('category', 40).notNullable().unique()
       table.timestamps()
     })
   }
