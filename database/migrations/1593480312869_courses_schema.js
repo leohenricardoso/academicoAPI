@@ -12,8 +12,12 @@ class CoursesSchema extends Schema {
       table.integer('speaker_id').unsigned().references('id').inTable('course_speakers')
       table.string('name', 150).notNullable().unique()
       table.string('description', 300).notNullable()
-      table.string('contents', 3000).notNullable()
+      table.string('image_path', 600).notNullable()
+      table.json('contents').notNullable()
+      table.json('info').notNullable()
       table.timestamps()
+      table.decimal('base_amount', 10, 2)
+      table.decimal('discount_amount', 10, 2)
     })
   }
 

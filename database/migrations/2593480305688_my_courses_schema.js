@@ -7,6 +7,10 @@ class MyCoursesSchema extends Schema {
   up () {
     this.create('my_courses', (table) => {
       table.increments()
+      table.integer('student_id').unsigned().references('id').inTable('students')
+      table.integer('course_id').unsigned().references('id').inTable('courses')
+      table.integer('payment_id').unsigned().references('id').inTable('payment_pagarmes')
+      table.boolean('active').notNullable().defaultTo(false)
       table.timestamps()
     })
   }

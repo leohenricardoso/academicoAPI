@@ -9,7 +9,7 @@ class CourseSpeakerSchema extends Schema {
       table.increments()
       table.string('name', 120).notNullable().unique()
       table.string('email', 200).notNullable().unique()
-      table.string('image').notNullable()
+      table.string('image_path', 600).notNullable()
       table.string('description', 200).notNullable()
       table.string('instagram', 70)
       table.string('facebook', 150)
