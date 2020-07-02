@@ -4,6 +4,8 @@
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
+const Contact = use('App/Models/BusinessContact')
+
 /**
  * Resourceful controller for interacting with businesscontacts
  */
@@ -17,19 +19,12 @@ class BusinessContactController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async index ({ request, response, view }) {
-  }
+  async index ({ request, response, view, auth }) {
+    if(!auth.user.id) {
+      return response.status(401)
+    }
 
-  /**
-   * Render a form to be used for creating a new businesscontact.
-   * GET businesscontacts/create
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async create ({ request, response, view }) {
+    return await Contact.all()
   }
 
   /**
@@ -53,18 +48,6 @@ class BusinessContactController {
    * @param {View} ctx.view
    */
   async show ({ params, request, response, view }) {
-  }
-
-  /**
-   * Render a form to update an existing businesscontact.
-   * GET businesscontacts/:id/edit
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async edit ({ params, request, response, view }) {
   }
 
   /**
