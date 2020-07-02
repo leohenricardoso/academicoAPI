@@ -26,3 +26,8 @@ Route.get('/', () => {
 Route.group(() => {
   Route.resource('api/course-category', 'CourseCategoryController').apiOnly()
 }).middleware('auth')
+
+
+Route.group(() => {
+  Route.resource('api/newsletter', 'NewsletterController').apiOnly()
+}).middleware('auth')
