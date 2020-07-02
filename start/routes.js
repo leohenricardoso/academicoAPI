@@ -31,3 +31,7 @@ Route.group(() => {
 Route.group(() => {
   Route.resource('api/newsletter', 'NewsletterController').apiOnly()
 }).middleware('auth')
+
+Route.group(() => {
+  Route.resource('api/contact', 'ContactController').apiOnly()
+}).middleware('auth')
