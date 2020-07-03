@@ -35,3 +35,7 @@ Route.group(() => {
 Route.group(() => {
   Route.resource('api/business-contact', 'BusinessContactController').apiOnly()
 }).middleware('auth')
+
+Route.group(() => {
+  Route.resource('api/contact', 'ContactController').apiOnly()
+}).middleware('auth')
