@@ -4,6 +4,9 @@
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
+const Speaker = use('App/Models/CourseSpeaker')
+const Database = use('Database')
+
 /**
  * Resourceful controller for interacting with coursespeakers
  */
@@ -17,19 +20,15 @@ class CourseSpeakerController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async index ({ request, response, view }) {
-  }
+  async index({
+    response,
+    auth
+  }) {
+    if (!auth.user.id) {
+      return response.status(401)
+    }
 
-  /**
-   * Render a form to be used for creating a new coursespeaker.
-   * GET coursespeakers/create
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async create ({ request, response, view }) {
+    return await Speaker.all()
   }
 
   /**
@@ -40,7 +39,20 @@ class CourseSpeakerController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async store ({ request, response }) {
+  async store({
+    request,
+    response,
+    auth
+  }) {
+    if (!auth.user.id) {
+      return response.status(401)
+    }
+
+    const data = request.post()
+
+    const speaker = await Speaker.create({
+      ...data
+    })
   }
 
   /**
@@ -52,19 +64,16 @@ class CourseSpeakerController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async show ({ params, request, response, view }) {
-  }
+  async show({
+    params,
+    response,
+    auth
+  }) {
+    if (!auth.user.id) {
+      return response.status(401)
+    }
 
-  /**
-   * Render a form to update an existing coursespeaker.
-   * GET coursespeakers/:id/edit
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async edit ({ params, request, response, view }) {
+    return await Speaker.findOrFail(params.id)
   }
 
   /**
@@ -75,7 +84,21 @@ class CourseSpeakerController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async update ({ params, request, response }) {
+  async update({
+    params,
+    request,
+    response,
+    auth
+  }) {
+    if (!auth.user.id) {
+      return response.status(401)
+    }
+
+    const speaker = await Speaker.findOrFail(params.id)
+    const data = request.post()
+    speaker.merge(data)
+    await speaker.save()
+    return speaker
   }
 
   /**
@@ -86,7 +109,16 @@ class CourseSpeakerController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async destroy ({ params, request, response }) {
+  async destroy({
+    params,
+    response,
+    auth
+  }) {
+    if (!auth.user.id) {
+      return response.status(401)
+    }
+    const speaker = await Speaker.findOrFail(params.id)
+    await speaker.delete()
   }
 }
 
