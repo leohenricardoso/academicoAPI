@@ -43,3 +43,7 @@ Route.group(() => {
 Route.group(() => {
   Route.resource('api/contact', 'ContactController').apiOnly()
 }).middleware('auth')
+
+Route.group(() => {
+  Route.resource('api/paymentpagarme', 'PaymentPagarmeController').apiOnly()
+}).middleware('auth')
