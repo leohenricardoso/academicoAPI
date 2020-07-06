@@ -47,3 +47,7 @@ Route.group(() => {
 Route.group(() => {
   Route.resource('api/paymentpagarme', 'PaymentPagarmeController').apiOnly()
 }).middleware('auth')
+
+Route.group(() => {
+  Route.resource('api/course', 'CourseController').apiOnly()
+}).middleware('auth')
