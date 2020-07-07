@@ -16,9 +16,8 @@ class ContactController {
    * GET contacts
    *
    * @param {object} ctx
-   * @param {Request} ctx.request
    * @param {Response} ctx.response
-   * @param {View} ctx.view
+   * @param {Auth} ctx.auth
    */
   async index ({ response, auth }) {
     if(!auth.user.id) {
@@ -34,6 +33,7 @@ class ContactController {
    * @param {object} ctx
    * @param {Request} ctx.request
    * @param {Response} ctx.response
+   * @param {Auth} ctx.auth
    */
   async store ({ request, response, auth }) {
     if(!auth.user.id) {
@@ -57,9 +57,9 @@ class ContactController {
    * GET contacts/:id
    *
    * @param {object} ctx
-   * @param {Request} ctx.request
+   * @param {Params} ctx.params
    * @param {Response} ctx.response
-   * @param {View} ctx.view
+   * @param {Auth} ctx.auth
    */
   async show ({ params, response, auth }) {
     if(!auth.user.id) {
@@ -75,8 +75,10 @@ class ContactController {
    * PUT or PATCH contacts/:id
    *
    * @param {object} ctx
+   * @param {Params} ctx.params
    * @param {Request} ctx.request
    * @param {Response} ctx.response
+   * @param {Auth} ctx.auth
    */
   async update ({ params, request, response, auth }) {
     if(!auth.user.id) {
@@ -102,8 +104,9 @@ class ContactController {
    * DELETE contacts/:id
    *
    * @param {object} ctx
-   * @param {Request} ctx.request
+   * @param {Params} ctx.params
    * @param {Response} ctx.response
+   * @param {Auth} ctx.auth
    */
   async destroy ({ params, response, auth }) {
     if(!auth.user.id) {

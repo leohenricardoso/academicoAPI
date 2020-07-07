@@ -16,9 +16,8 @@ class CourseCategoryController {
    * GET coursecategories
    *
    * @param {object} ctx
-   * @param {Request} ctx.request
    * @param {Response} ctx.response
-   * @param {View} ctx.view
+   * @param {Auth} ctx.auth
    */
   async index({
     response,
@@ -37,6 +36,7 @@ class CourseCategoryController {
    * @param {object} ctx
    * @param {Request} ctx.request
    * @param {Response} ctx.response
+   * @param {Auth} ctx.auth
    */
   async store({
     request,
@@ -61,9 +61,9 @@ class CourseCategoryController {
    * GET coursecategories/:id
    *
    * @param {object} ctx
-   * @param {Request} ctx.request
+   * @param {Params} ctx.params
    * @param {Response} ctx.response
-   * @param {View} ctx.view
+   * @param {Auth} ctx.auth
    */
   async show({
     params,
@@ -82,8 +82,10 @@ class CourseCategoryController {
    * PUT or PATCH coursecategories/:id
    *
    * @param {object} ctx
+   * @param {Params} ctx.params
    * @param {Request} ctx.request
    * @param {Response} ctx.response
+   * @param {Auth} ctx.auth
    */
   async update({
     params,
@@ -110,8 +112,9 @@ class CourseCategoryController {
    * DELETE coursecategories/:id
    *
    * @param {object} ctx
-   * @param {Request} ctx.request
+   * @param {Params} ctx.params
    * @param {Response} ctx.response
+   * @param {Auth} ctx.auth
    */
   async destroy({
     params,

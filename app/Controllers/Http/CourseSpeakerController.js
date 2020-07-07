@@ -16,9 +16,8 @@ class CourseSpeakerController {
    * GET coursespeakers
    *
    * @param {object} ctx
-   * @param {Request} ctx.request
    * @param {Response} ctx.response
-   * @param {View} ctx.view
+   * @param {Auth} ctx.auth
    */
   async index({
     response,
@@ -38,6 +37,7 @@ class CourseSpeakerController {
    * @param {object} ctx
    * @param {Request} ctx.request
    * @param {Response} ctx.response
+   * @param {Auth} ctx.auth
    */
   async store({
     request,
@@ -60,9 +60,9 @@ class CourseSpeakerController {
    * GET coursespeakers/:id
    *
    * @param {object} ctx
-   * @param {Request} ctx.request
+   * @param {Params} ctx.params
    * @param {Response} ctx.response
-   * @param {View} ctx.view
+   * @param {Auth} ctx.auth
    */
   async show({
     params,
@@ -81,8 +81,10 @@ class CourseSpeakerController {
    * PUT or PATCH coursespeakers/:id
    *
    * @param {object} ctx
+   * @param {Params} ctx.params
    * @param {Request} ctx.request
    * @param {Response} ctx.response
+   * @param {Auth} ctx.auth
    */
   async update({
     params,
@@ -106,8 +108,9 @@ class CourseSpeakerController {
    * DELETE coursespeakers/:id
    *
    * @param {object} ctx
-   * @param {Request} ctx.request
+   * @param {Params} ctx.params
    * @param {Response} ctx.response
+   * @param {Auth} ctx.auth
    */
   async destroy({
     params,

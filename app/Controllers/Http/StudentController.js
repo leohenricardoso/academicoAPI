@@ -14,9 +14,8 @@ class StudentController {
    * GET students
    *
    * @param {object} ctx
-   * @param {Request} ctx.request
    * @param {Response} ctx.response
-   * @param {View} ctx.view
+   * @param {Auth} ctx.auth
    */
   async index ({ request, response, auth }) {
     if(!auth.user.id) {
@@ -33,6 +32,7 @@ class StudentController {
    * @param {object} ctx
    * @param {Request} ctx.request
    * @param {Response} ctx.response
+   * @param {Auth} ctx.auth
    */
   async store ({ request, response, auth }) {
     if(!auth.user.id) {
@@ -51,9 +51,9 @@ class StudentController {
    * GET students/:id
    *
    * @param {object} ctx
-   * @param {Request} ctx.request
+   * @param {Params} ctx.params
    * @param {Response} ctx.response
-   * @param {View} ctx.view
+   * @param {Auth} ctx.auth
    */
   async show ({ params, response, auth }) {
     if (!auth.user.id) {
@@ -69,8 +69,10 @@ class StudentController {
    * PUT or PATCH students/:id
    *
    * @param {object} ctx
+   * @param {Params} ctx.params
    * @param {Request} ctx.request
    * @param {Response} ctx.response
+   * @param {Auth} ctx.auth
    */
   async update ({ params, request, response, auth }) {
     if (!auth.user.id) {
@@ -89,8 +91,9 @@ class StudentController {
    * DELETE students/:id
    *
    * @param {object} ctx
-   * @param {Request} ctx.request
+   * @param {Params} ctx.params
    * @param {Response} ctx.response
+   * @param {Auth} ctx.auth
    */
   async destroy ({ params, response, auth }) {
     if (!auth.user.id) {
