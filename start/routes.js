@@ -59,3 +59,7 @@ Route.group(() => {
 Route.group(() => {
   Route.resource('api/student', 'StudentController').apiOnly()
 }).middleware('auth')
+
+Route.group(() => {
+  Route.resource('api/my-course', 'MyCourseController').apiOnly()
+}).middleware('auth')
