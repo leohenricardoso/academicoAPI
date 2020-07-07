@@ -23,15 +23,21 @@ Init
 adonis serve --dev
 ```
 
-or manually clone the repo and then run `npm install`.
-
-### Migrations
-
-Run the following command to run startup migrations.
-
 ```js
 adonis migration:run
 ```
+
+### Front-end static
+Home - https://leohenrique.me/project/academico/#/
+Página do curso - https://leohenrique.me/project/academico/#/course
+Página de pagamento do curso - https://leohenrique.me/project/academico/#/payment
+Página de cursos - https://leohenrique.me/project/academico/#/courses
+Página de contato - https://leohenrique.me/project/academico/#/contacts
+Página Quem somos - https://leohenrique.me/project/academico/#/about
+Login para admin - https://leohenrique.me/project/academico/#/admin
+Página de gerenciamento de pagamentos (admin) - https://leohenrique.me/project/academico/#/admin/payments
+Página de listagem de cursos cadastrados - https://leohenrique.me/project/academico/#/admin/courses
+Página para gerenciamento de contatos no admin- https://leohenrique.me/project/academico/#/admin/contacts
 
 ## Routes Api
 Download export insomnia
