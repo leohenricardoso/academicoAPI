@@ -5,6 +5,7 @@
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
 const Course = use('App/Models/Course')
+const Database = use('Database')
 /**
  * Resourceful controller for interacting with courses
  */
@@ -100,6 +101,29 @@ class CourseController {
     }
     const course = await Course.findOrFail(params.id)
     await course.delete()
+  }
+
+    /**
+   * Get courses with category id.
+   * courses-category/:category_id
+   *
+   * @param {object} ctx
+   * @param {Auth} ctx.request
+   * @param {Response} ctx.response
+   */
+  async getCoursesByCategoryId({ params, auth, response }) {
+
+    if (!auth.user.id) {
+      return response.status(401)
+    }
+
+    let courses = await Database
+      .from('courses')
+      .where({
+        category_id: params.category_id
+      })
+
+    return courses
   }
 }
 
