@@ -32,7 +32,10 @@ Run the following command to run startup migrations.
 ```js
 adonis migration:run
 ```
+
 ## Routes Api
+Download export insomnia
+https://drive.google.com/file/d/1_MbBvyHNeFEcz_M4uLoHUj48fa9gvfHv/view?usp=sharing
 ### Contact
 ```
 Post -> /api/contact
@@ -56,5 +59,63 @@ Delete -> /api/business-contact/:id
 Update -> /api/business-contact/:id
 Get -> /api/business-contact/:id
 Get -> /api/business-contact/
+```
+### PaymentPagarme
+```
+Post -> /api/paymentpagarme
+Delete -> /api/paymentpagarme/:id
+Update -> /api/paymentpagarme/:id
+Get -> /api/paymentpagarme/:id
+Get -> /api/paymentpagarme/
+```
+### Course
+```
+Post -> /api/course
+Delete -> /api/course/:id
+Update -> /api/course/:id
+Get -> /api/course/:id
+Get -> /api/course/
+```
+### CourseType
+```
+Post -> /api/course-type
+Delete -> /api/course-type/:id
+Update -> /api/course-type/:id
+Get -> /api/course-type/:id
+Get -> /api/course-type/
+```
+### CourseCategory
+```
+Post -> /api/course-category
+Delete -> /api/course-category/:id
+Update -> /api/course-category/:id
+Get -> /api/course-category/:id
+Get -> /api/course-category/
+```
+### CourseSpeaker
+```
+Post -> /api/speaker
+Delete -> /api/speaker/:id
+Update -> /api/speaker/:id
+Get -> /api/speaker/:id
+Get -> /api/speaker/
+```
+
+### Student
+```
+Post -> /api/student
+Delete -> /api/student/:id
+Update -> /api/student/:id
+Get -> /api/student/:id
+Get -> /api/student/
+```
+
+### MyCourse
+```
+Post -> /api/my-course
+Delete -> /api/my-course/:id
+Update -> /api/my-course/:id
+Get -> /api/my-course/:id
+Get -> /api/my-course/
 ```
 
