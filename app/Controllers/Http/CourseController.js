@@ -176,6 +176,28 @@ class CourseController {
 
     return courses
   }
+  /**
+   * Get courses with speaker id.
+   * courses-speaker/:speaker_id
+   *
+   * @param {object} ctx
+   * @param {Auth} ctx.request
+   * @param {Response} ctx.response
+   */
+  async getCoursesBySpeakerId({ params, auth, response }) {
+
+    if (!auth.user.id) {
+      return response.status(401)
+    }
+
+    let courses = await Database
+      .from('courses')
+      .where({
+        speaker_id: params.speaker_id
+      })
+
+    return courses
+  }
 }
 
 module.exports = CourseController
