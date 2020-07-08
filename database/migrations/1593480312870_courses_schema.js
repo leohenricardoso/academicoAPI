@@ -15,9 +15,12 @@ class CoursesSchema extends Schema {
       table.string('image_path', 600).notNullable()
       table.json('contents').notNullable()
       table.json('info').notNullable()
-      table.timestamps()
       table.decimal('base_amount', 10, 2)
       table.decimal('discount_amount', 10, 2)
+      table.timestamp('initial_date')
+      table.timestamp('final_date')
+      table.boolean('active').notNullable()
+      table.timestamps()
     })
   }
 
