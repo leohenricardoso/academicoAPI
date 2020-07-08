@@ -125,6 +125,35 @@ class CourseController {
 
     return courses
   }
+
+  /**
+   * Get courses with where like clause in event name.
+   * courses-search/:name
+   *
+   * @param {object} ctx
+   * @param {Auth} ctx.request
+   * @param {Response} ctx.response
+   */
+
+  async getEventsByName({ params, auth, response }) {
+    if (!auth.user.id) {
+      return response.status(401)
+    }
+
+    let name = params.name
+    name = name.toUpperCase()
+
+    let courses = await Database
+      .from('courses')
+      .where(Database.raw("UPPER(name)"), 'LIKE', '%' + name + '%')
+      .where({
+        status: 1
+      })
+      .orderBy('created_at', 'asc')
+      .paginate(params.pages, params.limit)
+
+    return courses
+  }
 }
 
 module.exports = CourseController
