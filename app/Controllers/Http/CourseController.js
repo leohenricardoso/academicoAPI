@@ -154,6 +154,28 @@ class CourseController {
 
     return courses
   }
+      /**
+   * Get courses with type id.
+   * courses-type/:type_id
+   *
+   * @param {object} ctx
+   * @param {Auth} ctx.request
+   * @param {Response} ctx.response
+   */
+  async getCoursesByTypeId({ params, auth, response }) {
+
+    if (!auth.user.id) {
+      return response.status(401)
+    }
+
+    let courses = await Database
+      .from('courses')
+      .where({
+        type_id: params.type_id
+      })
+
+    return courses
+  }
 }
 
 module.exports = CourseController
