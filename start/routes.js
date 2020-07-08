@@ -65,4 +65,4 @@ Route.group(() => {
 }).middleware('auth')
 
 Route.get('/api/courses-category/:category_id', 'CourseController.getCoursesByCategoryId').middleware(['auth'])
-Route.get('/api/courses-search/:name', 'CourseController.getEventsByName').middleware(['auth'])
+Route.get('/api/courses-search/:name', 'CourseController.getCoursesByName').middleware(['auth'])

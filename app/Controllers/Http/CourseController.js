@@ -135,7 +135,7 @@ class CourseController {
    * @param {Response} ctx.response
    */
 
-  async getEventsByName({ params, auth, response }) {
+  async getCoursesByName({ params, auth, response }) {
     if (!auth.user.id) {
       return response.status(401)
     }
