@@ -4,6 +4,7 @@
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
+const Student = use('App/Models/Student')
 /**
  * Resourceful controller for interacting with students
  */
@@ -13,23 +14,15 @@ class StudentController {
    * GET students
    *
    * @param {object} ctx
-   * @param {Request} ctx.request
    * @param {Response} ctx.response
-   * @param {View} ctx.view
+   * @param {Auth} ctx.auth
    */
-  async index ({ request, response, view }) {
-  }
+  async index ({ request, response, auth }) {
+    if(!auth.user.id) {
+      return response.status(401)
+    }
 
-  /**
-   * Render a form to be used for creating a new student.
-   * GET students/create
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async create ({ request, response, view }) {
+      return await Student.all()
   }
 
   /**
@@ -39,8 +32,18 @@ class StudentController {
    * @param {object} ctx
    * @param {Request} ctx.request
    * @param {Response} ctx.response
+   * @param {Auth} ctx.auth
    */
-  async store ({ request, response }) {
+  async store ({ request, response, auth }) {
+    if(!auth.user.id) {
+      return response.status(401)
+    }
+
+    const data = request.post()
+
+    const student = await Student.create({
+      ...data
+    })
   }
 
   /**
@@ -48,34 +51,39 @@ class StudentController {
    * GET students/:id
    *
    * @param {object} ctx
-   * @param {Request} ctx.request
+   * @param {Params} ctx.params
    * @param {Response} ctx.response
-   * @param {View} ctx.view
+   * @param {Auth} ctx.auth
    */
-  async show ({ params, request, response, view }) {
+  async show ({ params, response, auth }) {
+    if (!auth.user.id) {
+      return response.status(401)
+    }
+
+    return await Student.findOrFail(params.id)
   }
 
-  /**
-   * Render a form to update an existing student.
-   * GET students/:id/edit
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async edit ({ params, request, response, view }) {
-  }
 
   /**
    * Update student details.
    * PUT or PATCH students/:id
    *
    * @param {object} ctx
+   * @param {Params} ctx.params
    * @param {Request} ctx.request
    * @param {Response} ctx.response
+   * @param {Auth} ctx.auth
    */
-  async update ({ params, request, response }) {
+  async update ({ params, request, response, auth }) {
+    if (!auth.user.id) {
+      return response.status(401)
+    }
+
+    const student = await Student.findOrFail(params.id)
+    const data = request.post()
+    student.merge(data)
+    await student.save()
+    return student
   }
 
   /**
@@ -83,10 +91,16 @@ class StudentController {
    * DELETE students/:id
    *
    * @param {object} ctx
-   * @param {Request} ctx.request
+   * @param {Params} ctx.params
    * @param {Response} ctx.response
+   * @param {Auth} ctx.auth
    */
-  async destroy ({ params, request, response }) {
+  async destroy ({ params, response, auth }) {
+    if (!auth.user.id) {
+      return response.status(401)
+    }
+    const student = await Student.findOrFail(params.id)
+    await student.delete()
   }
 }
 

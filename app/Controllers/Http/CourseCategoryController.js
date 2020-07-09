@@ -4,6 +4,9 @@
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
+const Category = use('App/Models/CourseCategory')
+const Database = use('Database')
+
 /**
  * Resourceful controller for interacting with coursecategories
  */
@@ -13,23 +16,17 @@ class CourseCategoryController {
    * GET coursecategories
    *
    * @param {object} ctx
-   * @param {Request} ctx.request
    * @param {Response} ctx.response
-   * @param {View} ctx.view
+   * @param {Auth} ctx.auth
    */
-  async index ({ request, response, view }) {
-  }
-
-  /**
-   * Render a form to be used for creating a new coursecategory.
-   * GET coursecategories/create
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async create ({ request, response, view }) {
+  async index({
+    response,
+    auth
+  }) {
+    if (!auth.user.id) {
+      return response.status(401)
+    }
+    return await Category.all()
   }
 
   /**
@@ -39,8 +36,24 @@ class CourseCategoryController {
    * @param {object} ctx
    * @param {Request} ctx.request
    * @param {Response} ctx.response
+   * @param {Auth} ctx.auth
    */
-  async store ({ request, response }) {
+  async store({
+    request,
+    response,
+    auth
+  }) {
+    if (!auth.user.id) {
+      return response.status(401)
+    }
+
+    const data = request.only([
+      'category'
+    ])
+
+    const category = await Category.create({
+      ...data
+    })
   }
 
   /**
@@ -48,23 +61,20 @@ class CourseCategoryController {
    * GET coursecategories/:id
    *
    * @param {object} ctx
-   * @param {Request} ctx.request
+   * @param {Params} ctx.params
    * @param {Response} ctx.response
-   * @param {View} ctx.view
+   * @param {Auth} ctx.auth
    */
-  async show ({ params, request, response, view }) {
-  }
+  async show({
+    params,
+    response,
+    auth
+  }) {
+    if (!auth.user.id) {
+      return response.status(401)
+    }
 
-  /**
-   * Render a form to update an existing coursecategory.
-   * GET coursecategories/:id/edit
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async edit ({ params, request, response, view }) {
+    return await Category.findOrFail(params.id)
   }
 
   /**
@@ -72,10 +82,29 @@ class CourseCategoryController {
    * PUT or PATCH coursecategories/:id
    *
    * @param {object} ctx
+   * @param {Params} ctx.params
    * @param {Request} ctx.request
    * @param {Response} ctx.response
+   * @param {Auth} ctx.auth
    */
-  async update ({ params, request, response }) {
+  async update({
+    params,
+    request,
+    response,
+    auth
+  }) {
+    if (!auth.user.id) {
+      return response.status(401)
+    }
+
+    const category = await Category.findOrFail(params.id)
+    const data = request.only([
+      'category'
+    ])
+
+    category.merge(data)
+    await category.save()
+    return category
   }
 
   /**
@@ -83,10 +112,21 @@ class CourseCategoryController {
    * DELETE coursecategories/:id
    *
    * @param {object} ctx
-   * @param {Request} ctx.request
+   * @param {Params} ctx.params
    * @param {Response} ctx.response
+   * @param {Auth} ctx.auth
    */
-  async destroy ({ params, request, response }) {
+  async destroy({
+    params,
+    response,
+    auth
+  }) {
+    if (!auth.user.id) {
+      return response.status(401)
+    }
+
+    const category = await Category.findOrFail(params.id)
+    await category.delete()
   }
 }
 

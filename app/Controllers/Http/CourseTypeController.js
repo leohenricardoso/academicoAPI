@@ -4,6 +4,7 @@
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
+const CourseType = use('App/Models/CourseType')
 /**
  * Resourceful controller for interacting with coursetypes
  */
@@ -13,24 +14,17 @@ class CourseTypeController {
    * GET coursetypes
    *
    * @param {object} ctx
-   * @param {Request} ctx.request
    * @param {Response} ctx.response
-   * @param {View} ctx.view
+   * @param {Auth} ctx.auth
    */
-  async index ({ request, response, view }) {
-  }
+  async index ({ response, auth }) {
+    if(!auth.user.id) {
+      return response.status(401)
+    }
 
-  /**
-   * Render a form to be used for creating a new coursetype.
-   * GET coursetypes/create
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async create ({ request, response, view }) {
-  }
+      return await CourseType.all()
+    }
+
 
   /**
    * Create/save a new coursetype.
@@ -39,8 +33,18 @@ class CourseTypeController {
    * @param {object} ctx
    * @param {Request} ctx.request
    * @param {Response} ctx.response
+   * @param {Auth} ctx.auth
    */
-  async store ({ request, response }) {
+  async store ({ request, response, auth }) {
+    if(!auth.user.id) {
+      return response.status(401)
+    }
+
+    const data = request.post()
+
+    const coursetype = await CourseType.create({
+      ...data
+    })
   }
 
   /**
@@ -48,23 +52,16 @@ class CourseTypeController {
    * GET coursetypes/:id
    *
    * @param {object} ctx
-   * @param {Request} ctx.request
+   * @param {Params} ctx.params
    * @param {Response} ctx.response
-   * @param {View} ctx.view
+   * @param {Auth} ctx.auth
    */
-  async show ({ params, request, response, view }) {
-  }
+  async show ({ params, response, auth }) {
+    if (!auth.user.id) {
+      return response.status(401)
+    }
 
-  /**
-   * Render a form to update an existing coursetype.
-   * GET coursetypes/:id/edit
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async edit ({ params, request, response, view }) {
+    return await CourseType.findOrFail(params.id)
   }
 
   /**
@@ -72,10 +69,21 @@ class CourseTypeController {
    * PUT or PATCH coursetypes/:id
    *
    * @param {object} ctx
+   * @param {Params} ctx.params
    * @param {Request} ctx.request
    * @param {Response} ctx.response
+   * @param {Auth} ctx.auth
    */
-  async update ({ params, request, response }) {
+  async update ({ params, request, response, auth }) {
+    if (!auth.user.id) {
+      return response.status(401)
+    }
+
+    const coursetype = await CourseType.findOrFail(params.id)
+    const data = request.post()
+    coursetype.merge(data)
+    await coursetype.save()
+    return coursetype
   }
 
   /**
@@ -83,10 +91,16 @@ class CourseTypeController {
    * DELETE coursetypes/:id
    *
    * @param {object} ctx
-   * @param {Request} ctx.request
+   * @param {Params} ctx.params
    * @param {Response} ctx.response
+   * @param {Auth} ctx.auth
    */
-  async destroy ({ params, request, response }) {
+  async destroy ({ params, response, auth }) {
+    if (!auth.user.id) {
+      return response.status(401)
+    }
+    const coursetype = await CourseType.findOrFail(params.id)
+    await coursetype.delete()
   }
 }
 
