@@ -198,6 +198,35 @@ class CourseController {
 
     return courses
   }
+
+  /**
+   * Get courses with prices.
+   * courses-price/:price_min/:price_max
+   *
+   * @param {object} ctx
+   * @param {Auth} ctx.request
+   * @param {Response} ctx.response
+   */
+  async getCoursesByPrice({ params, auth, response }) {
+
+    if (!auth.user.id) {
+      return response.status(401)
+    }
+    let price_min = params.price_min
+    let price_max = params.price_max
+
+    let courses = await Database
+      .from('courses')
+      .whereBetween(
+      'discount_amount',
+        [
+          `${price_min}`,
+          `${price_max}`
+        ]
+      )
+
+    return courses
+  }
 }
 
 module.exports = CourseController
