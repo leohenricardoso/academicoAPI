@@ -227,6 +227,32 @@ class CourseController {
 
     return courses
   }
+
+    /**
+   * Get courses with prices.
+   * courses-date/:date
+   *
+   * @param {object} ctx
+   * @param {Auth} ctx.request
+   * @param {Response} ctx.response
+   */
+  async getCoursesByDate({ params, auth, response }) {
+
+    if (!auth.user.id) {
+      return response.status(401)
+    }
+    let date = params.date
+
+    let courses = await Database
+      .from('courses')
+      .where( 'initial_date', '>=', `${date}`)
+      .where({
+        active: 1
+      })
+      .orderBy('initial_date', 'asc')
+
+    return courses
+  }
 }
 
 module.exports = CourseController
