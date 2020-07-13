@@ -78,3 +78,7 @@ Route.get('/api/courses-category/:category_id', 'CourseController.getCoursesByCa
 Route.get('/api/courses-search/:name', 'CourseController.getCoursesByName').middleware(['auth'])
 Route.get('/api/courses-type/:type_id', 'CourseController.getCoursesByTypeId').middleware(['auth'])
 Route.get('/api/courses-speaker/:speaker_id', 'CourseController.getCoursesBySpeakerId').middleware(['auth'])
+Route.get('/api/courses-price/:price_min/:price_max', 'CourseController.getCoursesByPrice').middleware(['auth'])
+Route.get('/api/courses-date/:date', 'CourseController.getCoursesByDate').middleware(['auth'])
+Route.get('/api/price-asc', 'CourseController.getPriceAsc').middleware(['auth'])
+

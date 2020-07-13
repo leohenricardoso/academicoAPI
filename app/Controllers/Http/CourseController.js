@@ -198,6 +198,83 @@ class CourseController {
 
     return courses
   }
+
+  /**
+   * Get courses with prices.
+   * courses-price/:price_min/:price_max
+   *
+   * @param {object} ctx
+   * @param {Auth} ctx.request
+   * @param {Response} ctx.response
+   */
+  async getCoursesByPrice({ params, auth, response }) {
+
+    if (!auth.user.id) {
+      return response.status(401)
+    }
+    let price_min = params.price_min
+    let price_max = params.price_max
+
+    let courses = await Database
+      .from('courses')
+      .whereBetween(
+      'discount_amount',
+        [
+          `${price_min}`,
+          `${price_max}`
+        ]
+      )
+
+    return courses
+  }
+
+    /**
+   * Get courses with prices.
+   * courses-date/:date
+   *
+   * @param {object} ctx
+   * @param {Auth} ctx.request
+   * @param {Response} ctx.response
+   */
+  async getCoursesByDate({ params, auth, response }) {
+
+    if (!auth.user.id) {
+      return response.status(401)
+    }
+    let date = params.date
+
+    let courses = await Database
+      .from('courses')
+      .where( 'initial_date', '>=', `${date}`)
+      .where({
+        active: 1
+      })
+      .orderBy('initial_date', 'asc')
+
+    return courses
+  }
+  /**
+   * Get courses with prices.
+   * courses-date/:date
+   *
+   * @param {object} ctx
+   * @param {Auth} ctx.request
+   * @param {Response} ctx.response
+   */
+  async getPriceAsc({ params, auth, response }) {
+    if (!auth.user.id) {
+      return response.status(401)
+    }
+    let course = await Database
+    .from('courses')
+    .where({
+      active: 1
+    })
+    .orderBy('discount_amount', 'asc')
+
+    return await course
+
+  }
 }
 
 module.exports = CourseController
