@@ -253,6 +253,28 @@ class CourseController {
 
     return courses
   }
+  /**
+   * Get courses with prices.
+   * courses-date/:date
+   *
+   * @param {object} ctx
+   * @param {Auth} ctx.request
+   * @param {Response} ctx.response
+   */
+  async getPriceAsc({ params, auth, response }) {
+    if (!auth.user.id) {
+      return response.status(401)
+    }
+    let course = await Database
+    .from('courses')
+    .where({
+      active: 1
+    })
+    .orderBy('discount_amount', 'asc')
+
+    return await course
+
+  }
 }
 
 module.exports = CourseController
