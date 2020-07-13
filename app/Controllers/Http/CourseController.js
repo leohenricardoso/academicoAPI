@@ -261,7 +261,7 @@ class CourseController {
    * @param {Auth} ctx.request
    * @param {Response} ctx.response
    */
-  async getPriceAsc({ params, auth, response }) {
+  async getPriceAsc({ auth, response }) {
     if (!auth.user.id) {
       return response.status(401)
     }
@@ -271,6 +271,29 @@ class CourseController {
       active: 1
     })
     .orderBy('discount_amount', 'asc')
+
+    return await course
+
+  }
+
+  /**
+   * Get courses with prices.
+   * courses-date/:date
+   *
+   * @param {object} ctx
+   * @param {Auth} ctx.request
+   * @param {Response} ctx.response
+   */
+  async getPriceDesc({ auth, response }) {
+    if (!auth.user.id) {
+      return response.status(401)
+    }
+    let course = await Database
+    .from('courses')
+    .where({
+      active: 1
+    })
+    .orderBy('discount_amount', 'desc')
 
     return await course
 
