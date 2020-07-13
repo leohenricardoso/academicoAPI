@@ -18,10 +18,20 @@ const Route = use('Route')
 
 Route.post('/api/register', 'AuthApiController.register')
 Route.post('/api/authenticate', 'AuthApiController.authenticate')
+Route.post('/api/admin-user-register', 'AuthUserAdminController.register')
+Route.post('/api/admin-user-authenticate', 'AuthUserAdminController.authenticate')
 
 Route.get('/', () => {
-  return { greeting: 'Hello world in JSON' }
-})
+  return { greeting: 'You are in frontend section' }
+}).middleware('auth')
+
+Route.get('/admin', () => {
+  return { greeting: 'You are in admin section' }
+}).middleware('auth:admin')
+
+Route.group(() => {
+  Route.resource('api/admin-user', 'AuthUserAdminController').apiOnly()
+}).middleware('auth')
 
 Route.group(() => {
   Route.resource('api/course-category', 'CourseCategoryController').apiOnly()

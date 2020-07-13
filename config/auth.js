@@ -18,6 +18,18 @@ module.exports = {
   */
   authenticator: 'jwt',
 
+  admin: {
+    serializer: 'lucid',
+    model: 'App/Models/UserAdmin',
+    scheme: 'jwt',
+    uid: 'email',
+    password: 'password',
+    options: {
+      secret: Env.get('APP_KEY_AUTH_ADMIN'),
+      expiresIn: 36000
+    }
+  },
+
   /*
   |--------------------------------------------------------------------------
   | Session
