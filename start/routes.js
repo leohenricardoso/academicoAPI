@@ -83,4 +83,5 @@ Route.get('/api/courses-date/:date', 'CourseController.getCoursesByDate').middle
 Route.get('/api/price-asc', 'CourseController.getPriceAsc').middleware(['auth'])
 Route.get('/api/price-desc', 'CourseController.getPriceDesc').middleware(['auth'])
 Route.get('/api/name-asc', 'CourseController.getNameAsc').middleware(['auth'])
+Route.get('/api/name-desc', 'CourseController.getNameDesc').middleware(['auth'])
 

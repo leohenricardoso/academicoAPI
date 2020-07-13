@@ -321,6 +321,29 @@ class CourseController {
     return await course
 
   }
+
+    /**
+   * Get courses with name-asc.
+   * name-asc
+   *
+   * @param {object} ctx
+   * @param {Auth} ctx.request
+   * @param {Response} ctx.response
+   */
+  async getNameDesc({ auth, response }) {
+    if (!auth.user.id) {
+      return response.status(401)
+    }
+    let course = await Database
+    .from('courses')
+    .where({
+      active: 1
+    })
+    .orderBy('name', 'desc')
+
+    return await course
+
+  }
 }
 
 module.exports = CourseController
