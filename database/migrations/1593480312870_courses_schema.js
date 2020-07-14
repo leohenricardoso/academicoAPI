@@ -17,6 +17,7 @@ class CoursesSchema extends Schema {
       table.json('info').notNullable()
       table.decimal('base_amount', 10, 2)
       table.decimal('discount_amount', 10, 2)
+      table.integer('duration')
       table.timestamp('initial_date')
       table.timestamp('final_date')
       table.boolean('active').notNullable()
