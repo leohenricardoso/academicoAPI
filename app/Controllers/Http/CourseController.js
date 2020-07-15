@@ -6,6 +6,8 @@
 
 const Course = use('App/Models/Course')
 const Database = use('Database')
+const Helpers = use('Helpers')
+
 /**
  * Resourceful controller for interacting with courses
  */
@@ -81,6 +83,46 @@ class CourseController {
 
     const course = await Course.findOrFail(params.id)
     const data = request.post()
+    course.merge(data)
+    await course.save()
+    return course
+  }
+
+  /**
+   * Save Course image.
+   * POST courses-image/:id
+   *
+   * @param {object} ctx
+   * @param {Params} ctx.params
+   * @param {Request} ctx.request
+   * @param {Response} ctx.response
+   * @param {Auth} ctx.auth
+   */
+  async saveImage ({ params, request, response, auth }) {
+
+    if (!auth.user.id) {
+      return response.status(401)
+    }
+
+    const course = await Course.findOrFail(params.id)
+
+    const image = request.file('image', {
+      types: ['image'],
+      size: '2mb'
+    })
+
+    await image.move(Helpers.tmpPath('img/course'),{
+      name: `${Date.now()}-${image.clientName}`
+    })
+
+    if (!image.moved()) {
+      return image.errors()
+    }
+
+    let data = {
+      image_path: `ìmg/course/${image.fileName}`
+    }
+
     course.merge(data)
     await course.save()
     return course
