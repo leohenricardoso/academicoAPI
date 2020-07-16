@@ -85,4 +85,5 @@ Route.get('/api/price-desc', 'CourseController.getPriceDesc').middleware(['auth'
 Route.get('/api/name-asc', 'CourseController.getNameAsc').middleware(['auth'])
 Route.get('/api/name-desc', 'CourseController.getNameDesc').middleware(['auth'])
 Route.post('/api/courses-image/:id', 'CourseController.saveImage').middleware(['auth'])
+Route.post('/api/send-contact-email', 'SendEmailController.sendContactEmail').middleware(['auth'])
 
