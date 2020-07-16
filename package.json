@@ -25,6 +25,8 @@
     "@adonisjs/framework": "^5.0.9",
     "@adonisjs/ignitor": "^2.0.8",
     "@adonisjs/lucid": "^6.1.3",
+    "@adonisjs/mail": "^3.0.10",
+    "mercadopago": "^1.3.2",
     "pg": "^7.18.2",
     "sendgrid": "^5.2.3",
     "url-parse": "^1.4.7"
