@@ -56,7 +56,6 @@ class SendEmailController {
   }
 
   async sendInviteToPresentialCourse({
-    request,
     params
   }) {
     try {
