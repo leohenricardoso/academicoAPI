@@ -8,20 +8,22 @@ class SendEmailController {
   async sendContactEmail({
     request
   }) {
-      try {
-        Logger.level = 'debug'
-        const data = request.post()
+    try {
+      Logger.level = 'debug'
+      const data = request.post()
 
-        await Mail.send('emails.contact', { data: data }, (message) => {
-          message
-            .to(data.email)
-            .from(data.from)
-            .subject(data.subject)
-        })
-      } catch (error) {
-        Logger.debug(error)
-          return error
-      }
+      await Mail.send('emails.contact', {
+        data: data
+      }, (message) => {
+        message
+          .to(data.email)
+          .from(data.from)
+          .subject(data.subject)
+      })
+    } catch (error) {
+      Logger.debug(error)
+      return error
+    }
   }
 }
 
