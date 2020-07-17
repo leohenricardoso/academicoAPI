@@ -2,8 +2,8 @@
 
 const Env = use('Env')
 
-const MAILGUN_DOMAIN = new Url(Env.get('MAILGUN_DOMAIN'))
-const MAILGUN_API_KEY = new Url(Env.get('MAILGUN_API_KEY'))
+const MAILGUN_DOMAIN = Env.get('MAILGUN_DOMAIN')
+const MAILGUN_API_KEY = Env.get('MAILGUN_API_KEY')
 
 module.exports = {
   /*
