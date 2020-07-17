@@ -20,6 +20,7 @@ class CoursesSchema extends Schema {
       table.integer('duration')
       table.timestamp('initial_date')
       table.timestamp('final_date')
+      table.boolean('online', 600)
       table.boolean('active').notNullable()
       table.timestamps()
     })

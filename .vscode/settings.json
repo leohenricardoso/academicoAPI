@@ -5,7 +5,10 @@
         "adonisjs",
         "contato",
         "controller",
+        "course",
+        "cursos",
         "domain",
+        "invite",
         "mailgun",
         "mailgun domain",
         "mico",
@@ -13,7 +16,13 @@
         "payment",
         "payment pagarme controller",
         "paymentpagarme",
+        "presential",
+        "qrcode",
         "resposta",
-        "smtp"
-    ]
+        "send",
+        "send invite to presential course",
+        "smtp",
+        "to"
+    ],
+    "cSpell.enabled": true
 }
