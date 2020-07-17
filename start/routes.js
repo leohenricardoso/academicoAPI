@@ -88,5 +88,5 @@ Route.post('/api/courses-image/:id', 'CourseController.saveImage').middleware(['
 Route.post('/api/send-contact-email', 'SendEmailController.sendContactEmail').middleware(['auth'])
 Route.post('/api/send-contact-email', 'SendEmailController.sendContactEmail').middleware(['auth'])
 Route.post('/api/send-buy-email/:courseId', 'SendEmailController.sendShopEmail').middleware(['auth'])
-Route.post('/api/send-course-invite-qrcode/:courseId/:studentId', 'SendEmailController.sendInviteToPresentialCourse').middleware(['auth'])
+Route.get('/api/send-course-invite-qrcode/:courseId/:studentId', 'SendEmailController.sendInviteToPresentialCourse').middleware(['auth'])
 
