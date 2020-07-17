@@ -5,11 +5,15 @@
         "adonisjs",
         "contato",
         "controller",
+        "domain",
+        "mailgun",
+        "mailgun domain",
         "mico",
         "pagarme",
         "payment",
         "payment pagarme controller",
         "paymentpagarme",
-        "resposta"
+        "resposta",
+        "smtp"
     ]
 }

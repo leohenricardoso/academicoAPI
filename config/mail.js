@@ -2,6 +2,9 @@
 
 const Env = use('Env')
 
+const MAILGUN_DOMAIN = new Url(Env.get('MAILGUN_DOMAIN'))
+const MAILGUN_API_KEY = new Url(Env.get('MAILGUN_API_KEY'))
+
 module.exports = {
   /*
   |--------------------------------------------------------------------------
@@ -12,7 +15,32 @@ module.exports = {
   | define a driver too.
   |
   */
-  connection: Env.get('MAIL_CONNECTION', 'smtp'),
+  connection: Env.get('MAIL_CONNECTION', 'mailgun'),
+
+
+  /*
+  |--------------------------------------------------------------------------
+  | Mailgun
+  |--------------------------------------------------------------------------
+  |
+  | Here we define configuration for mailgun. Extra options can be defined
+  | inside the `extra` object.
+  |
+  | https://mailgun-documentation.readthedocs.io/en/latest/api-sending.html#sending
+  |
+  | extras: {
+  |   'o:tag': '',
+  |   'o:campaign': '',,
+  |   . . .
+  | }
+  |
+  */
+ mailgun: {
+  driver: 'mailgun',
+  domain: Env.get('MAILGUN_DOMAIN', MAILGUN_DOMAIN),
+  apiKey: Env.get('MAILGUN_API_KEY', MAILGUN_API_KEY),
+  extras: {}
+},
 
   /*
   |--------------------------------------------------------------------------
@@ -25,12 +53,12 @@ module.exports = {
   smtp: {
     driver: 'smtp',
     pool: true,
-    port: Env.get('SMTP_PORT', 587),
-    host: Env.get('SMTP_HOST', 'smtp.gmail.com'),
+    port: Env.get('SMTP_PORT', 2525),
+    host: Env.get('SMTP_HOST'),
     secure: true,
     auth: {
-      user: Env.get('MAIL_USERNAME', 'contact.leohenrique@gmail.com'),
-      pass: Env.get('MAIL_PASSWORD', 'testesmtp')
+      user: Env.get('MAIL_USERNAME'),
+      pass: Env.get('MAIL_PASSWORD')
     },
     maxConnections: 5,
     maxMessages: 100,
@@ -56,31 +84,6 @@ module.exports = {
   sparkpost: {
     driver: 'sparkpost',
     apiKey: Env.get('SPARKPOST_API_KEY'),
-    extras: {}
-  },
-
-  /*
-  |--------------------------------------------------------------------------
-  | Mailgun
-  |--------------------------------------------------------------------------
-  |
-  | Here we define configuration for mailgun. Extra options can be defined
-  | inside the `extra` object.
-  |
-  | https://mailgun-documentation.readthedocs.io/en/latest/api-sending.html#sending
-  |
-  | extras: {
-  |   'o:tag': '',
-  |   'o:campaign': '',,
-  |   . . .
-  | }
-  |
-  */
-  mailgun: {
-    driver: 'mailgun',
-    domain: Env.get('MAILGUN_DOMAIN'),
-    region: Env.get('MAILGUN_API_REGION'),
-    apiKey: Env.get('MAILGUN_API_KEY'),
     extras: {}
   },
 
