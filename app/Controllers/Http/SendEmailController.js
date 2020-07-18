@@ -5,10 +5,10 @@ const Logger = use('Logger')
 const QRCode = use('qrcode')
 
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
-const Course = use('Course')
+const Course = use('App/Models/Course')
 
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
-const Student = use('Student')
+const Student = use('App/Models/Student')
 
 class SendEmailController {
 
@@ -27,7 +27,7 @@ class SendEmailController {
           .subject(data.subject)
       })
     } catch (error) {
-      Logger.debug(error)
+      Logger.error(error)
       return error
     }
   }
@@ -50,7 +50,7 @@ class SendEmailController {
           .subject('Acadêmico Cursos - ' + course.name)
       })
     } catch (error) {
-      Logger.debug(error)
+      Logger.error(error)
       return error
     }
   }
@@ -60,31 +60,32 @@ class SendEmailController {
   }) {
     try {
       Logger.level = 'debug'
-      Logger.error(params.studentId)
-      Logger.error(params.courseId)
-      const student = Student.findOrFail(params.studentId)
-      const course = Course.findOrFail(params.courseId)
+      const student = await Student.findOrFail(params.studentId)
+      const course = await Course.findOrFail(params.courseId)
 
-      QRCode.toDataURL(`Nome: ${student.full_name} - CPF: ${student.cpf}`, function (err, url) {
-        Logger.debug(url)
-      })
+      Logger.debug(student)
 
-      QRCode.toString('I am a pony!', {
-        type: 'terminal'
-      }, function (err, url) {
-        Logger.debug(url)
-      })
+      QRCode.toDataURL('tmp/qrcode/qrCourse.png',
+        `Nome: ${student.full_name} - CPF: ${student.cpf}`,
+        {
+          color: {
+            dark: '#000',
+            light: '#fff'
+          }
+        }, function (err) {
+          Logger.error(err)
+        })
 
-      data.course = course
-
-      await Mail.send('emails.courseBuy', {
+      await Mail.send('emails.inviteCourse', {
         data: data
       }, (message) => {
         message
-          .to(data.email)
-          .from(data.from)
+          .to(student.email)
+          .from('leohenricardoso@gmail.com')
           .subject('Acadêmico Cursos - ' + course.name)
+          .attach(Helpers.tmpPath('qrcode/qrCourse.png'))
       })
+
     } catch (error) {
       Logger.error(error)
       return error
