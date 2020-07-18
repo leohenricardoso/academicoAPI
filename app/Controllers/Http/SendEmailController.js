@@ -60,6 +60,8 @@ class SendEmailController {
   }) {
     try {
       Logger.level = 'debug'
+      Logger.error(params.studentId)
+      Logger.error(params.courseId)
       const student = Student.findOrFail(params.studentId)
       const course = Course.findOrFail(params.courseId)
 
@@ -84,7 +86,7 @@ class SendEmailController {
           .subject('Acadêmico Cursos - ' + course.name)
       })
     } catch (error) {
-      Logger.debug(error)
+      Logger.error(error)
       return error
     }
   }
