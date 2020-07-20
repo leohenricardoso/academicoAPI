@@ -39,7 +39,9 @@ class SendEmailController {
     try {
       let data = request.post()
       const course = Course.findOrFail(params.courseId)
+      const student = await Student.findByOrFail('email', data.email)
       data.course = course
+      data.student = student
 
       await Mail.send('emails.courseBuy', {
         data: data
@@ -49,6 +51,8 @@ class SendEmailController {
           .from(data.from)
           .subject('Acadêmico Cursos - ' + course.name)
       })
+
+      return data
     } catch (error) {
       Logger.error(error)
       return error
