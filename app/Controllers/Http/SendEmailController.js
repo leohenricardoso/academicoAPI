@@ -66,17 +66,18 @@ class SendEmailController {
   }
 
   async sendInviteToPresentialCourse({
-    params
+    params,
+    request
   }) {
     try {
-      Logger.level = 'debug'
       const student = await Student.findOrFail(params.studentId)
       const course = await Course.findOrFail(params.courseId)
-
-      Logger.debug(student)
+      let data = request.post()
+      data.course = course
+      data.student = student
 
       QRCode.toDataURL('tmp/qrcode/qrCourse.png',
-        `Nome: ${student.full_name} - CPF: ${student.cpf}`,
+        `Nome: ${student.full_name} - CPF: ${student.cpf} - Curso: ${course.name}`,
         {
           color: {
             dark: '#000',
@@ -91,7 +92,7 @@ class SendEmailController {
       }, (message) => {
         message
           .to(student.email)
-          .from('leohenricardoso@gmail.com')
+          .from(data.email)
           .subject('Acadêmico Cursos - ' + course.name)
           .attach(Helpers.tmpPath('qrcode/qrCourse.png'))
       })
