@@ -34,12 +34,18 @@ class SendEmailController {
 
   async sendShopEmail({
     request,
-    params
+    params,
+    response
   }) {
     try {
       let data = request.post()
       const course = await Course.findOrFail(params.courseId)
       const student = await Student.findByOrFail('email', data.email)
+
+      if (course == undefined || student == undefined) {
+        return response.status(404)
+      }
+
       data.course = course
       data.student = student
 
