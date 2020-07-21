@@ -87,7 +87,7 @@ class SendEmailController {
           Logger.error(err)
         })
 
-      await Mail.send('emails.inviteCourse', {
+      await Mail.send('emails.invitePresential', {
         data: data
       }, (message) => {
         message
