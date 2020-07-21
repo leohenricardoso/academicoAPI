@@ -84,21 +84,21 @@ class SendEmailController {
             light: '#fff'
           }
         }, function (err) {
-          Logger.error(err)
+          Logger.info(err)
         })
 
-      await Mail.send('emails.inviteCourse', {
+      await Mail.send('emails.invitePresential', {
         data: data
       }, (message) => {
         message
           .to(student.email)
-          .from(data.email)
+          .from(data.from)
           .subject('Acadêmico Cursos - ' + course.name)
           .attach(Helpers.tmpPath('qrcode/qrCourse.png'))
       })
-
+      return data
     } catch (error) {
-      Logger.error(error)
+      Logger.info(error)
       return error
     }
   }
