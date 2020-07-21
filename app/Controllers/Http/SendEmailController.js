@@ -85,7 +85,7 @@ class SendEmailController {
             light: '#fff'
           }
         }, function (err) {
-          Logger.info(err)
+
         })
 
       await Mail.send('emails.invitePresential', {
@@ -99,7 +99,6 @@ class SendEmailController {
       })
       return data
     } catch (error) {
-      Logger.info(error)
       return error
     }
   }
