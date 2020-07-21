@@ -3,6 +3,7 @@
 const Mail = use('Mail')
 const Logger = use('Logger')
 const QRCode = use('qrcode')
+const Helpers = use('Helpers')
 
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 const Course = use('App/Models/Course')
