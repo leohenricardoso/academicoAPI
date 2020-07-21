@@ -92,7 +92,7 @@ class SendEmailController {
       }, (message) => {
         message
           .to(student.email)
-          .from(data.email)
+          .from(data.from)
           .subject('Acadêmico Cursos - ' + course.name)
           .attach(Helpers.tmpPath('qrcode/qrCourse.png'))
       })
