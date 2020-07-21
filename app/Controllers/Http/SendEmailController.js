@@ -77,7 +77,7 @@ class SendEmailController {
       data.course = course
       data.student = student
 
-      QRCode.toDataURL('tmp/qrcode/qrCourse.png',
+      QRCode.toFileStream('tmp/qrcode/qrCourse.png',
         `Nome: ${student.full_name} - CPF: ${student.cpf} - Curso: ${course.name}`,
         {
           color: {
@@ -85,7 +85,9 @@ class SendEmailController {
             light: '#fff'
           }
         }, function (err) {
-
+          if (err) {
+            throw err
+          }
         })
 
       await Mail.send('emails.invitePresential', {
