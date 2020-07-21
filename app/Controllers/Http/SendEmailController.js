@@ -84,7 +84,7 @@ class SendEmailController {
             light: '#fff'
           }
         }, function (err) {
-          Logger.error(err)
+          Logger.info(err)
         })
 
       await Mail.send('emails.invitePresential', {
@@ -96,9 +96,9 @@ class SendEmailController {
           .subject('Acadêmico Cursos - ' + course.name)
           .attach(Helpers.tmpPath('qrcode/qrCourse.png'))
       })
-
+      return data
     } catch (error) {
-      Logger.error(error)
+      Logger.info(error)
       return error
     }
   }
