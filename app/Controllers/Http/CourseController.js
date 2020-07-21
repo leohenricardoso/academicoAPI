@@ -386,6 +386,51 @@ class CourseController {
     return await course
 
   }
+  /**
+   * Get courses with duration-desc.
+   * duration-desc
+   *
+   * @param {object} ctx
+   * @param {Auth} ctx.request
+   * @param {Response} ctx.response
+   */
+  async getDurationDesc({ auth, response }) {
+    if (!auth.user.id) {
+      return response.status(401)
+    }
+    let course = await Database
+    .from('courses')
+    .where({
+      active: 1
+    })
+    .orderBy('duration', 'desc')
+
+    return await course
+
+  }
+
+    /**
+   * Get courses with duration-asc.
+   * duration-asc
+   *
+   * @param {object} ctx
+   * @param {Auth} ctx.request
+   * @param {Response} ctx.response
+   */
+  async getDurationAsc({ auth, response }) {
+    if (!auth.user.id) {
+      return response.status(401)
+    }
+    let course = await Database
+    .from('courses')
+    .where({
+      active: 1
+    })
+    .orderBy('duration', 'asc')
+
+    return await course
+
+  }
 }
 
 module.exports = CourseController
