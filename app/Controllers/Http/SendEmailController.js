@@ -4,6 +4,7 @@ const Mail = use('Mail')
 const Logger = use('Logger')
 const QRCode = use('qrcode')
 const Helpers = use('Helpers')
+const Drive = use('Drive')
 
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 const Course = use('App/Models/Course')
@@ -77,14 +78,16 @@ class SendEmailController {
       data.course = course
       data.student = student
 
-      QRCode.toFileStream('tmp/qrcode/qrCourse.png',
-        `Nome: ${student.full_name} - CPF: ${student.cpf} - Curso: ${course.name}`,
-        {
+      let fileName = `${student.full_name}-${student.cpf}-${course.name}-${Date.now().toString()}.png`
+
+      QRCode.toFile(`tmp/qrcode/${fileName}`,
+        `Nome: ${student.full_name} - CPF: ${student.cpf} - Curso: ${course.name}`, {
           color: {
             dark: '#000',
             light: '#fff'
           }
-        }, function (err) {
+        },
+        function (err) {
           if (err) {
             throw err
           }
@@ -97,8 +100,11 @@ class SendEmailController {
           .to(student.email)
           .from(data.from)
           .subject('Acadêmico Cursos - ' + course.name)
-          .attach(Helpers.tmpPath('qrcode/qrCourse.png'))
+          .attach(Helpers.tmpPath(`qrcode/${fileName}`))
       })
+
+      await Drive.delete(`qrcode/${fileName}`)
+
       return data
     } catch (error) {
       return error
