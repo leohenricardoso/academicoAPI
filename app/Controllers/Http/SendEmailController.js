@@ -103,11 +103,11 @@ class SendEmailController {
           .attach(Helpers.tmpPath(`qrcode/${fileName}`))
       })
 
-      await Drive.delete(`qrcode/${fileName}`)
+      //await Drive.delete(`qrcode/${fileName}`)
 
       return data
     } catch (error) {
-      Logger.error(error)
+      Logger.info(error)
       return error
     }
   }
