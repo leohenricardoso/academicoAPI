@@ -107,6 +107,7 @@ class SendEmailController {
 
       return data
     } catch (error) {
+      Logger.error(error)
       return error
     }
   }
