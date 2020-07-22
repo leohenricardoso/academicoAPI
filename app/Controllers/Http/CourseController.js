@@ -189,7 +189,7 @@ class CourseController {
       .from('courses')
       .where(Database.raw("UPPER(name)"), 'LIKE', '%' + name + '%')
       .where({
-        status: 1
+        active: true
       })
       .orderBy('created_at', 'asc')
       .paginate(params.pages, params.limit)
