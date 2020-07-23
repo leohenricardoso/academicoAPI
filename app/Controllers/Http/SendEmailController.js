@@ -100,7 +100,7 @@ class SendEmailController {
           .to(student.email)
           .from(data.from)
           .subject('Acadêmico Cursos - ' + course.name)
-          .attach(Helpers.tmpPath(`qrcode/${fileName}`))
+          //.attach(Helpers.tmpPath(`qrcode/${fileName}`))
       })
 
       //await Drive.delete(`qrcode/${fileName}`)
