@@ -19,7 +19,7 @@ module.exports = {
   | interacting with SQL databases.
   |
   */
-  connection: Env.get('DB_CONNECTION', 'sqlite'),
+  connection: Env.get('DB_CONNECTION', 'mysql'),
 
   /*
   |--------------------------------------------------------------------------
@@ -54,11 +54,11 @@ module.exports = {
   mysql: {
     client: 'mysql',
     connection: {
-      host: Env.get('DB_HOST', 'localhost'),
-      port: Env.get('DB_PORT', ''),
-      user: Env.get('DB_USER', 'root'),
-      password: Env.get('DB_PASSWORD', ''),
-      database: Env.get('DB_DATABASE', 'adonis')
+      host: Env.get('DB_HOST', 'mysql669.umbler.com'),
+      port: Env.get('DB_PORT', '3306'),
+      user: Env.get('DB_USER',  'academico'),
+      password: Env.get('DB_PASSWORD', 'zT2C[t6_VD3'),
+      database: Env.get('DB_DATABASE', 'academico')
     },
     debug: Env.get('DB_DEBUG', false)
   },

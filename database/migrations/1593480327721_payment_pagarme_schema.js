@@ -20,7 +20,7 @@ class PaymentPagarmeSchema extends Schema {
       table.string('boleto_exp_date', 200)
       table.decimal('paid_amount', 10, 2)
       table.decimal('authorized_amount', 10, 2)
-      table.json('data').notNullable()
+      table.string('data', 2000).notNullable()
       table.timestamps()
     })
   }
