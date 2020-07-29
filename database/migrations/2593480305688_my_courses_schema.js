@@ -9,7 +9,7 @@ class MyCoursesSchema extends Schema {
       table.increments()
       table.integer('student_id').unsigned().references('id').inTable('students')
       table.integer('course_id').unsigned().references('id').inTable('courses')
-      table.integer('payment_id').unsigned().references('id').inTable('payment_pagarmes')
+      table.integer('payment_id').unsigned().references('id').inTable('mercadopagos')
       table.boolean('active').notNullable().defaultTo(false)
       table.timestamps()
     })
