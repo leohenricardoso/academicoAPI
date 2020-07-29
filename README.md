@@ -27,6 +27,12 @@ adonis serve --dev
 adonis migration:run
 ```
 
+```
+Mercado Pago Credencial
+Public Key: TEST-5d019c37-215a-482e-95f8-0034b3c28b01
+Access Token: TEST-1253996926905747-071622-5a7906c929ecf8dfc4d05b898e8dc34d-188258831
+```
+
 ### Front-end static
 Home - https://leohenrique.me/project/academico/#/
 Página do curso - https://leohenrique.me/project/academico/#/course
