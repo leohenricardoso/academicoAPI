@@ -55,7 +55,7 @@ Route.group(() => {
 }).middleware('auth')
 
 Route.group(() => {
-  Route.resource('api/paymentpagarme', 'PaymentPagarmeController').apiOnly()
+  Route.resource('api/paymentmercadopago', 'MercadoPagoController').apiOnly()
 }).middleware('auth')
 
 Route.group(() => {

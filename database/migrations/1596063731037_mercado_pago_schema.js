@@ -5,7 +5,7 @@ const Schema = use('Schema')
 
 class MercadopagoSchema extends Schema {
   up () {
-    this.create('mercadopagos', (table) => {
+    this.create('mercado_pagos', (table) => {
       table.increments()
       table.integer('course_id').unsigned().references('id').inTable('courses')
       table.string('transaction_id').notNullable()
@@ -28,7 +28,7 @@ class MercadopagoSchema extends Schema {
   }
 
   down () {
-    this.drop('mercadopagos')
+    this.drop('mercado_pagos')
   }
 }
 
