@@ -90,4 +90,5 @@ Route.post('/api/send-buy-email/:courseId', 'SendEmailController.sendShopEmail')
 Route.post('/api/send-course-invite-qrcode/:courseId/:studentId', 'SendEmailController.sendInviteToPresentialCourse').middleware(['auth'])
 Route.get('/api/duration-desc', 'CourseController.getDurationDesc').middleware(['auth'])
 Route.get('/api/duration-asc', 'CourseController.getDurationAsc').middleware(['auth'])
+Route.post('/api/mercadopago/cc_create', 'MercadoPagoController.createPayment').middleware(['auth'])
 

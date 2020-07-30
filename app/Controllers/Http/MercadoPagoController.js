@@ -6,12 +6,58 @@
 
 const MercadoPagoModel = use('App/Models/MercadoPago')
 const Logger = use('Logger')
+const MP = use('mercadopago')
+const Env = use('Env')
 
 
 /**
  * Resourceful controller for interacting with mercadopagos
  */
 class MercadoPagoController {
+
+  async createPayment({
+    request,
+    response,
+    auth
+  }) {
+    if (!auth.user.id) {
+      return response.status(401)
+    }
+    const data = request.only([
+      'amount',
+      'identification_number',
+      'identification_type',
+      'name',
+      'course',
+      'email',
+      'installment',
+      'payment_method_id',
+      'public_key',
+      'status',
+      'token',
+    ])
+
+    const payment_data = {
+      transaction_amount: data['amount'],
+      token: data['token'],
+      description: data['course'],
+      installments: data['installment'],
+      payment_method_id: data['payment_method_id'],
+      payer: {
+        email: data['email']
+      }
+    };
+
+    Logger.info(data['token'])
+
+    MP.configurations.setAccessToken(Env.get('ACCESS_KEY_MP'))
+    MP.payment.save(payment_data).then(function (data) {
+      response.send(data);
+    }).catch(function (error) {
+      Logger.info(error);
+    });
+  }
+
   /**
    * Show a list of all mercadopagos.
    * GET mercadopagos
