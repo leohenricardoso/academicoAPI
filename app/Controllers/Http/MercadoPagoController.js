@@ -23,36 +23,27 @@ class MercadoPagoController {
     if (!auth.user.id) {
       return response.status(401)
     }
-    const data = request.only([
-      'amount',
-      'identification_number',
-      'identification_type',
-      'name',
-      'course',
-      'email',
-      'installment',
-      'payment_method_id',
-      'public_key',
-      'status',
-      'token',
-    ])
+    const req = request.all()
+    Logger.info(req.data)
 
     const payment_data = {
-      transaction_amount: data['amount'],
-      token: data['token'],
-      description: data['course'],
-      installments: data['installment'],
-      payment_method_id: data['payment_method_id'],
+      transaction_amount: parseFloat(req.data.amount),
+      token: req.data.token,
+      description: req.data.course,
+      installments: req.data.installment,
+      payment_method_id: req.data.payment_method_id,
       payer: {
-        email: data['email']
+        email: req.data.email
       }
-    };
+    }
 
-    Logger.info(data['token'])
 
     MP.configurations.setAccessToken(Env.get('ACCESS_KEY_MP'))
-    MP.payment.save(payment_data).then(function (data) {
-      response.send(data);
+    MP.payment.save(
+      payment_data
+    ).then(function (res) {
+      Logger.info(res);
+      response.send(res);
     }).catch(function (error) {
       Logger.info(error);
     });
@@ -73,7 +64,7 @@ class MercadoPagoController {
     if (!auth.user.id) {
       return response.status(401)
     }
-    this.teste()
+
     return await MercadoPagoModel.all()
   }
 
