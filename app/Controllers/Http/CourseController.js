@@ -5,6 +5,9 @@
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
 const Course = use('App/Models/Course')
+const Category = use('App/Models/CourseCategory')
+const Type = use('App/Models/CourseType')
+const Speaker = use('App/Models/CourseSpeaker')
 const Database = use('Database')
 const Helpers = use('Helpers')
 
@@ -43,6 +46,15 @@ class CourseController {
     }
 
     const data = request.post()
+
+    let category = await Category.findOrFail(data['category_id'])
+    data['category_label'] = category['category']
+
+    let type = await Type.findOrFail(data['type_id'])
+    data['type_label'] = type['type']
+
+    let speaker = await Speaker.findOrFail(data['speaker_id'])
+    data['speaker_label'] = speaker['name']
 
     const course = await Course.create({
       ...data
@@ -83,6 +95,16 @@ class CourseController {
 
     const course = await Course.findOrFail(params.id)
     const data = request.post()
+
+    let category = await Category.findOrFail(data['category_id'])
+    data['category_label'] = category['category']
+
+    let type = await Type.findOrFail(data['type_id'])
+    data['type_label'] = type['type']
+
+    let speaker = await Speaker.findOrFail(data['speaker_id'])
+    data['speaker_label'] = speaker['name']
+
     course.merge(data)
     await course.save()
     return course
