@@ -56,6 +56,7 @@ class CourseController {
     let speaker = await Speaker.findOrFail(data['speaker_id'])
     data['speaker_label'] = speaker['name']
 
+
     const course = await Course.create({
       ...data
     })
@@ -74,8 +75,10 @@ class CourseController {
     if (!auth.user.id) {
       return response.status(401)
     }
+    let course = await Course.findOrFail(params.id)
 
-    return await Course.findOrFail(params.id)
+    return course
+
   }
 
   /**
@@ -451,6 +454,49 @@ class CourseController {
     .orderBy('duration', 'asc')
 
     return await course
+
+  }
+  /**
+   * Get courses with duration-asc.
+   * duration-asc
+   *
+   * @param {object} ctx
+   * @param {Auth} ctx.request
+   * @param {Response} ctx.response
+   */
+  async getCourseLive({ params, auth, response }) {
+    if (!auth.user.id) {
+      return response.status(401)
+    }
+    let courses = await Database
+    .from('courses')
+    .where({
+      type_id: 1
+    })
+    .orderBy('initial_date', 'asc')
+    .paginate(params.pages, params.limit)
+
+    return courses
+
+  }
+    /**
+   * Get courses with duration-asc.
+   * duration-asc
+   *
+   * @param {object} ctx
+   * @param {Auth} ctx.request
+   * @param {Response} ctx.response
+   */
+  async getCoursesIndex({ params, auth, response }) {
+    if (!auth.user.id) {
+      return response.status(401)
+    }
+    let courses = await Database
+    .from('courses')
+    .whereNot('type_id', '<', 2)
+    .paginate(params.pages, params.limit)
+
+    return courses
 
   }
 }

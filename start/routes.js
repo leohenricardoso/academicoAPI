@@ -74,6 +74,10 @@ Route.group(() => {
   Route.resource('api/my-course', 'MyCourseController').apiOnly()
 }).middleware('auth')
 
+Route.group(() => {
+  Route.resource('api/banner', 'BannerController').apiOnly()
+}).middleware('auth')
+
 Route.get('/api/courses-category/:category_id', 'CourseController.getCoursesByCategoryId').middleware(['auth'])
 Route.get('/api/courses-search/:name', 'CourseController.getCoursesByName').middleware(['auth'])
 Route.get('/api/courses-type/:type_id', 'CourseController.getCoursesByTypeId').middleware(['auth'])
@@ -91,4 +95,6 @@ Route.post('/api/send-course-invite-qrcode/:courseId/:studentId', 'SendEmailCont
 Route.get('/api/duration-desc', 'CourseController.getDurationDesc').middleware(['auth'])
 Route.get('/api/duration-asc', 'CourseController.getDurationAsc').middleware(['auth'])
 Route.post('/api/mercadopago/cc_create', 'MercadoPagoController.createPayment').middleware(['auth'])
-
+Route.get('/api/courses-live/:pages/:limit', 'CourseController.getCourseLive').middleware(['auth'])
+Route.get('/api/courses-index/:pages/:limit', 'CourseController.getCoursesIndex').middleware(['auth'])
+Route.get('/api/banner/save-image', 'BannerController.saveImage').middleware(['auth'])
