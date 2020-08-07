@@ -113,7 +113,7 @@ class BannerController {
       size: '2mb'
     })
 
-    await image.move(Helpers.tmpPath('img/banner'),{
+    await image.move(Helpers.publicPath('img/banner'),{
       name: `${Date.now()}-${image.clientName}`
     })
 
@@ -130,6 +130,10 @@ class BannerController {
     })
 
     return banner
+  }
+
+  async downloadImage ({ params, response }) {
+    return response.download(Helpers.publicPath(`img/banner/${params.path}`))
   }
 }
 

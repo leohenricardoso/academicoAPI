@@ -98,3 +98,4 @@ Route.post('/api/mercadopago/cc_create', 'MercadoPagoController.createPayment').
 Route.get('/api/courses-live/:pages/:limit', 'CourseController.getCourseLive').middleware(['auth'])
 Route.get('/api/courses-index/:pages/:limit', 'CourseController.getCoursesIndex').middleware(['auth'])
 Route.post('/api/banner/save-image', 'BannerController.saveImage').middleware(['auth'])
+Route.get('/api/images/:path', 'BannerController.downloadImage')
