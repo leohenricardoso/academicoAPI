@@ -5,6 +5,8 @@
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
 const Banner = use('App/Models/Banner')
+const Helpers = use('Helpers')
+const Database = use('Database')
 
 /**
  * Resourceful controller for interacting with banners
@@ -100,13 +102,11 @@ class BannerController {
     await banner.delete()
   }
 
-  async saveImage ({ params, request, response, auth }) {
+  async saveImage ({ request, response, auth }) {
 
     if (!auth.user.id) {
       return response.status(401)
     }
-
-    const banner = await Banner.findOrFail(params.id)
 
     const image = request.file('image', {
       types: ['image'],
@@ -118,15 +118,17 @@ class BannerController {
     })
 
     if (!image.moved()) {
-      return image.errors()
+       return image.errors()
     }
 
     let data = {
-      image_path: `ìmg/banner/${image.fileName}`
+      image_path: `img/banner/${image.fileName}`
     }
 
-    banner.merge(data)
-    await banner.save()
+    const banner = await Banner.create({
+      ...data
+    })
+
     return banner
   }
 }
