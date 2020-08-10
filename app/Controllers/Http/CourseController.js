@@ -378,14 +378,15 @@ class CourseController {
     if (!auth.user.id) {
       return response.status(401)
     }
-    let course = await Database
+    let courses = await Database
     .from('courses')
     .where({
       active: 1
     })
     .orderBy('name', 'asc')
+    .paginate(params.pages, params.limit)
 
-    return await course
+    return await courses
 
   }
 
@@ -401,14 +402,15 @@ class CourseController {
     if (!auth.user.id) {
       return response.status(401)
     }
-    let course = await Database
+    let courses = await Database
     .from('courses')
     .where({
       active: 1
     })
     .orderBy('name', 'desc')
+    .paginate(params.pages, params.limit)
 
-    return await course
+    return await courses
 
   }
   /**
