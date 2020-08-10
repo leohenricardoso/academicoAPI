@@ -374,7 +374,7 @@ class CourseController {
    * @param {Auth} ctx.request
    * @param {Response} ctx.response
    */
-  async getNameAsc({ auth, response }) {
+  async getNameAsc({ auth, response, params }) {
     if (!auth.user.id) {
       return response.status(401)
     }
