@@ -28,7 +28,7 @@ class CourseSpeakerSeeder {
         },
         {
           "name": "Vinicius Camargo",
-          "email": "www.psicologoviniciuscamargo.com",
+          "email": "www.psicologoviniciuscamargo1.com",
           "image_path": "https://s3-sa-east-1.amazonaws.com/doctoralia.com.br/doctor/94698d/94698dfaa39c42157874eee86d9ea769_large.jpg",
           "description": "Psicólogo Clínico",
           "instagram": "https://www.instagram.com/viniiicamargo/?hl=pt-",
@@ -37,7 +37,7 @@ class CourseSpeakerSeeder {
         },
         {
           "name": "Amanda",
-          "email": "www.psicologoviniciuscamargo.com",
+          "email": "www.psicologoviniciuscamargo2.com",
           "image_path": "https://s3-sa-east-1.amazonaws.com/doctoralia.com.br/doctor/94698d/94698dfaa39c42157874eee86d9ea769_large.jpg",
           "description": "Psicólogo Clínico",
           "instagram": "https://www.instagram.com/viniiicamargo/?hl=pt-",
@@ -46,7 +46,7 @@ class CourseSpeakerSeeder {
         },
         {
           "name": "Vitoria",
-          "email": "www.psicologoviniciuscamargo.com",
+          "email": "www.psicologoviniciuscamargo3.com",
           "image_path": "https://s3-sa-east-1.amazonaws.com/doctoralia.com.br/doctor/94698d/94698dfaa39c42157874eee86d9ea769_large.jpg",
           "description": "Psicólogo Clínico",
           "instagram": "https://www.instagram.com/viniiicamargo/?hl=pt-",
