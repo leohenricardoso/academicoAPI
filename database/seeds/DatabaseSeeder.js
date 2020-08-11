@@ -18,7 +18,7 @@ const CourseCategorySeeder = use('./CourseCategorySeeder')
 const CourseTypeSeeder = use('./CourseTypeSeeder')
 const CourseSeeder = use('./CourseSeeder')
 const BusinessContact = use('./BusinessContact')
-const NewsletterSeeder = use('./BusinessContact')
+const NewsletterSeeder = use('./NewsletterSeeder')
 
 class DatabaseSeeder {
   async run () {
