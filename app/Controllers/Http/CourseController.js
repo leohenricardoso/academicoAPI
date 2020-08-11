@@ -501,6 +501,52 @@ class CourseController {
     return courses
 
   }
+
+  /**
+   * Get courses with filters.
+   *
+   *
+   * @param {object} ctx
+   * @param {Auth} ctx.request
+   * @param {Response} ctx.response
+   */
+  async getCoursesFilter({ params, auth, response, request }) {
+    if (!auth.user.id) {
+      return response.status(401)
+    }
+
+    const filterRequest = request.all()
+    let filters = {}
+    var order = 'name'
+
+    if (filterRequest.category) {
+      filters.category_id = filterRequest.category
+    }
+
+    if (filterRequest.type) {
+      filters.type_id = filterRequest.type
+    }
+
+    if (filterRequest.speaker) {
+      filters.speaker_id = filterRequest.speaker
+    }
+
+    if (filterRequest.name) {
+      filters.name = filterRequest.name
+    }
+
+    if (filterRequest.order) {
+      order = filterRequest.order
+    }
+
+    let courses = await Database
+      .from('courses')
+      .where(filters)
+      .orderBy(order, 'asc')
+      .paginate(params.pages, params.limit)
+
+    return courses
+  }
 }
 
 module.exports = CourseController
