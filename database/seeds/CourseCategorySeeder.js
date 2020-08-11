@@ -25,7 +25,7 @@ class CourseCategorySeeder {
       },
       {
         "category": "Curso",
-      },
+      }
     ])
   }
 }
