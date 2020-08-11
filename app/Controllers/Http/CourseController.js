@@ -519,31 +519,30 @@ class CourseController {
     let filters = {}
     var order = 'name'
 
-    if (filterRequest.category) {
-      filters.category_id = filterRequest.category
-    }
-
-    if (filterRequest.type) {
-      filters.type_id = filterRequest.type
-    }
-
-    if (filterRequest.speaker) {
-      filters.speaker_id = filterRequest.speaker
-    }
-
-    if (filterRequest.name) {
-      filters.name = filterRequest.name
-    }
-
     if (filterRequest.order) {
       order = filterRequest.order
     }
 
     let courses = await Database
-      .from('courses')
-      .where(filters)
-      .orderBy(order, 'asc')
-      .paginate(params.pages, params.limit)
+    .from('courses')
+    .orderBy(order, 'asc')
+    .paginate(params.pages, params.limit)
+
+    if (filterRequest.category) {
+      courses = courses.where({category_id: filterRequest.category})
+    }
+
+    if (filterRequest.type) {
+      courses = courses.where({type_id: filterRequest.type})
+    }
+
+    if (filterRequest.speaker) {
+      courses = courses.where({speaker_id: filterRequest.speaker})
+    }
+
+    if (filterRequest.name) {
+      courses = courses.where({name: filterRequest.name})
+    }
 
     return courses
   }
