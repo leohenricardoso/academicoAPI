@@ -517,7 +517,7 @@ class CourseController {
 
     const filterRequest = request.all()
     let filters = {}
-    let order = 'name'
+    var order = 'name'
 
     if (filterRequest.category) {
       filters.category_id = filterRequest.category
@@ -536,7 +536,7 @@ class CourseController {
     }
 
     if (filterRequest.order) {
-      order = filterRequest.name
+      order = filterRequest.order
     }
 
     let courses = await Database
