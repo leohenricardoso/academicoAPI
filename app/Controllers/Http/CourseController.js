@@ -517,6 +517,7 @@ class CourseController {
 
     const filterRequest = request.all()
     let filters = {}
+    let order = 'name'
 
     if (filterRequest.category) {
       filters.category_id = filterRequest.category
@@ -534,9 +535,14 @@ class CourseController {
       filters.name = filterRequest.name
     }
 
+    if (filterRequest.order) {
+      order = filterRequest.name
+    }
+
     let courses = await Database
       .from('courses')
       .where(filters)
+      .orderBy(order, 'asc')
       .paginate(params.pages, params.limit)
 
     return courses
