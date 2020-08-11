@@ -17,7 +17,7 @@ const CourseSpeakerSeeder = use('./CourseSpeakerSeeder')
 const CourseCategorySeeder = use('./CourseCategorySeeder')
 const CourseTypeSeeder = use('./CourseTypeSeeder')
 const CourseSeeder = use('./CourseSeeder')
-const BusinessContact = use('./BusinessContact')
+const BusinessContact = use('./BusinessContactSeeder')
 const NewsletterSeeder = use('./NewsletterSeeder')
 
 class DatabaseSeeder {
