@@ -122,7 +122,7 @@ class BannerController {
     }
 
     let data = {
-      image_path: `img/banner/${image.fileName}`
+      image_path: `${image.fileName}`,
     }
 
     const banner = await Banner.create({
