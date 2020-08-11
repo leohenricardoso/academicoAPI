@@ -15,7 +15,7 @@ const Factory = use('Factory')
 const Database = use('Database')
 
 class NewsletterSeeder {
-  async run () {
+  static async run () {
     await Database.table('newsletters').insert([
       {
         "email": "pedro_diniz_l2@hotmail.com",

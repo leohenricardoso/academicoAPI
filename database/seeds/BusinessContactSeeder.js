@@ -15,7 +15,7 @@ const Factory = use('Factory')
 const Database = use('Database')
 
 class BusinessContactSeeder {
-  async run () {
+  static async run () {
     await Database.table('business_contacts').insert([
       {
         "name": "Pedro Diniz Ramos",
