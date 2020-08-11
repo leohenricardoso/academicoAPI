@@ -18,6 +18,7 @@ const CourseCategorySeeder = use('./CourseCategorySeeder')
 const CourseTypeSeeder = use('./CourseTypeSeeder')
 const CourseSeeder = use('./CourseSeeder')
 const BusinessContact = use('./BusinessContact')
+const NewsletterSeeder = use('./BusinessContact')
 
 class DatabaseSeeder {
   async run () {
@@ -25,8 +26,9 @@ class DatabaseSeeder {
     await CourseSpeakerSeeder.run()
     await CourseCategorySeeder.run()
     await CourseTypeSeeder.run()
-    await CourseSeeder.run()
     await BusinessContact.run()
+    await NewsletterSeeder.run()
+    await CourseSeeder.run()
   }
 }
 
