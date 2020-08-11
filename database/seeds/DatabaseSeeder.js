@@ -14,7 +14,6 @@
 const Factory = use('Factory')
 const StudentSeeder = use('./StudentSeeder')
 const CourseSpeakerSeeder = use('./CourseSpeakerSeeder')
-const CourseCategorySeeder = use('./CourseCategorySeeder')
 const CourseTypeSeeder = use('./CourseTypeSeeder')
 const CourseSeeder = use('./CourseSeeder')
 const BusinessContact = use('./BusinessContactSeeder')
@@ -24,7 +23,6 @@ class DatabaseSeeder {
   async run () {
     await StudentSeeder.run()
     await CourseSpeakerSeeder.run()
-    await CourseCategorySeeder.run()
     await CourseTypeSeeder.run()
     await BusinessContact.run()
     await NewsletterSeeder.run()
