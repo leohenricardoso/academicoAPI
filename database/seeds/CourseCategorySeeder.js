@@ -18,13 +18,13 @@ class CourseCategorySeeder {
   async run () {
     await Database.table('course_categories').insert([
       {
-        "category": "Palestras",
+        "category": "Palestras"
       },
       {
-        "category": "Grupo de estudo",
+        "category": "Grupo de estudo"
       },
       {
-        "category": "Curso",
+        "category": "Curso"
       }
     ])
   }
