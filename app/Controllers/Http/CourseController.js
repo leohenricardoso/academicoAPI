@@ -553,7 +553,7 @@ class CourseController {
 
     let courses = await Database
       .from('courses')
-      .where(whereFilter)
+      .where(filterRequest)
       .orderBy(order, 'asc')
       .paginate(params.pages, params.limit)
 
