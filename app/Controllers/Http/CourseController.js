@@ -511,12 +511,17 @@ class CourseController {
    * @param {Auth} ctx.request
    * @param {Response} ctx.response
    */
-  async getCoursesFilter({ params, request, response, auth }) {
+  async getCoursesFilter({
+    request,
+    params,
+    response,
+    auth
+  }) {
     if (!auth.user.id) {
       return response.status(401)
     }
 
-    const filterRequest = request.post()
+    let filterRequest = request.post()
     var filters = new Object()
     var order = 'name'
 
@@ -544,6 +549,7 @@ class CourseController {
     Logger.info(filters)
     Logger.info('filterRequest')
     Logger.info(filterRequest)
+    Logger.info(filterRequest.category_id)
 
     let courses = await Database
       .from('courses')
