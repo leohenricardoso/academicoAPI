@@ -522,7 +522,7 @@ class CourseController {
     }
 
     const filterRequest = request.post()
-    var filters = []
+    var filters = null
     var order = 'name'
 
     if (filterRequest.category != undefined && filterRequest.category != null) {
@@ -547,6 +547,8 @@ class CourseController {
 
     let whereFilter = Object.assign({}, filters)
     Logger.info('filters')
+    Logger.info(filters)
+    Logger.info('whereFilter')
     Logger.info(whereFilter)
 
     let courses = await Database
