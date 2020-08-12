@@ -545,7 +545,7 @@ class CourseController {
 
     let courses = await Database
       .from('courses')
-      .where(filters)
+      .where({category_id: filters.category_id, name: filters.name})
       .orderBy(order, 'asc')
       .paginate(params.pages, params.limit)
       .debug(true)
