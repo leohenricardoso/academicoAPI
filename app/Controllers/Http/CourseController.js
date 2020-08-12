@@ -523,25 +523,32 @@ class CourseController {
       order = filterRequest.order
     }
 
-    let courses = Database.table('courses')
+    let sql = `select * from courses`
 
     if (filterRequest.category) {
-      courses = courses.where({category_id: filterRequest.category})
+      sql += ` where category_id = ${filterRequest.category}`
     }
 
-    if (filterRequest.type) {
-      courses = courses.where({type_id: filterRequest.type})
+    if (!filterRequest.category && filterRequest.type) {
+      sql += ` where type_id = ${filterRequest.type}`
+    } else {
+      sql += ` and where type_id = ${filterRequest.type}`
     }
 
-    if (filterRequest.speaker) {
-      courses = courses.where({speaker_id: filterRequest.speaker})
+    if (!filterRequest.category && !filterRequest.type && filterRequest.speaker) {
+      sql += ` where speaker_id = ${filterRequest.speaker}`
+    } else {
+      sql += ` and where speaker_id = ${filterRequest.speaker}`
     }
 
-    if (filterRequest.name) {
-      courses = courses.where({name: filterRequest.name})
+    if (!filterRequest.category && !filterRequest.type && !filterRequest.speaker && filterRequest.name) {
+      sql += ` where name = ${filterRequest.name}`
+    } else {
+      sql += ` and where name = ${filterRequest.name}`
     }
 
-    courses = courses.orderBy(order, 'asc').paginate(params.pages, params.limit)
+    let courses = await Database.raw(sql).orderBy(order, 'asc').paginate(params.pages, params.limit)
+
     return courses
   }
 }
