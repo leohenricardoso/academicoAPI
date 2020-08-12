@@ -521,39 +521,37 @@ class CourseController {
       return response.status(401)
     }
 
-    let filterRequest = request.post()
-    var filters = new Object()
+    const filterRequest = request.post()
+    var filters = []
     var order = 'name'
 
     if (filterRequest.category != undefined && filterRequest.category != null) {
-      filters.category_id = filterRequest.category
+      filters['category_id'] = filterRequest.category
     }
 
     if (filterRequest.type != undefined && filterRequest.type != null) {
-      filters.type_id = filterRequest.type
+      filters['type_id'] = filterRequest.type
     }
 
     if (filterRequest.speaker != undefined && filterRequest.speaker != null) {
-      filters.speaker_id = filterRequest.speaker
+      filters['speaker_id'] = filterRequest.speaker
     }
 
     if (filterRequest.name != undefined && filterRequest.name != null) {
-      filters.name = filterRequest.name
+      filters['name'] = filterRequest.name
     }
 
     if (filterRequest.order) {
       order = filterRequest.order
     }
 
+    let whereFilter = Object.assign({}, filters)
     Logger.info('filters')
-    Logger.info(filters.category_id)
-    Logger.info('filterRequest')
-    Logger.info(filterRequest)
-    Logger.info(filterRequest.category_id)
+    Logger.info(whereFilter)
 
     let courses = await Database
       .from('courses')
-      .where({category_id: filterRequest.category, name: filterRequest.name})
+      .where(whereFilter)
       .orderBy(order, 'asc')
       .paginate(params.pages, params.limit)
 
