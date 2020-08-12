@@ -511,7 +511,7 @@ class CourseController {
    * @param {Auth} ctx.request
    * @param {Response} ctx.response
    */
-  async getCoursesFilter({ params, auth, response, request }) {
+  async getCoursesFilter({ params, request, response, auth }) {
     if (!auth.user.id) {
       return response.status(401)
     }
@@ -548,7 +548,6 @@ class CourseController {
       .where({category_id: filters.category_id, name: filters.name})
       .orderBy(order, 'asc')
       .paginate(params.pages, params.limit)
-      .debug(true)
 
     return courses
   }
