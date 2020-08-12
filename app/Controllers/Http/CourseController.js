@@ -541,12 +541,14 @@ class CourseController {
     }
 
     Logger.info(filters)
+    Logger.info(filterRequest)
 
     let courses = await Database
       .from('courses')
       .where(filters)
       .orderBy(order, 'asc')
       .paginate(params.pages, params.limit)
+      .debug(true)
 
     return courses
   }
