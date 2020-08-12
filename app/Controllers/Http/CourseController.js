@@ -522,38 +522,34 @@ class CourseController {
     }
 
     const filterRequest = request.post()
-    var filters = []
+    var filters = {}
     var order = 'name'
 
-    if (filterRequest.category != undefined && filterRequest.category != null) {
-      filters['category_id'] = filterRequest.category
+    if (filterRequest.category_id != undefined && filterRequest.category_id != null) {
+      filters.category_id = filterRequest.category_id
     }
 
-    if (filterRequest.type != undefined && filterRequest.type != null) {
-      filters['type_id'] = filterRequest.type
+    if (filterRequest.type_id != undefined && filterRequest.type_id != null) {
+      filters.type_id = filterRequest.type_id
     }
 
-    if (filterRequest.speaker != undefined && filterRequest.speaker != null) {
-      filters['speaker_id'] = filterRequest.speaker
+    if (filterRequest.speaker_id != undefined && filterRequest.speaker_id != null) {
+      filters.speaker_id = filterRequest.speaker_id
     }
 
     if (filterRequest.name != undefined && filterRequest.name != null) {
-      filters['name'] = filterRequest.name
+      filters.name = filterRequest.name
     }
 
     if (filterRequest.order) {
       order = filterRequest.order
     }
 
-    let whereFilter = Object.assign({}, filters)
-    Logger.info('filters')
-    Logger.info(filters)
-    Logger.info('whereFilter')
-    Logger.info(whereFilter.level)
+    Logger.info(filterRequest)
 
     let courses = await Database
       .from('courses')
-      .where(filterRequest)
+      .where(filters)
       .orderBy(order, 'asc')
       .paginate(params.pages, params.limit)
 
