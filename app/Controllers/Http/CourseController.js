@@ -517,7 +517,7 @@ class CourseController {
     }
 
     const filterRequest = request.all()
-    let filters = {}
+    var filters
     var order = 'name'
 
     if (filterRequest.category != undefined && filterRequest.category != null) {
