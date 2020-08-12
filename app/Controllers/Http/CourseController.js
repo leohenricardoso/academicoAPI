@@ -526,22 +526,22 @@ class CourseController {
     let courses = Database.table('courses')
 
     if (filterRequest.category) {
-      courses.where({category_id: filterRequest.category})
+      courses = courses.where({category_id: filterRequest.category})
     }
 
     if (filterRequest.type) {
-      courses.where({type_id: filterRequest.type})
+      courses = courses.where({type_id: filterRequest.type})
     }
 
     if (filterRequest.speaker) {
-      courses.where({speaker_id: filterRequest.speaker})
+      courses = courses.where({speaker_id: filterRequest.speaker})
     }
 
     if (filterRequest.name) {
-      courses.where({name: filterRequest.name})
+      courses = courses.where({name: filterRequest.name})
     }
 
-    courses.orderBy(order, 'asc').paginate(params.pages, params.limit)
+    courses = courses.orderBy(order, 'asc').paginate(params.pages, params.limit)
     return courses
   }
 }
