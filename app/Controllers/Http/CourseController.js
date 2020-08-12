@@ -525,8 +525,6 @@ class CourseController {
 
     let courses = await Database
     .from('courses')
-    .orderBy(order, 'asc')
-    .paginate(params.pages, params.limit)
 
     if (filterRequest.category) {
       courses = courses.where({category_id: filterRequest.category})
@@ -544,6 +542,7 @@ class CourseController {
       courses = courses.where({name: filterRequest.name})
     }
 
+    courses = courses.orderBy(order, 'asc').paginate(params.pages, params.limit)
     return courses
   }
 }
