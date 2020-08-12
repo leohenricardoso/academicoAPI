@@ -10,6 +10,7 @@ const Type = use('App/Models/CourseType')
 const Speaker = use('App/Models/CourseSpeaker')
 const Database = use('Database')
 const Helpers = use('Helpers')
+const Logger = use('Logger')
 
 /**
  * Resourceful controller for interacting with courses
@@ -519,25 +520,27 @@ class CourseController {
     let filters = {}
     var order = 'name'
 
-    if (filterRequest.category) {
+    if (filterRequest.category != undefined && filterRequest.category != null) {
       filters.category_id = filterRequest.category
     }
 
-    if (filterRequest.type) {
+    if (filterRequest.type != undefined && filterRequest.type != null) {
       filters.type_id = filterRequest.type
     }
 
-    if (filterRequest.speaker) {
+    if (filterRequest.speaker != undefined && filterRequest.speaker != null) {
       filters.speaker_id = filterRequest.speaker
     }
 
-    if (filterRequest.name) {
+    if (filterRequest.name != undefined && filterRequest.name != null) {
       filters.name = filterRequest.name
     }
 
     if (filterRequest.order) {
       order = filterRequest.order
     }
+
+    Logger.info(filters)
 
     let courses = await Database
       .from('courses')
