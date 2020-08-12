@@ -524,6 +524,7 @@ class CourseController {
     const filterRequest = request.post()
     var filters = {}
     var order = 'name'
+    var courseName
 
     if (filterRequest.category_id != undefined && filterRequest.category_id != null) {
       filters.category_id = filterRequest.category_id
@@ -538,7 +539,7 @@ class CourseController {
     }
 
     if (filterRequest.name != undefined && filterRequest.name != null) {
-      filters.name = filterRequest.name
+      courseName = filterRequest.name
     }
 
     if (filterRequest.order) {
@@ -546,12 +547,22 @@ class CourseController {
     }
 
     Logger.info(filterRequest)
+    let courses = {}
 
-    let courses = await Database
+    if (courseName) {
+      courses = await Database
+      .from('courses')
+      .where(filters)
+      .where(Database.raw("UPPER(name)"), 'LIKE', '%' + courseName + '%')
+      .orderBy(order, 'asc')
+      .paginate(params.pages, params.limit)
+    } else {
+      courses = await Database
       .from('courses')
       .where(filters)
       .orderBy(order, 'asc')
       .paginate(params.pages, params.limit)
+    }
 
     return courses
   }
