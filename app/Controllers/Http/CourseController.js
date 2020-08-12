@@ -519,35 +519,31 @@ class CourseController {
     let filters = {}
     var order = 'name'
 
+    if (filterRequest.category) {
+      filters.category_id = filterRequest.category
+    }
+
+    if (filterRequest.type) {
+      filters.type_id = filterRequest.type
+    }
+
+    if (filterRequest.speaker) {
+      filters.speaker_id = filterRequest.speaker
+    }
+
+    if (filterRequest.name) {
+      filters.name = filterRequest.name
+    }
+
     if (filterRequest.order) {
       order = filterRequest.order
     }
 
-    let sql = `select * from courses`
-
-    if (filterRequest.category) {
-      sql += ` where category_id = ${filterRequest.category}`
-    }
-
-    if (!filterRequest.category && filterRequest.type) {
-      sql += ` where type_id = ${filterRequest.type}`
-    } else {
-      sql += ` and where type_id = ${filterRequest.type}`
-    }
-
-    if (!filterRequest.category && !filterRequest.type && filterRequest.speaker) {
-      sql += ` where speaker_id = ${filterRequest.speaker}`
-    } else {
-      sql += ` and where speaker_id = ${filterRequest.speaker}`
-    }
-
-    if (!filterRequest.category && !filterRequest.type && !filterRequest.speaker && filterRequest.name) {
-      sql += ` where name = ${filterRequest.name}`
-    } else {
-      sql += ` and where name = ${filterRequest.name}`
-    }
-
-    let courses = await Database.raw(sql).orderBy(order, 'asc').paginate(params.pages, params.limit)
+    let courses = await Database
+      .from('courses')
+      .where(filters)
+      .orderBy(order, 'asc')
+      .paginate(params.pages, params.limit)
 
     return courses
   }
