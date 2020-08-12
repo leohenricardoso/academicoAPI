@@ -522,7 +522,7 @@ class CourseController {
     }
 
     const filterRequest = request.post()
-    var filters = null
+    var filters = []
     var order = 'name'
 
     if (filterRequest.category != undefined && filterRequest.category != null) {
