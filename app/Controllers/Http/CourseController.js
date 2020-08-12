@@ -516,8 +516,8 @@ class CourseController {
       return response.status(401)
     }
 
-    const filterRequest = request.all()
-    var filters
+    const filterRequest = request.post()
+    var filters = {}
     var order = 'name'
 
     if (filterRequest.category != undefined && filterRequest.category != null) {
