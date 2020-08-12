@@ -546,7 +546,6 @@ class CourseController {
       order = filterRequest.order
     }
 
-    Logger.info(filterRequest)
     let courses = {}
 
     if (courseName) {
