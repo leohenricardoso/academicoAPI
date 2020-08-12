@@ -549,7 +549,7 @@ class CourseController {
     Logger.info('filters')
     Logger.info(filters)
     Logger.info('whereFilter')
-    Logger.info(whereFilter)
+    Logger.info(whereFilter.level)
 
     let courses = await Database
       .from('courses')
