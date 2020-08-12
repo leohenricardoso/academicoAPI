@@ -546,7 +546,7 @@ class CourseController {
     }
 
     Logger.info('filters')
-    Logger.info(filters)
+    Logger.info(filters.category_id)
     Logger.info('filterRequest')
     Logger.info(filterRequest)
     Logger.info(filterRequest.category_id)
