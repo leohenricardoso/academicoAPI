@@ -517,7 +517,7 @@ class CourseController {
     }
 
     const filterRequest = request.post()
-    var filters = {}
+    var filters = new Object()
     var order = 'name'
 
     if (filterRequest.category != undefined && filterRequest.category != null) {
@@ -540,12 +540,14 @@ class CourseController {
       order = filterRequest.order
     }
 
+    Logger.info('filters')
     Logger.info(filters)
+    Logger.info('filterRequest')
     Logger.info(filterRequest)
 
     let courses = await Database
       .from('courses')
-      .where({category_id: filters.category_id, name: filters.name})
+      .where({category_id: filterRequest.category, name: filterRequest.name})
       .orderBy(order, 'asc')
       .paginate(params.pages, params.limit)
 
