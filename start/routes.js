@@ -63,7 +63,10 @@ Route.group(() => {
 }).middleware('auth')
 Route.get('/api/name-asc/:pages/:limit', 'CourseController.getNameAsc').middleware(['auth'])
 Route.post('/api/courses-image/:id', 'CourseController.saveImage').middleware(['auth'])
+Route.get('/api/courses-image/:path', 'CourseController.downloadImage')
 Route.post('/api/filterCourse/:pages/:limit', 'CourseController.getCoursesFilter').middleware(['auth'])
+Route.get('/api/course/highlight/:pages/:limit', 'CourseController.getHighlight').middleware(['auth'])
+Route.get('/api/course/recorded/:pages/:limit', 'CourseController.getRecorded').middleware(['auth'])
 
 
 Route.group(() => {

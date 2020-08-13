@@ -137,16 +137,16 @@ class CourseController {
       size: '2mb'
     })
 
-    await image.move(Helpers.tmpPath('img/course'),{
+    await image.move(Helpers.publicPath('img/course'),{
       name: `${Date.now()}-${image.clientName}`
     })
 
     if (!image.moved()) {
-      return image.errors()
+       return image.errors()
     }
 
     let data = {
-      image_path: `ìmg/course/${image.fileName}`
+      image_path: `${image.fileName}`
     }
 
     course.merge(data)
@@ -258,6 +258,54 @@ class CourseController {
     }
 
     return courses
+  }
+
+  /**
+   * Get courses with highlight.
+   *
+   *
+   * @param {object} ctx
+   * @param {Auth} ctx.request
+   * @param {Response} ctx.response
+   */
+  async getHighlight({ auth, response, params }) {
+    if (!auth.user.id) {
+      return response.status(401)
+    }
+    let courses = await Database
+    .from('courses')
+    .where({
+      highlight: 1
+    })
+    .paginate(params.pages, params.limit)
+
+    return await courses
+  }
+
+  /**
+   * Get courses with recorded.
+   *
+   *
+   * @param {object} ctx
+   * @param {Auth} ctx.request
+   * @param {Response} ctx.response
+   */
+  async getRecorded({ auth, response, params }) {
+    if (!auth.user.id) {
+      return response.status(401)
+    }
+    let courses = await Database
+    .from('courses')
+    .where({
+      recorded: 1
+    })
+    .paginate(params.pages, params.limit)
+
+    return await courses
+  }
+
+  async downloadImage ({ params, response }) {
+    return response.download(Helpers.publicPath(`img/course/${params.path}`))
   }
 }
 
