@@ -555,14 +555,12 @@ class CourseController {
       .from('courses')
       .where(filters)
       .where(Database.raw("UPPER(name)"), 'LIKE', '%' + courseName + '%')
-      .where(Database.whereNotNull('initial_date'), '>=', 'now()')
       .orderBy(order, orderDirection)
       .paginate(params.pages, params.limit)
     } else {
       courses = await Database
       .from('courses')
       .where(filters)
-      .where(Database.whereNotNull('initial_date'), '>=', 'now()')
       .orderBy(order, orderDirection)
       .paginate(params.pages, params.limit)
     }
