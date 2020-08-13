@@ -15,7 +15,7 @@ module.exports = {
   | define a driver too.
   |
   */
-  connection: Env.get('MAIL_CONNECTION', 'mailgun'),
+  connection: Env.get('MAIL_CONNECTION', 'smtp'),
 
 
   /*
@@ -53,7 +53,7 @@ module.exports = {
   smtp: {
     driver: 'smtp',
     pool: true,
-    port: Env.get('SMTP_PORT', 2525),
+    port: Env.get('SMTP_PORT'),
     host: Env.get('SMTP_HOST'),
     secure: true,
     auth: {
