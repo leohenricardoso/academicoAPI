@@ -49,6 +49,8 @@ Route.group(() => {
 Route.group(() => {
   Route.resource('api/speaker', 'CourseSpeakerController').apiOnly()
 }).middleware('auth')
+Route.get('/api/get-speakers/:pages/:limit', 'CourseSpeakerController.getSpeakers').middleware(['auth'])
+Route.post('/api/get-speaker-name/:pages/:limit', 'CourseSpeakerController.getSpeakersByName').middleware(['auth'])
 
 Route.group(() => {
   Route.resource('api/contact', 'ContactController').apiOnly()

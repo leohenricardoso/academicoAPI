@@ -123,6 +123,60 @@ class CourseSpeakerController {
     const speaker = await Speaker.findOrFail(params.id)
     await speaker.delete()
   }
+
+  /**
+   * Show a list of all coursespeakers.
+   * GET coursespeakers
+   *
+   * @param {object} ctx
+   * @param {Response} ctx.response
+   * @param {Auth} ctx.auth
+   */
+  async getSpeakers({
+    params,
+    response,
+    auth
+  }) {
+    if (!auth.user.id) {
+      return response.status(401)
+    }
+
+    const speakers = await Database
+      .from('course_speakers')
+      .orderBy('name', 'asc')
+      .paginate(params.pages, params.limit)
+
+    return speakers
+  }
+
+    /**
+   * Show a list of all coursespeakers.
+   * POST coursespeakers
+   *
+   * @param {object} ctx
+   * @param {Response} ctx.response
+   * @param {Auth} ctx.auth
+   */
+  async getSpeakersByName({
+    params,
+    request,
+    response,
+    auth
+  }) {
+    if (!auth.user.id) {
+      return response.status(401)
+    }
+
+    const req = request.only(['name'])
+
+    const speakers = await Database
+      .from('course_speakers')
+      .where(Database.raw("UPPER(name)"), 'LIKE', '%' + req.name + '%')
+      .orderBy('name', 'asc')
+      .paginate(params.pages, params.limit)
+
+    return speakers
+  }
 }
 
 module.exports = CourseSpeakerController
