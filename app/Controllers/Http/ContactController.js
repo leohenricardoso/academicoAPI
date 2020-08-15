@@ -52,6 +52,27 @@ class ContactController {
     })
   }
 
+    /**
+   * Show a list of all contacts.
+   * GET contacts
+   *
+   * @param {object} ctx
+   * @param {Response} ctx.response
+   * @param {Auth} ctx.auth
+   */
+  async getContacts ({ params, response, auth }) {
+
+    if (!auth.user.id) {
+      return response.status(401)
+    }
+    let contacts = await Database
+    .from('contacts')
+    .orderBy('created_at', 'asc')
+    .paginate(params.pages, params.limit)
+
+    return await contacts
+  }
+
   /**
    * Display a single contact.
    * GET contacts/:id

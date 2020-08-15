@@ -55,6 +55,7 @@ Route.post('/api/get-speaker-name/:pages/:limit', 'CourseSpeakerController.getSp
 Route.group(() => {
   Route.resource('api/contact', 'ContactController').apiOnly()
 }).middleware('auth')
+Route.get('/api/get-contacts/:pages/:limit', 'ContactController.getContacts').middleware(['auth'])
 
 Route.group(() => {
   Route.resource('api/paymentmercadopago', 'MercadoPagoController').apiOnly()
