@@ -5,6 +5,7 @@ const Logger = use('Logger')
 const QRCode = use('qrcode')
 const Helpers = use('Helpers')
 const Drive = use('Drive')
+const Env = use('Env')
 
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 const Course = use('App/Models/Course')
@@ -25,7 +26,7 @@ class SendEmailController {
       }, (message) => {
         message
           .to(data.email)
-          .from(data.from)
+          .from(Env.get('EMAIL_SMTP'))
           .subject(data.subject)
       })
     } catch (error) {
@@ -56,7 +57,7 @@ class SendEmailController {
       }, (message) => {
         message
           .to(data.email)
-          .from(data.from)
+          .from(Env.get('EMAIL_SMTP'))
           .subject('Acadêmico Cursos - ' + course.name)
       })
 
@@ -98,7 +99,7 @@ class SendEmailController {
       }, (message) => {
         message
           .to(student.email)
-          .from(data.from)
+          .from(Env.get('EMAIL_SMTP'))
           .subject('Acadêmico Cursos - ' + course.name)
           //.attach(Helpers.tmpPath(`qrcode/${fileName}`))
       })
