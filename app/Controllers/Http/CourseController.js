@@ -62,7 +62,7 @@ class CourseController {
       ...data
     })
 
-    return data
+    return course
   }
 
   /**
