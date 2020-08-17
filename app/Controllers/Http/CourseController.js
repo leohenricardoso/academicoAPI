@@ -61,6 +61,8 @@ class CourseController {
     const course = await Course.create({
       ...data
     })
+
+    return data
   }
 
   /**
