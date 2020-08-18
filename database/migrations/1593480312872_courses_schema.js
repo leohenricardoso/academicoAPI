@@ -16,6 +16,7 @@ class CoursesSchema extends Schema {
       table.string('name', 150).notNullable().unique()
       table.string('description', 300).notNullable()
       table.string('image_path', 600)
+      table.string('invite_link', 600)
       table.string('info', 2000).notNullable()
       table.decimal('base_amount', 10, 2)
       table.decimal('discount_amount', 10, 2)
