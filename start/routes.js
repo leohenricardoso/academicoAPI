@@ -41,6 +41,8 @@ Route.put('/api/speaker/:id', 'CourseSpeakerController.update').middleware('auth
 Route.delete('/api/speaker/:id', 'CourseSpeakerController.destroy').middleware('auth:admin')   // Admin
 Route.get('/api/get-speakers/:pages/:limit', 'CourseSpeakerController.getSpeakers') // Free
 Route.post('/api/get-speaker-name/:pages/:limit', 'CourseSpeakerController.getSpeakersByName') // Free
+Route.post('/api/speaker-image/:id', 'CourseSpeakerController.saveImage').middleware('auth:admin')   // Admin
+Route.get('/api/speaker-image/:path', 'CourseSpeakerController.downloadImage')    // Free
 
 /** Contact */
 Route.get('/api/contact', 'ContactController.index').middleware('auth:admin')   // Admin
