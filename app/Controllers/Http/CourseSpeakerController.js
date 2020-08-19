@@ -50,6 +50,8 @@ class CourseSpeakerController {
     const speaker = await Speaker.create({
       ...data
     })
+
+    return data
   }
 
   /**
