@@ -51,7 +51,7 @@ class CourseSpeakerController {
       ...data
     })
 
-    return data
+    return speaker
   }
 
   /**
