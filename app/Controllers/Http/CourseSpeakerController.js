@@ -6,6 +6,7 @@
 
 const Speaker = use('App/Models/CourseSpeaker')
 const Database = use('Database')
+const Helpers = use('Helpers')
 
 /**
  * Resourceful controller for interacting with coursespeakers
