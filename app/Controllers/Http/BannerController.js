@@ -21,9 +21,6 @@ class BannerController {
    * @param {Response} ctx.response
    */
   async index ({ response, auth }) {
-    if(!auth.user.id) {
-      return response.status(401)
-    }
     return await Banner.all()
   }
 
@@ -57,9 +54,6 @@ class BannerController {
    * @param {View} ctx.view
    */
   async show ({ params, response, auth }) {
-    if (!auth.user.id) {
-      return response.status(401)
-    }
     let banner = await Banner.findOrFail(params.id)
 
     return banner

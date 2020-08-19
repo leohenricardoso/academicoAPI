@@ -20,9 +20,6 @@ class MercadoPagoController {
     response,
     auth
   }) {
-    if (!auth.user.id) {
-      return response.status(401)
-    }
     const req = request.all()
     Logger.info(req.data)
 
@@ -160,10 +157,6 @@ class MercadoPagoController {
     }
     const paymentmercadopago = await MercadoPagoModel.findOrFail(params.id)
     await paymentmercadopago.delete()
-  }
-
-  teste() {
-    Logger.info('Teste')
   }
 }
 

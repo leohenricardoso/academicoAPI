@@ -16,8 +16,13 @@ const Student = use('App/Models/Student')
 class SendEmailController {
 
   async sendContactEmail({
-    request
+    request,
+    response,
+    auth
   }) {
+    if (!auth.user.id) {
+      return response.status(401)
+    }
     try {
       const data = request.post()
 
@@ -70,8 +75,13 @@ class SendEmailController {
 
   async sendInviteToPresentialCourse({
     params,
-    request
+    request,
+    response,
+    auth
   }) {
+    if (!auth.user.id) {
+      return response.status(401)
+    }
     try {
       const student = await Student.findOrFail(params.studentId)
       const course = await Course.findOrFail(params.courseId)
@@ -101,7 +111,7 @@ class SendEmailController {
           .to(student.email)
           .from(Env.get('EMAIL_SMTP'))
           .subject('Acadêmico Cursos - ' + course.name)
-          //.attach(Helpers.tmpPath(`qrcode/${fileName}`))
+        //.attach(Helpers.tmpPath(`qrcode/${fileName}`))
       })
 
       //await Drive.delete(`qrcode/${fileName}`)

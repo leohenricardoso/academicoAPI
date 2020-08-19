@@ -17,12 +17,16 @@ class StudentController {
    * @param {Response} ctx.response
    * @param {Auth} ctx.auth
    */
-  async index ({ request, response, auth }) {
-    if(!auth.user.id) {
+  async index({
+    request,
+    response,
+    auth
+  }) {
+    if (!auth.user.id) {
       return response.status(401)
     }
 
-      return await Student.all()
+    return await Student.all()
   }
 
   /**
@@ -34,8 +38,12 @@ class StudentController {
    * @param {Response} ctx.response
    * @param {Auth} ctx.auth
    */
-  async store ({ request, response, auth }) {
-    if(!auth.user.id) {
+  async store({
+    request,
+    response,
+    auth
+  }) {
+    if (!auth.user.id) {
       return response.status(401)
     }
 
@@ -55,7 +63,11 @@ class StudentController {
    * @param {Response} ctx.response
    * @param {Auth} ctx.auth
    */
-  async show ({ params, response, auth }) {
+  async show({
+    params,
+    response,
+    auth
+  }) {
     if (!auth.user.id) {
       return response.status(401)
     }
@@ -74,7 +86,12 @@ class StudentController {
    * @param {Response} ctx.response
    * @param {Auth} ctx.auth
    */
-  async update ({ params, request, response, auth }) {
+  async update({
+    params,
+    request,
+    response,
+    auth
+  }) {
     if (!auth.user.id) {
       return response.status(401)
     }
@@ -95,7 +112,11 @@ class StudentController {
    * @param {Response} ctx.response
    * @param {Auth} ctx.auth
    */
-  async destroy ({ params, response, auth }) {
+  async destroy({
+    params,
+    response,
+    auth
+  }) {
     if (!auth.user.id) {
       return response.status(401)
     }

@@ -23,10 +23,6 @@ class CourseSpeakerController {
     response,
     auth
   }) {
-    if (!auth.user.id) {
-      return response.status(401)
-    }
-
     return await Speaker.all()
   }
 
@@ -69,10 +65,6 @@ class CourseSpeakerController {
     response,
     auth
   }) {
-    if (!auth.user.id) {
-      return response.status(401)
-    }
-
     return await Speaker.findOrFail(params.id)
   }
 
@@ -137,10 +129,6 @@ class CourseSpeakerController {
     response,
     auth
   }) {
-    if (!auth.user.id) {
-      return response.status(401)
-    }
-
     const speakers = await Database
       .from('course_speakers')
       .orderBy('name', 'asc')
@@ -163,10 +151,6 @@ class CourseSpeakerController {
     response,
     auth
   }) {
-    if (!auth.user.id) {
-      return response.status(401)
-    }
-
     const req = request.only(['name'])
 
     const speakers = await Database

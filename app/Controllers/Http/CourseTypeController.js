@@ -17,13 +17,12 @@ class CourseTypeController {
    * @param {Response} ctx.response
    * @param {Auth} ctx.auth
    */
-  async index ({ response, auth }) {
-    if(!auth.user.id) {
-      return response.status(401)
-    }
-
-      return await CourseType.all()
-    }
+  async index({
+    response,
+    auth
+  }) {
+    return await CourseType.all()
+  }
 
 
   /**
@@ -35,8 +34,12 @@ class CourseTypeController {
    * @param {Response} ctx.response
    * @param {Auth} ctx.auth
    */
-  async store ({ request, response, auth }) {
-    if(!auth.user.id) {
+  async store({
+    request,
+    response,
+    auth
+  }) {
+    if (!auth.user.id) {
       return response.status(401)
     }
 
@@ -56,11 +59,11 @@ class CourseTypeController {
    * @param {Response} ctx.response
    * @param {Auth} ctx.auth
    */
-  async show ({ params, response, auth }) {
-    if (!auth.user.id) {
-      return response.status(401)
-    }
-
+  async show({
+    params,
+    response,
+    auth
+  }) {
     return await CourseType.findOrFail(params.id)
   }
 
@@ -74,7 +77,12 @@ class CourseTypeController {
    * @param {Response} ctx.response
    * @param {Auth} ctx.auth
    */
-  async update ({ params, request, response, auth }) {
+  async update({
+    params,
+    request,
+    response,
+    auth
+  }) {
     if (!auth.user.id) {
       return response.status(401)
     }
@@ -95,7 +103,11 @@ class CourseTypeController {
    * @param {Response} ctx.response
    * @param {Auth} ctx.auth
    */
-  async destroy ({ params, response, auth }) {
+  async destroy({
+    params,
+    response,
+    auth
+  }) {
     if (!auth.user.id) {
       return response.status(401)
     }

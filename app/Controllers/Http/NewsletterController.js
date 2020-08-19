@@ -36,10 +36,6 @@ class NewsletterController {
    * @param {Auth} ctx.auth
    */
   async store ({ request, response, auth }) {
-    if(!auth.user.id) {
-      return response.status(401)
-    }
-
     const data = request.only([
       'email',
       'active'

@@ -16,85 +16,93 @@
 /** @type {typeof import('@adonisjs/framework/src/Route/Manager')} */
 const Route = use('Route')
 
-Route.post('/api/register', 'AuthApiController.register')
-Route.post('/api/authenticate', 'AuthApiController.authenticate')
-Route.post('/api/admin-user-register', 'AuthUserAdminController.register')
-Route.post('/api/admin-user-authenticate', 'AuthUserAdminController.authenticate')
-
 Route.get('/', () => {
   return { greeting: 'You are in frontend section' }
-}).middleware('auth')
+})
+/** User Admin */
+Route.post('/api/admin-user-register', 'AuthUserAdminController.register')    // Free
+Route.post('/api/admin-user-authenticate', 'AuthUserAdminController.authenticate')    // Free
 
-Route.get('/admin', () => {
-  return { greeting: 'You are in admin section' }
-}).middleware('auth:admin')
+/** Course Category */
+Route.get('/api/course-category', 'CourseCategoryController.index')   // Free
+Route.get('/api/course-category/:id', 'CourseCategoryController.show')    // Free
+Route.post('/api/course-category', 'CourseCategoryController.store').middleware('auth:admin')   // Admin
+Route.put('/api/course-category/:id', 'CourseCategoryController.update').middleware('auth:admin')   // Admin
+Route.delete('/api/course-category/:id', 'CourseCategoryController.destroy').middleware('auth:admin')   // Admin
 
-Route.group(() => {
-  Route.resource('api/admin-user', 'AuthUserAdminController').apiOnly()
-}).middleware('auth')
+/** Newsletter */
+Route.post('/api/newsletter', 'NewsletterController.store')   // Free
 
-Route.group(() => {
-  Route.resource('api/course-category', 'CourseCategoryController').apiOnly()
-}).middleware('auth')
+/** Speaker */
+Route.get('/api/speaker', 'CourseSpeakerController.index')   // Free
+Route.get('/api/speaker/:id', 'CourseSpeakerController.show')   // Free
+Route.post('/api/speaker', 'CourseSpeakerController.store').middleware('auth:admin')   // Admin
+Route.put('/api/speaker/:id', 'CourseSpeakerController.update').middleware('auth:admin')   // Admin
+Route.delete('/api/speaker/:id', 'CourseSpeakerController.destroy').middleware('auth:admin')   // Admin
+Route.get('/api/get-speakers/:pages/:limit', 'CourseSpeakerController.getSpeakers') // Free
+Route.post('/api/get-speaker-name/:pages/:limit', 'CourseSpeakerController.getSpeakersByName') // Free
 
+/** Contact */
+Route.get('/api/contact', 'ContactController.index').middleware('auth:admin')   // Admin
+Route.get('/api/contact/:id', 'ContactController.show').middleware('auth:admin')   // Admin
+Route.post('/api/contact', 'ContactController.store') // Free
+Route.put('/api/contact/:id', 'ContactController.update').middleware('auth:admin')   // Admin
+Route.delete('/api/contact/:id', 'ContactController.destroy').middleware('auth:admin')   // Admin
+Route.get('/api/get-contacts/:pages/:limit', 'ContactController.getContacts').middleware('auth:admin')   // Admin
 
-Route.group(() => {
-  Route.resource('api/newsletter', 'NewsletterController').apiOnly()
-}).middleware('auth')
+/** Course */
+Route.get('/api/course', 'CourseController.index')   // Free
+Route.get('/api/course/:id', 'CourseController.show')    // Free
+Route.post('/api/course', 'CourseController.store').middleware('auth:admin')   // Admin
+Route.put('/api/course/:id', 'CourseController.update').middleware('auth:admin')   // Admin
+Route.delete('/api/course/:id', 'CourseController.destroy').middleware('auth:admin')   // Admin
+Route.get('/api/name-asc/:pages/:limit', 'CourseController.getNameAsc')    // Free
+Route.post('/api/courses-image/:id', 'CourseController.saveImage').middleware('auth:admin')   // Admin
+Route.get('/api/courses-image/:path', 'CourseController.downloadImage')    // Free
+Route.post('/api/filterCourse/:pages/:limit', 'CourseController.getCoursesFilter')    // Free
+Route.get('/api/course/highlight/:pages/:limit', 'CourseController.getHighlight')    // Free
+Route.get('/api/course/recorded/:pages/:limit', 'CourseController.getRecorded')    // Free
 
-Route.group(() => {
-  Route.resource('api/business-contact', 'BusinessContactController').apiOnly()
-}).middleware('auth')
+/** Course Type */
+Route.get('/api/course-type', 'CourseTypeController.index')   // Free
+Route.get('/api/course-type/:id', 'CourseTypeController.show')    // Free
+Route.post('/api/course-type', 'CourseTypeController.store').middleware('auth:admin')   // Admin
+Route.put('/api/course-type/:id', 'CourseTypeController.update').middleware('auth:admin')   // Admin
+Route.delete('/api/course-type/:id', 'CourseTypeController.destroy').middleware('auth:admin')   // Admin
 
-Route.group(() => {
-  Route.resource('api/speaker', 'CourseSpeakerController').apiOnly()
-}).middleware('auth')
-Route.get('/api/get-speakers/:pages/:limit', 'CourseSpeakerController.getSpeakers').middleware(['auth'])
-Route.post('/api/get-speaker-name/:pages/:limit', 'CourseSpeakerController.getSpeakersByName').middleware(['auth'])
+/** Student *//*
+Route.get('/api/student', 'StudentController.index').middleware('auth:admin')   // Admin
+Route.get('/api/student/:id', 'StudentController.show').middleware('auth:admin')   // Admin
+Route.post('/api/student', 'StudentController.store').middleware('auth:admin')   // Admin
+Route.put('/api/student/:id', 'StudentController.update').middleware('auth:admin')   // Admin
+Route.delete('/api/student/:id', 'StudentController.destroy').middleware('auth:admin')   // Admin
+*/
+/** My Courses *//*
+Route.get('/api/my-course', 'MyCourseController.index').middleware('auth:admin')   // Admin
+Route.get('/api/my-course/:id', 'MyCourseController.show').middleware('auth:admin')   // Admin
+Route.post('/api/my-course', 'MyCourseController.store').middleware('auth:admin')   // Admin
+Route.put('/api/my-course/:id', 'MyCourseController.update').middleware('auth:admin')   // Admin
+Route.delete('/api/my-course/:id', 'MyCourseController.destroy').middleware('auth:admin')   // Admin
+*/
 
-Route.group(() => {
-  Route.resource('api/contact', 'ContactController').apiOnly()
-}).middleware('auth')
-Route.get('/api/get-contacts/:pages/:limit', 'ContactController.getContacts').middleware(['auth'])
+/** Banners */
+Route.get('/api/banner', 'BannerController.index')   // Free
+Route.get('/api/banner/:id', 'BannerController.show')    // Free
+Route.post('/api/banner', 'BannerController.store').middleware('auth:admin')   // Admin
+Route.put('/api/banner/:id', 'BannerController.update').middleware('auth:admin')   // Admin
+Route.delete('/api/banner/:id', 'BannerController.destroy').middleware('auth:admin')   // Admin
+Route.post('/api/banner/save-image', 'BannerController.saveImage').middleware('auth:admin')   // Admin
+Route.get('/api/images/:path', 'BannerController.downloadImage')    // Free
 
-Route.group(() => {
-  Route.resource('api/paymentmercadopago', 'MercadoPagoController').apiOnly()
-}).middleware('auth')
+/** Email */
+Route.post('/api/send-contact-email', 'SendEmailController.sendContactEmail').middleware('auth:admin')   // Admin
+Route.post('/api/send-buy-email/:courseId', 'SendEmailController.sendShopEmail')   // Free
+Route.post('/api/send-course-invite-qrcode/:courseId/:studentId', 'SendEmailController.sendInviteToPresentialCourse').middleware('auth:admin')   // Admin
 
-Route.group(() => {
-  Route.resource('api/course', 'CourseController').apiOnly()
-}).middleware('auth')
-Route.get('/api/name-asc/:pages/:limit', 'CourseController.getNameAsc').middleware(['auth'])
-Route.post('/api/courses-image/:id', 'CourseController.saveImage').middleware(['auth'])
-Route.get('/api/courses-image/:path', 'CourseController.downloadImage')
-Route.post('/api/filterCourse/:pages/:limit', 'CourseController.getCoursesFilter').middleware(['auth'])
-Route.get('/api/course/highlight/:pages/:limit', 'CourseController.getHighlight').middleware(['auth'])
-Route.get('/api/course/recorded/:pages/:limit', 'CourseController.getRecorded').middleware(['auth'])
-
-
-Route.group(() => {
-  Route.resource('api/course-type', 'CourseTypeController').apiOnly()
-}).middleware('auth')
-
-Route.group(() => {
-  Route.resource('api/student', 'StudentController').apiOnly()
-}).middleware('auth')
-
-Route.group(() => {
-  Route.resource('api/my-course', 'MyCourseController').apiOnly()
-}).middleware('auth')
-
-Route.group(() => {
-  Route.resource('api/banner', 'BannerController').apiOnly()
-}).middleware('auth')
-
-
-
-Route.post('/api/send-contact-email', 'SendEmailController.sendContactEmail').middleware(['auth'])
-Route.post('/api/send-buy-email/:courseId', 'SendEmailController.sendShopEmail').middleware(['auth'])
-Route.post('/api/send-course-invite-qrcode/:courseId/:studentId', 'SendEmailController.sendInviteToPresentialCourse').middleware(['auth'])
-
-Route.post('/api/mercadopago/cc_create', 'MercadoPagoController.createPayment').middleware(['auth'])
-
-Route.post('/api/banner/save-image', 'BannerController.saveImage').middleware(['auth'])
-Route.get('/api/images/:path', 'BannerController.downloadImage')
+/** Mercado Pago */
+Route.post('/api/mercadopago/cc_create', 'MercadoPagoController.createPayment')   // Free
+Route.get('/api/mercadopago', 'MercadoPagoController.index').middleware('auth:admin')   // Admin
+Route.get('/api/mercadopago/:id', 'MercadoPagoController.show').middleware('auth:admin')   // Admin
+Route.post('/api/mercadopago', 'MercadoPagoController.store').middleware('auth:admin')   // Admin
+Route.put('/api/mercadopago/:id', 'MercadoPagoController.update').middleware('auth:admin')   // Admin
+Route.delete('/api/mercadopago/:id', 'MercadoPagoController.destroy').middleware('auth:admin')   // Admin
