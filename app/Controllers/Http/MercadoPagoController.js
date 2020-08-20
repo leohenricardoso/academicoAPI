@@ -70,7 +70,7 @@ class MercadoPagoController {
       .then(function(res){
       // Este valor substituirá a string "<%= global.id %>" no seu HTML
       Logger.info(res);
-      data.payment_link = res.body.id;
+      response.send(res)
       }).catch(function(error){
         console.log(error);
       });
