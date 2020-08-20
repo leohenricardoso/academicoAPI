@@ -67,9 +67,10 @@ class MercadoPagoController {
 
     var data = {}
     MP.preferences.create(preference)
-      .then(function(response){
+      .then(function(res){
       // Este valor substituirá a string "<%= global.id %>" no seu HTML
-      data.payment_link = response.body.id;
+      Logger.info(res);
+      data.payment_link = res.body.id;
       }).catch(function(error){
         console.log(error);
       });
