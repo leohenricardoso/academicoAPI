@@ -74,10 +74,12 @@ class MercadoPagoController {
       data.result = res.body
       Logger.info(data.result);
       Logger.info(teste);
-      return data
+      return teste
+      Logger.info('NÂO RETORNOU AQUI');
       }).catch(function(error){
+        Logger.info('EROUUUU');
       });
-
+      Logger.info('NÂO VAI SER AGHORA');
       return data
   }
 
