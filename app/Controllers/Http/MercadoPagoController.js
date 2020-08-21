@@ -70,16 +70,11 @@ class MercadoPagoController {
     var data = {}
     await MP.preferences.create(preference)
       .then(function(res){
-      // Este valor substituirá a string "<%= global.id %>" no seu HTML
-      data.result = res.body
-      Logger.info(data.result);
-      Logger.info(teste);
-      return teste
-      Logger.info('NÂO RETORNOU AQUI');
+        data.result = res.body
       }).catch(function(error){
-        Logger.info('EROUUUU');
+        data.result = false
       });
-      Logger.info('NÂO VAI SER AGHORA');
+
       return data
   }
 
