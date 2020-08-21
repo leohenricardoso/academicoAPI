@@ -26,6 +26,11 @@ class MercadoPagoController {
 
     const course = await Course.findOrFail(req.data.course)
 
+    let courseId = course.id
+    courseId = courseId.toString()
+    let courseCategoryLabel = course.category_label
+    courseCategoryLabel = courseCategoryLabel.toString()
+
     const payment_data = {
       transaction_amount: req.data.amount,
       token: req.data.token,
@@ -44,11 +49,11 @@ class MercadoPagoController {
       additional_info: {
         items:[
           {
-            id: course.id,
+            id: courseId,
             title: course.name,
             description: course.description,
             picture_url: `${Env.get('URL_COURSE_IMG')}${course.image_path}`,
-            category_id: course.category_label,
+            category_id: courseCategoryLabel,
             quantity: 1,
             unit_price: req.data.amount
           }
