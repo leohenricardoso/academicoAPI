@@ -108,3 +108,4 @@ Route.get('/api/mercadopago/:id', 'MercadoPagoController.show').middleware('auth
 Route.post('/api/mercadopago', 'MercadoPagoController.store').middleware('auth:admin')   // Admin
 Route.put('/api/mercadopago/:id', 'MercadoPagoController.update').middleware('auth:admin')   // Admin
 Route.delete('/api/mercadopago/:id', 'MercadoPagoController.destroy').middleware('auth:admin')   // Admin
+Route.delete('/api/mercadopago-pro', 'MercadoPagoController.checkoutPro')   // Free

@@ -46,6 +46,33 @@ class MercadoPagoController {
     });
   }
 
+  async checkoutPro({
+    params,
+    response,
+    request
+  }) {
+    MP.configure({
+      access_token: Env.get('ACCESS_KEY_MP')
+    });
+    const req = request.post()
+    let preference = {
+      items: [
+        {
+          title: req.course,
+          unit_price: req.amount,
+          quantity: 1,
+        }
+      ]
+    };
+    MP.preference.create(preference)
+      .then(function(response){
+      // Este valor substituirá a string "<%= global.id %>" no seu HTML
+        global.id = response.body.id;
+      }).catch(function(error){
+        console.log(error);
+      });
+  }
+
   /**
    * Show a list of all mercadopagos.
    * GET mercadopagos
@@ -65,30 +92,6 @@ class MercadoPagoController {
     return await MercadoPagoModel.all()
   }
 
-  /**
-   * Create/save a new paymentmercadopago.
-   * POST mercadopagos
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {Auth} ctx.auth
-   */
-  async store({
-    request,
-    response,
-    auth
-  }) {
-    if (!auth.user.id) {
-      return response.status(401)
-    }
-
-    const data = request.post()
-
-    const paymentmercadopago = await MercadoPagoModel.create({
-      ...data
-    })
-  }
 
   /**
    * Display a single paymentmercadopago.
@@ -136,27 +139,6 @@ class MercadoPagoController {
     paymentmercadopago.merge(data)
     await paymentmercadopago.save()
     return paymentmercadopago
-  }
-
-  /**
-   * Delete a paymentmercadopago with id.
-   * DELETE mercadopagos/:id
-   *
-   * @param {object} ctx
-   * @param {Params} ctx.params
-   * @param {Response} ctx.response
-   * @param {Auth} ctx.auth
-   */
-  async destroy({
-    params,
-    response,
-    auth
-  }) {
-    if (!auth.user.id) {
-      return response.status(401)
-    }
-    const paymentmercadopago = await MercadoPagoModel.findOrFail(params.id)
-    await paymentmercadopago.delete()
   }
 }
 
