@@ -15,7 +15,7 @@ const Env = use('Env')
  */
 class MercadoPagoController {
 
-  async createPayment({
+  /*async createPayment({
     request,
     response,
     auth
@@ -44,7 +44,7 @@ class MercadoPagoController {
     }).catch(function (error) {
       Logger.info(error);
     });
-  }
+  }*/
 
   async checkoutPro({
     params,
@@ -66,16 +66,20 @@ class MercadoPagoController {
     };
 
     var data = {}
-    MP.preferences.create(preference)
+    this.getPayment(preference)
       .then(function(res){
       // Este valor substituirá a string "<%= global.id %>" no seu HTML
       data.result = res
       Logger.info(data.result);
+      return data
       }).catch(function(error){
-        console.log(error);
       });
 
       return data
+  }
+
+  getPayment (preference) {
+    return MP.preferences.create(preference)
   }
 
   /**
