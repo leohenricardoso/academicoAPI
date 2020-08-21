@@ -8,6 +8,7 @@ const MercadoPagoModel = use('App/Models/MercadoPago')
 const Logger = use('Logger')
 const MP = use('mercadopago')
 const Env = use('Env')
+const Course = use('App/Models/Course')
 
 
 /**
@@ -23,17 +24,37 @@ class MercadoPagoController {
     const req = request.all()
     Logger.info(req.data)
 
+    const course = await Course.findOrFail(req.data.course)
+
     const payment_data = {
       transaction_amount: req.data.amount,
       token: req.data.token,
-      description: req.data.course,
+      description: `${req.data.email} - ${course.name}`,
       installments: req.data.installment,
       payment_method_id: req.data.payment_method_id,
       payer: {
-        email: req.data.email
+        name: req.data.name,
+        email: req.data.email,
+        identification: {
+          type: req.data.identification_type,
+          number: req.data.identification_number
+        }
+      },
+      notification_url: Env.get('MERCADOPAGO_URL_NOTIFICATION'),
+      additional_info: {
+        items:[
+          {
+            id: course.id,
+            title: course.name,
+            description: course.description,
+            picture_url: `${Env.get('URL_COURSE_IMG')}${course.image_path}`,
+            category_id: course.category_label,
+            quantity: 1,
+            unit_price: req.data.amount
+          }
+        ]
       }
     }
-
 
     MP.configurations.setAccessToken(Env.get('ACCESS_KEY_MP'))
     MP.payment.save(
