@@ -68,7 +68,7 @@ class MercadoPagoController {
       teste2: 'blabla'
     }
     var data = {}
-    this.getPayment(preference)
+    await MP.preferences.create(preference)
       .then(function(res){
       // Este valor substituirá a string "<%= global.id %>" no seu HTML
       data.result = res.body
@@ -81,10 +81,6 @@ class MercadoPagoController {
       });
       Logger.info('NÂO VAI SER AGHORA');
       return data
-  }
-
-  getPayment (preference) {
-    return MP.preferences.create(preference)
   }
 
   /**
