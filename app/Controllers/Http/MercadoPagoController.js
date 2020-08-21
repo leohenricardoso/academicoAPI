@@ -28,7 +28,7 @@ class MercadoPagoController {
 
     let courseId = course.id
     courseId = courseId.toString()
-    let courseCategoryLabel = course.category_label
+    let courseCategoryLabel = course.category_label ? course.category_label : course.name
     courseCategoryLabel = courseCategoryLabel.toString()
 
     const payment_data = {
