@@ -15,7 +15,7 @@ const Env = use('Env')
  */
 class MercadoPagoController {
 
-  /*async createPayment({
+  async createPayment({
     request,
     response,
     auth
@@ -44,7 +44,7 @@ class MercadoPagoController {
     }).catch(function (error) {
       Logger.info(error);
     });
-  }*/
+  }
 
   async checkoutPro({
     params,
