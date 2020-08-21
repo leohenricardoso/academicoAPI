@@ -64,13 +64,16 @@ class MercadoPagoController {
         }
       ]
     };
-
+    var teste = {
+      teste2: 'blabla'
+    }
     var data = {}
     this.getPayment(preference)
       .then(function(res){
       // Este valor substituirá a string "<%= global.id %>" no seu HTML
-      data.result = res
+      data.result = res.body
       Logger.info(data.result);
+      Logger.info(teste);
       return data
       }).catch(function(error){
       });
