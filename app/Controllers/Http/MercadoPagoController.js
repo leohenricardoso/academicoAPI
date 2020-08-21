@@ -24,7 +24,7 @@ class MercadoPagoController {
     Logger.info(req.data)
 
     const payment_data = {
-      transaction_amount: parseFloat(req.data.amount),
+      transaction_amount: req.data.amount,
       token: req.data.token,
       description: req.data.course,
       installments: req.data.installment,
