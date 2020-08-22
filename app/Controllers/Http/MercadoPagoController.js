@@ -130,8 +130,8 @@ class MercadoPagoController {
     const req = request.all()
     Logger.info('RETORNO DO POSTBACK: --------------------')
     Logger.info(req)
-    Logger.info(req.data.data.id)
-    var payment = MP.get(`/v1/payments/${req.data.data.id}`)
+    Logger.info(req.data.id)
+    var payment = MP.get(`/v1/payments/${req.data.id}`)
     Logger.info(payment)
   }
 
