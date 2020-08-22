@@ -149,11 +149,19 @@ class MercadoPagoController {
     Logger.info('POSTBACK')
     Logger.info(paymentPostback)
 
+    await this.sleep(10000)
+
     const payment = await MercadoPagoModel.findBy('transaction_id', req.data.id)
     Logger.info('ENCONTRADO')
     Logger.info(payment)
 
   }
+
+  function sleep(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+    })
+  }   
 
   /**
    * Show a list of all mercadopagos.
