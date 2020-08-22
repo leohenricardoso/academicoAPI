@@ -52,7 +52,8 @@ class MercadoPagoController {
       },
       notification_url: Env.get('MERCADOPAGO_URL_NOTIFICATION'),
       metadata: {
-        student_email: req.data.email
+        student_email: req.data.email,
+        course_id: course.id
       },
       additional_info: {
         payer: {
@@ -135,7 +136,7 @@ class MercadoPagoController {
         }
       } else {
         // Busca dados do curso pelo id
-        const course = await Course.findOrFail(Number(paymentPostbackData.additional_info.items[0].id))
+        const course = await Course.findOrFail(paymentPostbackData.metadata.course_id)
 
         // Verifica se tem estudante cadastrado com determinado email, se não tiver, cadastra um.
         let student = await Student.findBy('email', paymentPostbackData.metadata.student_email)
