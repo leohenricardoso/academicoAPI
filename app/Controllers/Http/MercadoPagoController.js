@@ -127,7 +127,7 @@ class MercadoPagoController {
     response,
     request
   }) {
-    const req = request.post()
+    const req = request.all()
     Logger.info('RETORNO DO POSTBACK: --------------------')
     Logger.info(req)
     Logger.info(req.data.data.id)
