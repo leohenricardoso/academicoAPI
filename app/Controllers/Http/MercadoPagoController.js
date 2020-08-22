@@ -23,8 +23,8 @@ class MercadoPagoController {
     auth
   }) {
     const req = request.all()
-    Logger.info(req.data)
 
+    // Verifica se tem estudante cadastrado com determinado email, se não tiver, cadastra um.
     let student = await Student.findBy('email', req.data.email)
     if (!student) {
       student = await Student.create({
@@ -34,13 +34,16 @@ class MercadoPagoController {
       })
     }
 
+    // Busca dados do curso pelo id
     const course = await Course.findOrFail(req.data.course)
 
+    // Prepara dados do curso para enviar ao MP
     let courseId = course.id
     courseId = courseId.toString()
     let courseCategoryLabel = course.category_label ? course.category_label : course.name
     courseCategoryLabel = courseCategoryLabel.toString()
 
+    // Cria objeto de pagamento para ser enviado ao MP
     const payment_data = {
       transaction_amount: req.data.amount,
       token: req.data.token,
@@ -73,12 +76,14 @@ class MercadoPagoController {
       }
     }
 
+    // Set access token do MP
     MP.configurations.setAccessToken(Env.get('ACCESS_KEY_MP'))
+
+    // Envia dados ao MP para realizar pagamento
     var paymentReturn = null
     await MP.payment.save(
       payment_data
     ).then(function (res) {
-      Logger.info(res);
       paymentReturn = res.response
     }).catch(function (error) {
       Logger.info(error);
@@ -88,6 +93,7 @@ class MercadoPagoController {
       return null
     }
 
+    // Salva dados de pagamento no banco de dados
     const jsonData = JSON.stringify(paymentReturn)
     const mercadopago_model = await MercadoPagoModel.create({
       course_id: courseId,
@@ -114,6 +120,16 @@ class MercadoPagoController {
     })
 
     return mercadopago_model
+  }
+
+  async postbackMP({
+    params,
+    response,
+    request
+  }) {
+    const data = request.post()
+    Logger.info('RETORNO DO POSTBACK: --------------------')
+    Logger.info(data)
   }
 
   async checkoutPro({
