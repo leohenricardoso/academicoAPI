@@ -38,7 +38,6 @@ class MercadoPagoController {
       installments: req.data.installment,
       payment_method_id: req.data.payment_method_id,
       payer: {
-        name: req.data.name,
         email: req.data.email,
         identification: {
           type: req.data.identification_type,
@@ -47,6 +46,9 @@ class MercadoPagoController {
       },
       notification_url: Env.get('MERCADOPAGO_URL_NOTIFICATION'),
       additional_info: {
+        payer: {
+          first_name: req.data.name
+        },
         items:[
           {
             id: courseId,
