@@ -87,6 +87,8 @@ class MercadoPagoController {
     if (!paymentReturn) {
       return null
     }
+
+    const jsonData = JSON.stringify(paymentReturn)
     const mercadopago_model = await MercadoPagoModel.create({
       course_id: courseId,
       student_id: student.id,
@@ -108,7 +110,7 @@ class MercadoPagoController {
       date_created: paymentReturn.date_created,
       date_approved: paymentReturn.date_approved,
       date_last_updated: paymentReturn.date_last_updated,
-      data: paymentReturn
+      data: jsonData
     })
 
     return mercadopago_model
