@@ -134,7 +134,7 @@ class MercadoPagoController {
 
     // Set access token do MP
     MP.configurations.setAccessToken(Env.get('ACCESS_KEY_MP'))
-    var payment = MP.payment.findById(req.data.id)
+    var payment = MP.payment.get(req.data.id, {}, function() {})
     Logger.info(payment)
   }
 
