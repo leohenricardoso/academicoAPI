@@ -27,16 +27,6 @@ class MercadoPagoController {
   }) {
     const req = request.all()
 
-    // Verifica se tem estudante cadastrado com determinado email, se não tiver, cadastra um.
-    let student = await Student.findBy('email', req.data.email)
-    if (!student) {
-      student = await Student.create({
-        full_name: req.data.name,
-        email: req.data.email,
-        cpf: req.data.identification_number
-      })
-    }
-
     // Busca dados do curso pelo id
     const course = await Course.findOrFail(req.data.course)
 
@@ -61,6 +51,9 @@ class MercadoPagoController {
         }
       },
       notification_url: Env.get('MERCADOPAGO_URL_NOTIFICATION'),
+      metadata: {
+        student_email: req.data.email
+      },
       additional_info: {
         payer: {
           first_name: req.data.name
@@ -140,10 +133,23 @@ class MercadoPagoController {
           await payment.save()
         }
       } else {
+        // Busca dados do curso pelo id
+        const course = await Course.findOrFail(Number(paymentPostback.response.additional_info.items[0].id))
+
+        // Verifica se tem estudante cadastrado com determinado email, se não tiver, cadastra um.
+        let student = await Student.findBy('email', paymentPostback.response.metadata.student_email)
+        if (!student) {
+          student = await Student.create({
+            full_name: req.data.name,
+            email: req.data.email,
+            cpf: req.data.identification_number
+          })
+        }
+
         // Salva dados de pagamento no banco de dados
         const jsonData = JSON.stringify(paymentPostback.response)
         const mercadopago_model = await MercadoPagoModel.create({
-          course_id: courseId,
+          course_id: course.id,
           student_id: student.id,
           transaction_id: paymentReturn.id,
           status: paymentReturn.status,
