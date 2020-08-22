@@ -125,25 +125,44 @@ class MercadoPagoController {
     return mercadopago_model
   }
 
+  /**
+   * Show a list of all mercadopagos.
+   * GET mercadopagos
+   *
+   * @param {object} ctx
+   * @param {Response} ctx.response
+   * @param {Auth} ctx.auth
+   */
   async postbackMP({
     params,
     response,
     request
   }) {
     const req = request.all()
-    Logger.info('RETORNO DO POSTBACK: --------------------')
-    Logger.info(req)
-    Logger.info(req.data.id)
 
     // Set access token do MERCADOPAGO
-    // MERCADOPAGO.configurations.setAccessToken(Env.get('ACCESS_KEY_MP'))
     MERCADOPAGO.configure({
       access_token: Env.get('ACCESS_KEY_MP')
     })
-    var payment = await MERCADOPAGO.payment.get(req.data.id)
+
+    const paymentPostback = await MERCADOPAGO.payment.get(req.data.id)
+    Logger.info('POSTBACK')
+    Logger.info(paymentPostback)
+
+    const payment = await MercadoPagoModel.findBy('transaction_id', req.data.id)
+    Logger.info('ENCONTRADO')
     Logger.info(payment)
+
   }
 
+  /**
+   * Show a list of all mercadopagos.
+   * GET mercadopagos
+   *
+   * @param {object} ctx
+   * @param {Response} ctx.response
+   * @param {Auth} ctx.auth
+   */
   async updatePaymentStatus({
     params,
     response,
@@ -158,12 +177,12 @@ class MercadoPagoController {
       access_token: Env.get('ACCESS_KEY_MP')
     })
 
-    const paymentUpdated = await MERCADOPAGO.payment.update({
+    const payment = await MERCADOPAGO.payment.update({
       id: payment_id,
       status: new_status
     })
 
-    return paymentUpdated
+    return payment
   }
 
   /**
