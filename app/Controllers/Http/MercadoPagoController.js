@@ -6,9 +6,12 @@
 
 const MercadoPagoModel = use('App/Models/MercadoPago')
 const Logger = use('Logger')
-const MP = use('mercadopago')
+const MERCADOPAGO = use('mercadopago')
 const Env = use('Env')
+
+/** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 const Course = use('App/Models/Course')
+/** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 const Student = use('App/Models/Student')
 
 
@@ -37,13 +40,13 @@ class MercadoPagoController {
     // Busca dados do curso pelo id
     const course = await Course.findOrFail(req.data.course)
 
-    // Prepara dados do curso para enviar ao MP
+    // Prepara dados do curso para enviar ao MERCADOPAGO
     let courseId = course.id
     courseId = courseId.toString()
     let courseCategoryLabel = course.category_label ? course.category_label : course.name
     courseCategoryLabel = courseCategoryLabel.toString()
 
-    // Cria objeto de pagamento para ser enviado ao MP
+    // Cria objeto de pagamento para ser enviado ao MERCADOPAGO
     const payment_data = {
       transaction_amount: req.data.amount,
       token: req.data.token,
@@ -76,12 +79,12 @@ class MercadoPagoController {
       }
     }
 
-    // Set access token do MP
-    MP.configurations.setAccessToken(Env.get('ACCESS_KEY_MP'))
+    // Set access token do MERCADOPAGO
+    MERCADOPAGO.configurations.setAccessToken(Env.get('ACCESS_KEY_MP'))
 
-    // Envia dados ao MP para realizar pagamento
+    // Envia dados ao MERCADOPAGO para realizar pagamento
     var paymentReturn = null
-    await MP.payment.save(
+    await MERCADOPAGO.payment.save(
       payment_data
     ).then(function (res) {
       paymentReturn = res.response
@@ -132,45 +135,35 @@ class MercadoPagoController {
     Logger.info(req)
     Logger.info(req.data.id)
 
-    // Set access token do MP
-    // MP.configurations.setAccessToken(Env.get('ACCESS_KEY_MP'))
-    MP.configure({
+    // Set access token do MERCADOPAGO
+    // MERCADOPAGO.configurations.setAccessToken(Env.get('ACCESS_KEY_MP'))
+    MERCADOPAGO.configure({
       access_token: Env.get('ACCESS_KEY_MP')
-    });
-    var payment = await MP.payment.get(req.data.id)
+    })
+    var payment = await MERCADOPAGO.payment.get(req.data.id)
     Logger.info(payment)
   }
 
-  async checkoutPro({
+  async updatePaymentStatus({
     params,
     response,
     request
   }) {
-    MP.configure({
-      access_token: Env.get('ACCESS_KEY_MP')
-    });
     const req = request.post()
-    let preference = {
-      items: [
-        {
-          title: req.course,
-          unit_price: req.amount,
-          quantity: 1,
-        }
-      ]
-    };
-    var teste = {
-      teste2: 'blabla'
-    }
-    var data = {}
-    await MP.preferences.create(preference)
-      .then(function(res){
-        data.result = res.body
-      }).catch(function(error){
-        data.result = false
-      });
 
-      return data
+    const payment_id = req.payment_id
+    const new_status = req.status
+
+    MERCADOPAGO.configure({
+      access_token: Env.get('ACCESS_KEY_MP')
+    })
+
+    const paymentUpdated = await MERCADOPAGO.payment.update({
+      id: payment_id,
+      status: new_status
+    })
+
+    return paymentUpdated
   }
 
   /**
@@ -239,6 +232,38 @@ class MercadoPagoController {
     paymentmercadopago.merge(data)
     await paymentmercadopago.save()
     return paymentmercadopago
+  }
+
+  async checkoutPro({
+    params,
+    response,
+    request
+  }) {
+    MERCADOPAGO.configure({
+      access_token: Env.get('ACCESS_KEY_MP')
+    });
+    const req = request.post()
+    let preference = {
+      items: [
+        {
+          title: req.course,
+          unit_price: req.amount,
+          quantity: 1,
+        }
+      ]
+    };
+    var teste = {
+      teste2: 'blabla'
+    }
+    var data = {}
+    await MERCADOPAGO.preferences.create(preference)
+      .then(function(res){
+        data.result = res.body
+      }).catch(function(error){
+        data.result = false
+      });
+
+      return data
   }
 }
 
