@@ -9,6 +9,7 @@ const Logger = use('Logger')
 const MP = use('mercadopago')
 const Env = use('Env')
 const Course = use('App/Models/Course')
+const Student = use('App/Models/Student')
 
 
 /**
@@ -23,6 +24,15 @@ class MercadoPagoController {
   }) {
     const req = request.all()
     Logger.info(req.data)
+
+    let student = await Student.findBy('email', req.data.email)
+    if (!student) {
+      student = await Student.create({
+        full_name: req.data.name,
+        email: req.data.email,
+        cpf: req.data.identification_number
+      })
+    }
 
     const course = await Course.findOrFail(req.data.course)
 
@@ -64,14 +74,44 @@ class MercadoPagoController {
     }
 
     MP.configurations.setAccessToken(Env.get('ACCESS_KEY_MP'))
-    MP.payment.save(
+    var paymentReturn = null
+    await MP.payment.save(
       payment_data
     ).then(function (res) {
       Logger.info(res);
-      response.send(res);
+      paymentReturn = res.response
     }).catch(function (error) {
       Logger.info(error);
     });
+
+    if (!paymentReturn) {
+      return null
+    }
+    const mercadopago_model = await MercadoPagoModel.create({
+      course_id: courseId,
+      student_id: student.id,
+      transaction_id: paymentReturn.id,
+      status: paymentReturn.status,
+      payment_method_id: paymentReturn.payment_method_id,
+      payment_type_id: paymentReturn.payment_type_id,
+      transaction_amount: paymentReturn.transaction_amount,
+      net_received_amount: paymentReturn.net_received_amount,
+      total_paid_amount: paymentReturn.total_paid_amount,
+      overpaid_amount: paymentReturn.overpaid_amount,
+      installment_amount: paymentReturn.installment_amount,
+      transaction_amount_refunded: paymentReturn.transaction_amount_refunded,
+      total_fee_amount: paymentReturn.total_fee_amount,
+      captured: paymentReturn.captured,
+      payer_doc: paymentReturn.payer_doc,
+      notification_url: paymentReturn.notification_url,
+      installments: paymentReturn.installments,
+      date_created: paymentReturn.date_created,
+      date_approved: paymentReturn.date_approved,
+      date_last_updated: paymentReturn.date_last_updated,
+      data: paymentReturn
+    })
+
+    return mercadopago_model
   }
 
   async checkoutPro({
