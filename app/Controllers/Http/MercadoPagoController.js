@@ -112,21 +112,22 @@ class MercadoPagoController {
       })
 
       const paymentPostback = await MERCADOPAGO.payment.get(req.data.id)
+      const paymentPostbackData = paymentPostback.response
       Logger.info('POSTBACK')
-      Logger.info(paymentPostback.response)
+      Logger.info(paymentPostbackData)
 
       const payment = await MercadoPagoModel.findBy('transaction_id', req.data.id)
 
       if (payment) {
         // Caso o status do pagamento for diferente do salvo no banco, irá atualizar as
         // informações no banco de dados
-        if (payment.status != paymentPostback.response.status) {
+        if (payment.status != paymentPostbackData.status) {
           // Pega dados a ser mergeados
           let newPaymentStatus = {
-            status: paymentPostback.response.status,
-            date_approved: paymentPostback.response.date_approved,
-            date_last_updated: paymentPostback.response.date_last_updated,
-            data: paymentPostback.response
+            status: paymentPostbackData.status,
+            date_approved: paymentPostbackData.date_approved,
+            date_last_updated: paymentPostbackData.date_last_updated,
+            data: paymentPostbackData
           }
           // Mergeia e salva os dados no banco de dados
           payment.merge(newPaymentStatus)
@@ -134,10 +135,10 @@ class MercadoPagoController {
         }
       } else {
         // Busca dados do curso pelo id
-        const course = await Course.findOrFail(Number(paymentPostback.response.additional_info.items[0].id))
+        const course = await Course.findOrFail(Number(paymentPostbackData.additional_info.items[0].id))
 
         // Verifica se tem estudante cadastrado com determinado email, se não tiver, cadastra um.
-        let student = await Student.findBy('email', paymentPostback.response.metadata.student_email)
+        let student = await Student.findBy('email', paymentPostbackData.metadata.student_email)
         if (!student) {
           student = await Student.create({
             full_name: req.data.name,
@@ -147,28 +148,28 @@ class MercadoPagoController {
         }
 
         // Salva dados de pagamento no banco de dados
-        const jsonData = JSON.stringify(paymentPostback.response)
+        const jsonData = JSON.stringify(paymentPostbackData)
         const mercadopago_model = await MercadoPagoModel.create({
           course_id: course.id,
           student_id: student.id,
-          transaction_id: paymentReturn.id,
-          status: paymentReturn.status,
-          payment_method_id: paymentReturn.payment_method_id,
-          payment_type_id: paymentReturn.payment_type_id,
-          transaction_amount: paymentReturn.transaction_amount,
-          net_received_amount: paymentReturn.net_received_amount,
-          total_paid_amount: paymentReturn.total_paid_amount,
-          overpaid_amount: paymentReturn.overpaid_amount,
-          installment_amount: paymentReturn.installment_amount,
-          transaction_amount_refunded: paymentReturn.transaction_amount_refunded,
-          total_fee_amount: paymentReturn.total_fee_amount,
-          captured: paymentReturn.captured,
-          payer_doc: paymentReturn.payer_doc,
-          notification_url: paymentReturn.notification_url,
-          installments: paymentReturn.installments,
-          date_created: paymentReturn.date_created,
-          date_approved: paymentReturn.date_approved,
-          date_last_updated: paymentReturn.date_last_updated,
+          transaction_id: paymentPostbackData.id,
+          status: paymentPostbackData.status,
+          payment_method_id: paymentPostbackData.payment_method_id,
+          payment_type_id: paymentPostbackData.payment_type_id,
+          transaction_amount: paymentPostbackData.transaction_amount,
+          net_received_amount: paymentPostbackData.net_received_amount,
+          total_paid_amount: paymentPostbackData.total_paid_amount,
+          overpaid_amount: paymentPostbackData.overpaid_amount,
+          installment_amount: paymentPostbackData.installment_amount,
+          transaction_amount_refunded: paymentPostbackData.transaction_amount_refunded,
+          total_fee_amount: paymentPostbackData.total_fee_amount,
+          captured: paymentPostbackData.captured,
+          payer_doc: paymentPostbackData.payer_doc,
+          notification_url: paymentPostbackData.notification_url,
+          installments: paymentPostbackData.installments,
+          date_created: paymentPostbackData.date_created,
+          date_approved: paymentPostbackData.date_approved,
+          date_last_updated: paymentPostbackData.date_last_updated,
           data: jsonData
         })
       }
