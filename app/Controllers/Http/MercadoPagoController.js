@@ -127,9 +127,12 @@ class MercadoPagoController {
     response,
     request
   }) {
-    const data = request.post()
+    const req = request.post()
     Logger.info('RETORNO DO POSTBACK: --------------------')
-    Logger.info(data)
+    Logger.info(req)
+    Logger.info(req.data.data.id)
+    var payment = MP.get(`/v1/payments/${req.data.data.id}`)
+    Logger.info(payment)
   }
 
   async checkoutPro({
