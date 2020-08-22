@@ -131,6 +131,9 @@ class MercadoPagoController {
     Logger.info('RETORNO DO POSTBACK: --------------------')
     Logger.info(req)
     Logger.info(req.data.id)
+
+    // Set access token do MP
+    MP.configurations.setAccessToken(Env.get('ACCESS_KEY_MP'))
     var payment = MP.get(`/v1/payments/${req.data.id}`)
     Logger.info(payment)
   }
