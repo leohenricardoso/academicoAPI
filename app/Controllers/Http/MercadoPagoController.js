@@ -228,7 +228,7 @@ class MercadoPagoController {
     if (!auth.user.id) {
       return response.status(401)
     }
-    var mercadopago = MercadoPagoModel.All().paginate(params.pages, params.limit)
+    var mercadopago = MercadoPagoModel.all().paginate(params.pages, params.limit)
     return await mercadopago
   }
 
