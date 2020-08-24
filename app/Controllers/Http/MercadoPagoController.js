@@ -320,6 +320,7 @@ class MercadoPagoController {
       .where({
         payment_type_id: 'credit_card'
       })
+      .innerJoin('courses', 'mercado_pagos.course_id', 'courses.id')
       .orderBy('id', 'desc')
       .paginate(params.pages, params.limit)
 
