@@ -222,13 +222,14 @@ class MercadoPagoController {
    */
   async index({
     response,
-    auth
+    auth,
+    params
   }) {
     if (!auth.user.id) {
       return response.status(401)
     }
-
-    return await MercadoPagoModel.all()
+    var mercadopago = MercadoPagoModel.All().paginate(params.pages, params.limit)
+    return await mercadopago
   }
 
 
