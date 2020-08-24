@@ -318,7 +318,7 @@ class MercadoPagoController {
     let mp = await Database
       .from('mercado_pagos')
       .where({
-        payment_method_id: 'credit_card'
+        payment_type_id: 'credit_card'
       })
       .orderBy('id', 'desc')
       .paginate(params.pages, params.limit)
