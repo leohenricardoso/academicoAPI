@@ -9,6 +9,7 @@ const Logger = use('Logger')
 const MERCADOPAGO = use('mercadopago')
 const Env = use('Env')
 const Database = use('Database')
+const Mail = use('Mail')
 
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 const Course = use('App/Models/Course')
