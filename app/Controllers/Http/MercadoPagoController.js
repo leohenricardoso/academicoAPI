@@ -176,12 +176,81 @@ class MercadoPagoController {
         })
       }
 
+      this.sendPaymentEmail(course.id, student.id, paymentPostbackData.status_detail)
+
       return response.status(200)
 
     } catch (error) {
       Logger.error(error)
     }
   }
+
+  sendPaymentEmail(courseId, studentId, statusDetail) {
+    try {
+      let data = {}
+      const course = await Course.findOrFail(courseId)
+      const student = await Student.findOrFail(studentId)
+
+      if (course == undefined || student == undefined) {
+        return
+      }
+
+      data.course = course
+      data.student = student
+      data.payment = {}
+
+      switch (statusDetail) {
+        case 'accredited':
+          data.payment.status = statusDetail
+          data.payment.message = 'Pronto, seu pagamento foi aprovado!'
+          data.invite_link = course.invite_link ? course.invite_link : null
+          break;
+        case 'pending_contingency':
+          data.payment.status = statusDetail
+          data.payment.message = 'Estamos processando o pagamento. Não se preocupe, em menos de 2 dias úteis informaremos por e-mail se foi creditado.'
+          break;
+        case 'pending_review_manual':
+          data.payment.status = statusDetail
+          data.payment.message = 'Estamos processando seu pagamento. Não se preocupe, em menos de 2 dias úteis informaremos por e-mail se foi creditado ou se necessitamos de mais informação.'
+          break;
+        case 'cc_rejected_blacklist':
+          data.payment.status = statusDetail
+          data.payment.message = 'Não pudemos processar seu pagamento.'
+          break;
+        case 'cc_rejected_card_error':
+          data.payment.status = statusDetail
+          data.payment.message = 'Não conseguimos processar seu pagamento.'
+          break;
+        case 'cc_rejected_high_risk':
+          data.payment.status = statusDetail
+          data.payment.message = 'Seu pagamento foi recusado. Escolha outra forma de pagamento. Recomendamos meios de pagamento em dinheiro. Entre em contato conosco para que possamos te ajudar!'
+          break;
+        case 'cc_rejected_other_reason':
+          data.payment.status = statusDetail
+          data.payment.message = 'Não foi possível processar seu pagamento, tente novamente com outro meio de pagamento.'
+          break;
+        default:
+          break;
+      }
+
+      if (data.payment.status != undefined && data.payment.status != null) {
+        await Mail.send('emails.paymentUpdate', {
+          data: data
+        }, (message) => {
+          message
+            .to(student.email)
+            .from(Env.get('EMAIL_SMTP'))
+            .subject('Acadêmico - Atualização de status')
+        })
+      }
+
+      return true
+    } catch (error) {
+      Logger.error(error)
+      return error
+    }
+  }
+
 
   /**
    * Show a list of all mercadopagos.
