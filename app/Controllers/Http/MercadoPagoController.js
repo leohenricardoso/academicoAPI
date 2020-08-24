@@ -177,7 +177,7 @@ class MercadoPagoController {
         })
       }
 
-      this.sendPaymentEmail(course.id, student.id, paymentPostbackData.status_detail)
+      this.sendPaymentEmail(paymentPostbackData.metadata.course_id, student.id, paymentPostbackData.status_detail)
 
       return response.status(200)
 
