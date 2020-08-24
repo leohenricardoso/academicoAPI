@@ -8,6 +8,7 @@ const MercadoPagoModel = use('App/Models/MercadoPago')
 const Logger = use('Logger')
 const MERCADOPAGO = use('mercadopago')
 const Env = use('Env')
+const Database = use('Database')
 
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 const Course = use('App/Models/Course')
