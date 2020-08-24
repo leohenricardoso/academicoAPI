@@ -394,7 +394,7 @@ class MercadoPagoController {
       .orderBy('id', 'desc')
       .paginate(params.pages, params.limit)
 
-    return await mp
+    return mp
   }
 }
 
