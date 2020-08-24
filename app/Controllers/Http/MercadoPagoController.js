@@ -222,14 +222,13 @@ class MercadoPagoController {
    */
   async index({
     response,
-    auth,
-    params
+    auth
   }) {
     if (!auth.user.id) {
       return response.status(401)
     }
-    var mercadopago = MercadoPagoModel.all().paginate(params.pages, params.limit)
-    return await mercadopago
+
+    return await MercadoPagoModel.all()
   }
 
 
@@ -309,6 +308,21 @@ class MercadoPagoController {
       });
 
     return data
+  }
+  async getCreditCards({
+    auth,
+    response,
+    params
+  }) {
+    let mp = await Database
+      .from('mercado_pagos')
+      .where({
+        payment_method_id: 'credit_card'
+      })
+      .orderBy('id', 'desc')
+      .paginate(params.pages, params.limit)
+
+    return await mp
   }
 }
 
