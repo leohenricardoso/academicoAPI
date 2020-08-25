@@ -391,10 +391,10 @@ class MercadoPagoController {
         payment_type_id: 'credit_card'
       })
       .innerJoin('courses', 'mercado_pagos.course_id', 'courses.id')
-      .orderBy('id', 'desc')
+      .orderBy('mercado_pagos.id', 'desc')
       .paginate(params.pages, params.limit)
 
-    return await mp
+    return mp
   }
 }
 
