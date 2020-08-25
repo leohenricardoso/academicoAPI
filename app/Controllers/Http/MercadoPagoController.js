@@ -117,8 +117,6 @@ class MercadoPagoController {
 
       const paymentPostback = await MERCADOPAGO.payment.get(req.data.id)
       const paymentPostbackData = paymentPostback.response
-      Logger.info('POSTBACK')
-      Logger.info(paymentPostbackData)
 
       const payment = await MercadoPagoModel.findBy('transaction_id', req.data.id)
 
@@ -153,7 +151,7 @@ class MercadoPagoController {
 
         // Salva dados de pagamento no banco de dados
         const jsonData = JSON.stringify(paymentPostbackData)
-        const mercadopago_model = await MercadoPagoModel.create({
+        var mercadopago_model = await MercadoPagoModel.create({
           course_id: course.id,
           student_id: student.id,
           transaction_id: paymentPostbackData.id,
@@ -176,7 +174,10 @@ class MercadoPagoController {
           date_last_updated: paymentPostbackData.date_last_updated,
           data: jsonData
         })
+
       }
+
+      Logger.info(mercadopago_model)
 
       this.sendPaymentEmail(course, student, paymentPostbackData.status_detail)
 
