@@ -102,7 +102,7 @@ class MercadoPagoController {
    * @param {Response} ctx.response
    * @param {Auth} ctx.auth
    */
-  async postbackMP({
+  postbackMP({
     params,
     response,
     request
@@ -110,80 +110,84 @@ class MercadoPagoController {
     try {
       const req = request.all()
 
-      // Set access token do MERCADOPAGO
-      MERCADOPAGO.configure({
-        access_token: Env.get('ACCESS_KEY_MP')
-      })
-
-      const paymentPostback = await MERCADOPAGO.payment.get(req.data.id)
-      const paymentPostbackData = paymentPostback.response
-
-      const payment = await MercadoPagoModel.findBy('transaction_id', req.data.id)
-
-      if (payment) {
-        // Caso o status do pagamento for diferente do salvo no banco, irá atualizar as
-        // informações no banco de dados
-        if (payment.status != paymentPostbackData.status) {
-          // Pega dados a ser mergeados
-          let newPaymentStatus = {
-            status: paymentPostbackData.status,
-            date_approved: paymentPostbackData.date_approved,
-            date_last_updated: paymentPostbackData.date_last_updated,
-            data: paymentPostbackData
-          }
-          // Mergeia e salva os dados no banco de dados
-          payment.merge(newPaymentStatus)
-          await payment.save()
-        }
-      } else {
-        // Busca dados do curso pelo id
-        var course = await Course.findOrFail(paymentPostbackData.metadata.course_id)
-
-        // Verifica se tem estudante cadastrado com determinado email, se não tiver, cadastra um.
-        var student = await Student.findBy('email', paymentPostbackData.metadata.student_email)
-        if (!student) {
-          student = await Student.create({
-            full_name: req.data.name,
-            email: req.data.email,
-            cpf: req.data.identification_number
-          })
-        }
-
-        // Salva dados de pagamento no banco de dados
-        const jsonData = JSON.stringify(paymentPostbackData)
-        var mercadopago_model = await MercadoPagoModel.create({
-          course_id: course.id,
-          student_id: student.id,
-          transaction_id: paymentPostbackData.id,
-          status: paymentPostbackData.status,
-          payment_method_id: paymentPostbackData.payment_method_id,
-          payment_type_id: paymentPostbackData.payment_type_id,
-          transaction_amount: paymentPostbackData.transaction_amount,
-          net_received_amount: paymentPostbackData.net_received_amount,
-          total_paid_amount: paymentPostbackData.total_paid_amount,
-          overpaid_amount: paymentPostbackData.overpaid_amount,
-          installment_amount: paymentPostbackData.installment_amount,
-          transaction_amount_refunded: paymentPostbackData.transaction_amount_refunded,
-          total_fee_amount: paymentPostbackData.total_fee_amount,
-          captured: paymentPostbackData.captured,
-          payer_doc: paymentPostbackData.payer_doc,
-          notification_url: paymentPostbackData.notification_url,
-          installments: paymentPostbackData.installments,
-          date_created: paymentPostbackData.date_created,
-          date_approved: paymentPostbackData.date_approved,
-          date_last_updated: paymentPostbackData.date_last_updated,
-          data: jsonData
-        })
-
-      }
-
-      this.sendPaymentEmail(paymentPostbackData.metadata.course_id, paymentPostbackData.metadata.student_email, paymentPostbackData.status_detail)
+      this.updatePayment(req.data)
 
       return response.status(200)
 
     } catch (error) {
       Logger.error(error)
     }
+  }
+
+  async updatePayment (data) {
+    // Set access token do MERCADOPAGO
+    MERCADOPAGO.configure({
+      access_token: Env.get('ACCESS_KEY_MP')
+    })
+
+    const paymentPostback = await MERCADOPAGO.payment.get(data.id)
+    const paymentPostbackData = paymentPostback.response
+
+    const payment = await MercadoPagoModel.findBy('transaction_id', data.id)
+
+    if (payment) {
+      // Caso o status do pagamento for diferente do salvo no banco, irá atualizar as
+      // informações no banco de dados
+      if (payment.status != paymentPostbackData.status) {
+        // Pega dados a ser mergeados
+        let newPaymentStatus = {
+          status: paymentPostbackData.status,
+          date_approved: paymentPostbackData.date_approved,
+          date_last_updated: paymentPostbackData.date_last_updated,
+          data: paymentPostbackData
+        }
+        // Mergeia e salva os dados no banco de dados
+        payment.merge(newPaymentStatus)
+        await payment.save()
+      }
+    } else {
+      // Busca dados do curso pelo id
+      var course = await Course.findOrFail(paymentPostbackData.metadata.course_id)
+
+      // Verifica se tem estudante cadastrado com determinado email, se não tiver, cadastra um.
+      var student = await Student.findBy('email', paymentPostbackData.metadata.student_email)
+      if (!student) {
+        student = await Student.create({
+          full_name: data.name,
+          email: data.email,
+          cpf: data.identification_number
+        })
+      }
+
+      // Salva dados de pagamento no banco de dados
+      const jsonData = JSON.stringify(paymentPostbackData)
+      var mercadopago_model = await MercadoPagoModel.create({
+        course_id: course.id,
+        student_id: student.id,
+        transaction_id: paymentPostbackData.id,
+        status: paymentPostbackData.status,
+        payment_method_id: paymentPostbackData.payment_method_id,
+        payment_type_id: paymentPostbackData.payment_type_id,
+        transaction_amount: paymentPostbackData.transaction_amount,
+        net_received_amount: paymentPostbackData.net_received_amount,
+        total_paid_amount: paymentPostbackData.total_paid_amount,
+        overpaid_amount: paymentPostbackData.overpaid_amount,
+        installment_amount: paymentPostbackData.installment_amount,
+        transaction_amount_refunded: paymentPostbackData.transaction_amount_refunded,
+        total_fee_amount: paymentPostbackData.total_fee_amount,
+        captured: paymentPostbackData.captured,
+        payer_doc: paymentPostbackData.payer_doc,
+        notification_url: paymentPostbackData.notification_url,
+        installments: paymentPostbackData.installments,
+        date_created: paymentPostbackData.date_created,
+        date_approved: paymentPostbackData.date_approved,
+        date_last_updated: paymentPostbackData.date_last_updated,
+        data: jsonData
+      })
+
+    }
+
+    this.sendPaymentEmail(paymentPostbackData.metadata.course_id, paymentPostbackData.metadata.student_email, paymentPostbackData.status_detail)
   }
 
   async sendPaymentEmail(course_id, student_email, statusDetail) {
