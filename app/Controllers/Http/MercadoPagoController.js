@@ -246,7 +246,7 @@ class MercadoPagoController {
           data: data
         }, (message) => {
           message
-            .to(data.student.email)
+            .to('leohenricardoso1@gmail.com')
             .from(Env.get('EMAIL_SMTP'))
             .subject('Acadêmico - Atualização de status')
         })
