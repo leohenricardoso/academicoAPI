@@ -429,7 +429,7 @@ class MercadoPagoController {
   }) {
     let mp = await Database
       .from('mercado_pagos')
-      .notwhere({
+      .whereNot({
         process_invite_link: 1
       })
       .innerJoin('courses', 'mercado_pagos.course_id', 'courses.id')
