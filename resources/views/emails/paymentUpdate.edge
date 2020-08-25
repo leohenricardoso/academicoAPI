@@ -18,6 +18,11 @@
             Obs: Entrada apenas com documento de identificação.
         </h4>
     @endif
+@elseif(!data.payment.invite_link)
+    <h4>
+        Dentro de 36h enviaremos um e-mail com acesso ao seu curso.
+    </h4>
+    <h6>Qualquer dúvida entre em contato conosco</h6>
 @endif
 <h4>Dados do curso:</h4>
 @if(data.course.type_id == 3)
