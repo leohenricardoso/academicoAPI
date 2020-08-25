@@ -142,7 +142,7 @@ class MercadoPagoController {
         const course = await Course.findOrFail(paymentPostbackData.metadata.course_id)
 
         // Verifica se tem estudante cadastrado com determinado email, se não tiver, cadastra um.
-        let student = await Student.findBy('email', paymentPostbackData.metadata.student_email)
+        var student = await Student.findBy('email', paymentPostbackData.metadata.student_email)
         if (!student) {
           student = await Student.create({
             full_name: req.data.name,
@@ -190,7 +190,7 @@ class MercadoPagoController {
   async sendPaymentEmail(courseId, studentId, statusDetail) {
     try {
       let data = {}
-
+      Logger.info('ENTROU')
       const course = await Course.findOrFail(courseId)
       const student = await Student.findOrFail(studentId)
 
