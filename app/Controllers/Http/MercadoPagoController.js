@@ -432,6 +432,9 @@ class MercadoPagoController {
       .whereNot({
         process_invite_link: 1
       })
+      .where({
+        status: 'approved'
+      })
       .innerJoin('courses', 'mercado_pagos.course_id', 'courses.id')
       .innerJoin('students', 'mercado_pagos.student_id', 'students.id')
       .orderBy('mercado_pagos.id', 'desc')
