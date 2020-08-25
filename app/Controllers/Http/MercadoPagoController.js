@@ -4,6 +4,7 @@
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
+/** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 const MercadoPagoModel = use('App/Models/MercadoPago')
 const Logger = use('Logger')
 const MERCADOPAGO = use('mercadopago')
@@ -193,6 +194,9 @@ class MercadoPagoController {
       const course = await Course.findOrFail(courseId)
       const student = await Student.findOrFail(studentId)
 
+      Logger.info(course)
+      Logger.info(student)
+
       if (course == undefined || student == undefined) {
         return
       }
@@ -235,6 +239,9 @@ class MercadoPagoController {
           break;
       }
 
+      Logger.info('Data:')
+      Logger.info(data)
+
       if (data.payment.status != undefined && data.payment.status != null) {
         await Mail.send('emails.paymentUpdate', {
           data: data
@@ -245,6 +252,8 @@ class MercadoPagoController {
             .subject('Acadêmico - Atualização de status')
         })
       }
+
+      Logger.info('RETORNOU')
 
       return true
     } catch (error) {
