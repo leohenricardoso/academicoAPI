@@ -105,6 +105,7 @@ Route.post('/api/send-course-invite-qrcode/:courseId/:studentId', 'SendEmailCont
 Route.post('/api/mercadopago/cc_create', 'MercadoPagoController.createPayment')   // Free
 Route.get('/api/mercadopago', 'MercadoPagoController.index').middleware('auth:admin')
 Route.get('/api/mercadopago/credit/:pages/:limit', 'MercadoPagoController.getCreditCards').middleware('auth:admin')    // Admin
+Route.get('/api/mercadopago/credit-process/:pages/:limit', 'MercadoPagoController.getProcessPayments').middleware('auth:admin')    // Admin
 Route.get('/api/mercadopago/:id', 'MercadoPagoController.show').middleware('auth:admin')   // Admin
 Route.post('/api/mercadopago', 'MercadoPagoController.store').middleware('auth:admin')   // Admin
 Route.put('/api/mercadopago/:id', 'MercadoPagoController.update').middleware('auth:admin')   // Admin

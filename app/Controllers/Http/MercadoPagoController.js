@@ -398,6 +398,23 @@ class MercadoPagoController {
 
     return mp
   }
+  async getProcessPayments({
+    auth,
+    response,
+    params
+  }) {
+    let mp = await Database
+      .from('mercado_pagos')
+      .where({
+        status: 'in_process'
+      })
+      .innerJoin('courses', 'mercado_pagos.course_id', 'courses.id')
+      .innerJoin('students', 'mercado_pagos.student_id', 'students.id')
+      .orderBy('mercado_pagos.id', 'desc')
+      .paginate(params.pages, params.limit)
+
+    return mp
+  }
 }
 
 module.exports = MercadoPagoController
