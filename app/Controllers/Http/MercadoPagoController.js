@@ -139,7 +139,7 @@ class MercadoPagoController {
         }
       } else {
         // Busca dados do curso pelo id
-        const course = await Course.findOrFail(paymentPostbackData.metadata.course_id)
+        var course = await Course.findOrFail(paymentPostbackData.metadata.course_id)
 
         // Verifica se tem estudante cadastrado com determinado email, se não tiver, cadastra um.
         var student = await Student.findBy('email', paymentPostbackData.metadata.student_email)
