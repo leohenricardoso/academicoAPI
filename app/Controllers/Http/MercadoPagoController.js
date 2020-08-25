@@ -187,7 +187,7 @@ class MercadoPagoController {
     }
   }
 
-  async sendPaymentEmail(course, student, statusDetail) {
+  sendPaymentEmail(course, student, statusDetail) {
     try {
       let data = {}
       Logger.info('ENTROU')
@@ -241,14 +241,7 @@ class MercadoPagoController {
       Logger.info(data)
 
       if (data.payment.status != undefined && data.payment.status != null) {
-        await Mail.send('emails.paymentUpdate', {
-          data: data
-        }, (message) => {
-          message
-            .to(student.email)
-            .from(Env.get('EMAIL_SMTP'))
-            .subject('Acadêmico - Atualização de status')
-        })
+        this.sendEmail(data)
       }
 
       Logger.info('RETORNOU')
@@ -258,6 +251,17 @@ class MercadoPagoController {
       Logger.error(error)
       return error
     }
+  }
+
+  async sendEmail (data) {
+    await Mail.send('emails.paymentUpdate', {
+      data: data
+    }, (message) => {
+      message
+        .to(data.student.email)
+        .from(Env.get('EMAIL_SMTP'))
+        .subject('Acadêmico - Atualização de status')
+    })
   }
 
 
