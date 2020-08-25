@@ -426,6 +426,23 @@ class MercadoPagoController {
 
     return mp
   }
+  async getPendingInvite({
+    auth,
+    response,
+    params
+  }) {
+    let mp = await Database
+      .from('mercado_pagos')
+      .whereNot({
+        process_invite_link: 1
+      })
+      .innerJoin('courses', 'mercado_pagos.course_id', 'courses.id')
+      .innerJoin('students', 'mercado_pagos.student_id', 'students.id')
+      .orderBy('mercado_pagos.id', 'desc')
+      .paginate(params.pages, params.limit)
+
+    return mp
+  }
 }
 
 module.exports = MercadoPagoController
