@@ -109,8 +109,9 @@ class MercadoPagoController {
   }) {
     try {
       const req = request.all()
+      Logger.info('ANTES DO RESPONSE')
       response.status(201).send('Created')
-
+      Logger.info('DEPOIS DO RESPONSE')
       Logger.info(req.data)
 
       this.updatePayment(req.data)
