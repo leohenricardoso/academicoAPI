@@ -111,7 +111,9 @@ class MercadoPagoController {
       const req = request.all()
       response.status(201).send('Created')
 
-      this.updatePayment(req.data)
+      if (req.data.type = 'payment') {
+        this.updatePayment(req.data)
+      }
 
       return response.status(200)
 
