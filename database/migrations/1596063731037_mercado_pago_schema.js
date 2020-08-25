@@ -24,6 +24,7 @@ class MercadopagoSchema extends Schema {
       table.decimal('transaction_amount_refunded', 10, 2)
       table.decimal('total_fee_amount', 10, 2)
       table.boolean('captured')
+      table.boolean('process_invite_link')
       table.string('payer_doc', 20)
       table.string('notification_url', 300)
       table.string('installments', 10)
