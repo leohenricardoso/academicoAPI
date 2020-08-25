@@ -191,6 +191,10 @@ class MercadoPagoController {
     try {
       let data = {}
       Logger.info('ENTROU')
+      Logger.info(courseId)
+      Logger.info(studentId)
+      Logger.info(statusDetail)
+
       const course = await Course.findOrFail(courseId)
       const student = await Student.findOrFail(studentId)
 
