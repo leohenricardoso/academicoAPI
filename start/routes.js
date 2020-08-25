@@ -112,5 +112,5 @@ Route.post('/api/mercadopago', 'MercadoPagoController.store').middleware('auth:a
 Route.put('/api/mercadopago/:id', 'MercadoPagoController.update').middleware('auth:admin')   // Admin
 Route.delete('/api/mercadopago/:id', 'MercadoPagoController.destroy').middleware('auth:admin')   // Admin
 Route.post('/api/mercadopago-pro', 'MercadoPagoController.checkoutPro')   // Free
-Route.post('/api/mercadopago-postback?source_news=webhooks', 'MercadoPagoController.postbackMP')   // Free
+Route.post('/api/mercadopago-postback', 'MercadoPagoController.postbackMP')   // Free
 Route.post('/api/mercadopago-update', 'MercadoPagoController.updatePaymentStatus')   // Free
