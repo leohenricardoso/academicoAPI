@@ -186,10 +186,15 @@ class MercadoPagoController {
     }
   }
 
-  sendPaymentEmail(course, student, statusDetail) {
+  async sendPaymentEmail(course_id, student_email, statusDetail) {
     try {
       let data = {}
       Logger.info('ENTROU')
+      // Busca dados do curso pelo id
+      var course = await Course.findOrFail(course_id)
+
+      // Busca estudante pelo email
+      var student = await Student.findBy('email', student_email)
       Logger.info(course)
       Logger.info(student)
       Logger.info(statusDetail)
@@ -240,7 +245,14 @@ class MercadoPagoController {
       Logger.info(data)
 
       if (data.payment.status != undefined && data.payment.status != null) {
-        this.sendEmail(data)
+        await Mail.send('emails.paymentUpdate', {
+          data: data
+        }, (message) => {
+          message
+            .to(data.student.email)
+            .from(Env.get('EMAIL_SMTP'))
+            .subject('Acadêmico - Atualização de status')
+        })
       }
 
       Logger.info('RETORNOU')
@@ -251,18 +263,6 @@ class MercadoPagoController {
       return error
     }
   }
-
-  async sendEmail (data) {
-    await Mail.send('emails.paymentUpdate', {
-      data: data
-    }, (message) => {
-      message
-        .to(data.student.email)
-        .from(Env.get('EMAIL_SMTP'))
-        .subject('Acadêmico - Atualização de status')
-    })
-  }
-
 
   /**
    * Show a list of all mercadopagos.
