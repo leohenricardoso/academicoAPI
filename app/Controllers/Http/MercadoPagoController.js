@@ -178,7 +178,7 @@ class MercadoPagoController {
         })
       }
 
-      this.sendPaymentEmail(paymentPostbackData.metadata.course_id, student.id, paymentPostbackData.status_detail)
+      this.sendPaymentEmail(course, student, paymentPostbackData.status_detail)
 
       return response.status(200)
 
@@ -187,19 +187,13 @@ class MercadoPagoController {
     }
   }
 
-  async sendPaymentEmail(courseId, studentId, statusDetail) {
+  async sendPaymentEmail(course, student, statusDetail) {
     try {
       let data = {}
       Logger.info('ENTROU')
-      Logger.info(courseId)
-      Logger.info(studentId)
-      Logger.info(statusDetail)
-
-      const course = await Course.findOrFail(courseId)
-      const student = await Student.findOrFail(studentId)
-
       Logger.info(course)
       Logger.info(student)
+      Logger.info(statusDetail)
 
       if (course == undefined || student == undefined) {
         return
