@@ -4,6 +4,7 @@
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
+/** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 const MercadoPagoModel = use('App/Models/MercadoPago')
 const Logger = use('Logger')
 const MERCADOPAGO = use('mercadopago')
@@ -141,7 +142,7 @@ class MercadoPagoController {
         const course = await Course.findOrFail(paymentPostbackData.metadata.course_id)
 
         // Verifica se tem estudante cadastrado com determinado email, se não tiver, cadastra um.
-        let student = await Student.findBy('email', paymentPostbackData.metadata.student_email)
+        var student = await Student.findBy('email', paymentPostbackData.metadata.student_email)
         if (!student) {
           student = await Student.create({
             full_name: req.data.name,
@@ -177,7 +178,7 @@ class MercadoPagoController {
         })
       }
 
-      this.sendPaymentEmail(paymentPostbackData.metadata.course_id, student.id, paymentPostbackData.status_detail)
+      this.sendPaymentEmail(course, student, paymentPostbackData.status_detail)
 
       return response.status(200)
 
@@ -186,12 +187,13 @@ class MercadoPagoController {
     }
   }
 
-  async sendPaymentEmail(courseId, studentId, statusDetail) {
+  async sendPaymentEmail(course, student, statusDetail) {
     try {
       let data = {}
-
-      const course = await Course.findOrFail(courseId)
-      const student = await Student.findOrFail(studentId)
+      Logger.info('ENTROU')
+      Logger.info(course)
+      Logger.info(student)
+      Logger.info(statusDetail)
 
       if (course == undefined || student == undefined) {
         return
@@ -235,6 +237,9 @@ class MercadoPagoController {
           break;
       }
 
+      Logger.info('Data:')
+      Logger.info(data)
+
       if (data.payment.status != undefined && data.payment.status != null) {
         await Mail.send('emails.paymentUpdate', {
           data: data
@@ -245,6 +250,8 @@ class MercadoPagoController {
             .subject('Acadêmico - Atualização de status')
         })
       }
+
+      Logger.info('RETORNOU')
 
       return true
     } catch (error) {
