@@ -186,9 +186,10 @@ class MercadoPagoController {
     }
   }
 
-  sendPaymentEmail(courseId, studentId, statusDetail) {
+  async sendPaymentEmail(courseId, studentId, statusDetail) {
     try {
       let data = {}
+
       const course = await Course.findOrFail(courseId)
       const student = await Student.findOrFail(studentId)
 
