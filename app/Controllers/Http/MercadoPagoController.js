@@ -195,9 +195,6 @@ class MercadoPagoController {
 
       // Busca estudante pelo email
       var student = await Student.findBy('email', student_email)
-      Logger.info(course)
-      Logger.info(student)
-      Logger.info(statusDetail)
 
       if (course == undefined || student == undefined) {
         return
@@ -242,7 +239,7 @@ class MercadoPagoController {
       }
 
       Logger.info('Data:')
-      Logger.info(data)
+      Logger.info(JSON.stringify(data))
 
       if (data.payment.status != undefined && data.payment.status != null) {
         await Mail.send('emails.paymentUpdate', {
