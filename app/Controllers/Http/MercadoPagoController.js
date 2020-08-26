@@ -109,12 +109,12 @@ class MercadoPagoController {
   }) {
     try {
       const req = request.all()
-      Logger.info('ANTES DO RESPONSE')
       response.status(201).send('Created')
-      Logger.info('DEPOIS DO RESPONSE')
-      Logger.info(req)
 
-      this.updatePayment(req.data)
+      if (req.type = 'payment') {
+        this.updatePayment(req.data)
+      }
+
       return response.status(200)
 
     } catch (error) {
