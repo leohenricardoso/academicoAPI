@@ -131,7 +131,7 @@ class CourseCategoryController {
       .orderBy('categorys.id', 'asc')
       .paginate(params.pages, params.limit)
 
-    return mp
+    return category
   }
 }
 
