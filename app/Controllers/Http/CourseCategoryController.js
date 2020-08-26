@@ -127,8 +127,8 @@ class CourseCategoryController {
     params
   }) {
     let category = await Database
-      .from('categorys')
-      .orderBy('categorys.id', 'asc')
+      .from('course_categories')
+      .orderBy('course_categories.id', 'asc')
       .paginate(params.pages, params.limit)
 
     return category
