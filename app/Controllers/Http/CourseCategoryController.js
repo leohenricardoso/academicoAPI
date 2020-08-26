@@ -120,6 +120,19 @@ class CourseCategoryController {
     const category = await Category.findOrFail(params.id)
     await category.delete()
   }
+
+  async getCategories({
+    auth,
+    response,
+    params
+  }) {
+    let category = await Database
+      .from('categorys')
+      .orderBy('categorys.id', 'asc')
+      .paginate(params.pages, params.limit)
+
+    return mp
+  }
 }
 
 module.exports = CourseCategoryController
