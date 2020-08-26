@@ -109,12 +109,12 @@ class MercadoPagoController {
   }) {
     try {
       const req = request.all()
-      Logger.info('ANTES DO RESPONSE')
       response.status(201).send('Created')
-      Logger.info('DEPOIS DO RESPONSE')
-      Logger.info(req.data)
 
-      this.updatePayment(req.data)
+      if (req.type = 'payment') {
+        this.updatePayment(req.data)
+      }
+
       return response.status(200)
 
     } catch (error) {
@@ -196,7 +196,7 @@ class MercadoPagoController {
   async sendPaymentEmail(course_id, student_email, statusDetail) {
     try {
       let data = {}
-      Logger.info('ENTROU')
+
       // Busca dados do curso pelo id
       var course = await Course.findOrFail(course_id)
 
@@ -245,9 +245,6 @@ class MercadoPagoController {
           break;
       }
 
-      Logger.info('Data:')
-      Logger.info(JSON.stringify(data))
-
       if (data.payment.status != undefined && data.payment.status != null) {
         await Mail.send('emails.paymentUpdate', {
           data: data
@@ -258,8 +255,6 @@ class MercadoPagoController {
             .subject('Acadêmico - Atualização de status')
         })
       }
-
-      Logger.info('RETORNOU')
 
       return true
     } catch (error) {
