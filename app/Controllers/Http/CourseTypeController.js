@@ -3,7 +3,7 @@
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
-
+const Database = use('Database')
 const CourseType = use('App/Models/CourseType')
 /**
  * Resourceful controller for interacting with coursetypes
@@ -113,6 +113,19 @@ class CourseTypeController {
     }
     const coursetype = await CourseType.findOrFail(params.id)
     await coursetype.delete()
+  }
+
+  async getTypes({
+    auth,
+    response,
+    params
+  }) {
+    let type = await Database
+      .from('course_types')
+      .orderBy('course_types.id', 'asc')
+      .paginate(params.pages, params.limit)
+
+    return type
   }
 }
 

@@ -26,7 +26,7 @@ Route.post('/api/admin-user-authenticate', 'AuthUserAdminController.authenticate
 /** Course Category */
 Route.get('/api/course-category', 'CourseCategoryController.index')   // Free
 Route.get('/api/course-category/:id', 'CourseCategoryController.show')    // Free
-Route.get('/api/course-category-admin/:pages/:limit', 'CourseCategoryController.getCategories')
+Route.get('/api/course-category-admin/:pages/:limit', 'CourseCategoryController.getCategories') // Free
 Route.post('/api/course-category', 'CourseCategoryController.store').middleware('auth:admin')   // Admin
 Route.put('/api/course-category/:id', 'CourseCategoryController.update').middleware('auth:admin')   // Admin
 Route.delete('/api/course-category/:id', 'CourseCategoryController.destroy').middleware('auth:admin')   // Admin
@@ -69,6 +69,7 @@ Route.get('/api/course/recorded/:pages/:limit', 'CourseController.getRecorded') 
 /** Course Type */
 Route.get('/api/course-type', 'CourseTypeController.index')   // Free
 Route.get('/api/course-type/:id', 'CourseTypeController.show')    // Free
+Route.get('/api/course-type-admin/:pages/:limit', 'CourseTypeController.getTypes') // Free
 Route.post('/api/course-type', 'CourseTypeController.store').middleware('auth:admin')   // Admin
 Route.put('/api/course-type/:id', 'CourseTypeController.update').middleware('auth:admin')   // Admin
 Route.delete('/api/course-type/:id', 'CourseTypeController.destroy').middleware('auth:admin')   // Admin
