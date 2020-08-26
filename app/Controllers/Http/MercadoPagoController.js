@@ -112,7 +112,7 @@ class MercadoPagoController {
       Logger.info('ANTES DO RESPONSE')
       response.status(201).send('Created')
       Logger.info('DEPOIS DO RESPONSE')
-      Logger.info(req.data)
+      Logger.info(req)
 
       this.updatePayment(req.data)
       return response.status(200)
