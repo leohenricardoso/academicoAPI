@@ -148,7 +148,7 @@ class CourseController {
 
     const image = request.file('image', {
       types: ['image'],
-      size: '2mb'
+      size: '10mb'
     })
 
     await image.move(Helpers.publicPath('img/course'), {
