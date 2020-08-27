@@ -160,7 +160,6 @@ class CourseController {
       .query()
       .where('id', params.id)
       .update({ image_path: `${image.fileName}` })
-      await course.save()
     } catch (err) {
       Logger.info(err)
       return err
