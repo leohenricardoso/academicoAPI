@@ -162,7 +162,7 @@ class CourseController {
       let data = {
         image_path: `${image.fileName}`
       }
-
+      Logger.info(data)
       course.merge(data)
       await course.save()
     } catch (err) {
