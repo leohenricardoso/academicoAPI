@@ -144,7 +144,6 @@ class CourseController {
       return response.status(401)
     }
   try {
-      const course = await Course.findOrFail(params.id)
       const image = request.file('image', {
         types: ['image'],
         size: '2mb'
@@ -157,11 +156,10 @@ class CourseController {
         return image.errors()
       }
 
-      let data = {
-        image_path: `${image.fileName}`
-      }
-      Logger.info(data)
-      course.merge(data)
+      await Course
+      .query()
+      .where('id', params.id)
+      .update({ image_path: `${image.fileName}` })
       await course.save()
     } catch (err) {
       Logger.info(err)
