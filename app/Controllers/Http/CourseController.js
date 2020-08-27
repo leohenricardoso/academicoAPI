@@ -156,15 +156,17 @@ class CourseController {
         return image.errors()
       }
 
-      await Course
+     let course = await Course
       .query()
       .where('id', params.id)
       .update({ image_path: `${image.fileName}` })
+
+      return course
+
     } catch (err) {
       Logger.info(err)
       return err
     }
-    return course
   }
 
   /**
