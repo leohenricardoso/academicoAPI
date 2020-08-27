@@ -133,32 +133,42 @@ class CourseController {
    * @param {Response} ctx.response
    * @param {Auth} ctx.auth
    */
-  async saveImage ({ request, response, auth }) {
+  async saveImage({
+    params,
+    request,
+    response,
+    auth
+  }) {
 
     if (!auth.user.id) {
       return response.status(401)
     }
+  try {
+      const course = await Course.findOrFail(params.id)
 
-    const image = request.file('image', {
-      types: ['image'],
-      size: '2mb'
-    })
+      const image = request.file('image', {
+        types: ['image'],
+        size: '2mb'
+      })
 
-    await image.move(Helpers.publicPath('img/course'),{
-      name: `${Date.now()}-${image.clientName}`
-    })
+      await image.move(Helpers.publicPath('img/course'), {
+        name: `${Date.now()}-${image.clientName}`
+      })
 
-    if (!image.moved()) {
-       return image.errors()
+      if (!image.moved()) {
+        return image.errors()
+      }
+
+      let data = {
+        image_path: `${image.fileName}`
+      }
+
+      course.merge(data)
+      await course.save()
+    } catch (err) {
+      Logger.info(err)
+      return err
     }
-
-    let data = {
-      image_path: `${image.fileName}`
-    }
-
-    const course = await Course.findOrFail(params.id)
-    course.merge(data)
-    await course.save()
     return course
   }
 
