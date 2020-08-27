@@ -143,14 +143,16 @@ class CourseController {
     if (!auth.user.id) {
       return response.status(401)
     }
+    Logger.info('enter')
+    Logger.info(params)
   try {
       const course = await Course.findOrFail(params.id)
-
+      Logger.info('course ->' + course)
       const image = request.file('image', {
         types: ['image'],
         size: '2mb'
       })
-
+      Logger.info('image ->' + image)
       await image.move(Helpers.publicPath('img/course'), {
         name: `${Date.now()}-${image.clientName}`
       })
