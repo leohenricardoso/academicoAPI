@@ -61,11 +61,11 @@ class CourseController {
     data['speaker_label'] = speaker['name']
 
     if (data['base_amount']) {
-      data['base_amount'] = data['base_amount'].toFixed(2)
+      data['base_amount'] = parseFloat(data['base_amount']).toFixed(2)
     }
 
     if (data['discount_amount']) {
-      data['discount_amount'] = data['discount_amount'].toFixed(2)
+      data['discount_amount'] = parseFloat(data['discount_amount']).toFixed(2)
     }
 
     const course = await Course.create({
