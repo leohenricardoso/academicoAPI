@@ -59,7 +59,8 @@ Route.get('/api/course/:id', 'CourseController.show')    // Free
 Route.post('/api/course', 'CourseController.store').middleware('auth:admin')   // Admin
 Route.put('/api/course/:id', 'CourseController.update').middleware('auth:admin')   // Admin
 Route.delete('/api/course/:id', 'CourseController.destroy').middleware('auth:admin')   // Admin
-Route.get('/api/name-asc/:pages/:limit', 'CourseController.getNameAsc')    // Free
+Route.get('/api/name-asc-not-active/:pages/:limit', 'CourseController.getNameAscNotActive')     // Free
+Route.get('/api/name-asc/:pages/:limit', 'CourseController.getNameAsc')     // Free
 Route.post('/api/courses-image/:id', 'CourseController.saveImage').middleware('auth:admin')   // Admin
 Route.get('/api/courses-image/:path', 'CourseController.downloadImage')    // Free
 Route.post('/api/filterCourse/:pages/:limit', 'CourseController.getCoursesFilter')    // Free
