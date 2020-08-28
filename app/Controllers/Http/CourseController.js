@@ -60,6 +60,13 @@ class CourseController {
     let speaker = await Speaker.findOrFail(data['speaker_id'])
     data['speaker_label'] = speaker['name']
 
+    if (data['base_amount']) {
+      data['base_amount'] = parseFloat(data['base_amount']).toFixed(2)
+    }
+
+    if (data['discount_amount']) {
+      data['discount_amount'] = parseFloat(data['discount_amount']).toFixed(2)
+    }
 
     const course = await Course.create({
       ...data
@@ -143,29 +150,30 @@ class CourseController {
     if (!auth.user.id) {
       return response.status(401)
     }
+  try {
+      const image = request.file('image', {
+        types: ['image'],
+        size: '2mb'
+      })
+      await image.move(Helpers.publicPath('img/course'), {
+        name: `${Date.now()}-${image.clientName}`
+      })
 
-    const course = await Course.findOrFail(params.id)
+      if (!image.moved()) {
+        return image.errors()
+      }
 
-    const image = request.file('image', {
-      types: ['image'],
-      size: '2mb'
-    })
+     let course = await Course
+      .query()
+      .where('id', params.id)
+      .update({ image_path: `${image.fileName}` })
 
-    await image.move(Helpers.publicPath('img/course'), {
-      name: `${Date.now()}-${image.clientName}`
-    })
+      return course
 
-    if (!image.moved()) {
-      return image.errors()
+    } catch (err) {
+      Logger.info(err)
+      return err
     }
-
-    let data = {
-      image_path: `${image.fileName}`
-    }
-
-    course.merge(data)
-    await course.save()
-    return course
   }
 
   /**
@@ -206,6 +214,31 @@ class CourseController {
       .from('courses')
       .where({
         active: 1
+      })
+      .orderBy('name', 'asc')
+      .paginate(params.pages, params.limit)
+
+    return await courses
+
+  }
+
+    /**
+   * Get courses with name-asc.
+   * name-asc
+   *
+   * @param {object} ctx
+   * @param {Auth} ctx.request
+   * @param {Response} ctx.response
+   */
+  async getNameAscNotActive({
+    auth,
+    response,
+    params
+  }) {
+    let courses = await Database
+      .from('courses')
+      .where({
+        active: 0
       })
       .orderBy('name', 'asc')
       .paginate(params.pages, params.limit)

@@ -26,7 +26,7 @@ Route.post('/api/admin-user-authenticate', 'AuthUserAdminController.authenticate
 /** Course Category */
 Route.get('/api/course-category', 'CourseCategoryController.index')   // Free
 Route.get('/api/course-category/:id', 'CourseCategoryController.show')    // Free
-Route.get('/api/course-category-admin/:pages/:limit', 'CourseCategoryController.getCategories')
+Route.get('/api/course-category-admin/:pages/:limit', 'CourseCategoryController.getCategories') // Free
 Route.post('/api/course-category', 'CourseCategoryController.store').middleware('auth:admin')   // Admin
 Route.put('/api/course-category/:id', 'CourseCategoryController.update').middleware('auth:admin')   // Admin
 Route.delete('/api/course-category/:id', 'CourseCategoryController.destroy').middleware('auth:admin')   // Admin
@@ -59,7 +59,8 @@ Route.get('/api/course/:id', 'CourseController.show')    // Free
 Route.post('/api/course', 'CourseController.store').middleware('auth:admin')   // Admin
 Route.put('/api/course/:id', 'CourseController.update').middleware('auth:admin')   // Admin
 Route.delete('/api/course/:id', 'CourseController.destroy').middleware('auth:admin')   // Admin
-Route.get('/api/name-asc/:pages/:limit', 'CourseController.getNameAsc')    // Free
+Route.get('/api/name-asc-not-active/:pages/:limit', 'CourseController.getNameAscNotActive')     // Free
+Route.get('/api/name-asc/:pages/:limit', 'CourseController.getNameAsc')     // Free
 Route.post('/api/courses-image/:id', 'CourseController.saveImage').middleware('auth:admin')   // Admin
 Route.get('/api/courses-image/:path', 'CourseController.downloadImage')    // Free
 Route.post('/api/filterCourse/:pages/:limit', 'CourseController.getCoursesFilter')    // Free
@@ -69,6 +70,7 @@ Route.get('/api/course/recorded/:pages/:limit', 'CourseController.getRecorded') 
 /** Course Type */
 Route.get('/api/course-type', 'CourseTypeController.index')   // Free
 Route.get('/api/course-type/:id', 'CourseTypeController.show')    // Free
+Route.get('/api/course-type-admin/:pages/:limit', 'CourseTypeController.getTypes') // Free
 Route.post('/api/course-type', 'CourseTypeController.store').middleware('auth:admin')   // Admin
 Route.put('/api/course-type/:id', 'CourseTypeController.update').middleware('auth:admin')   // Admin
 Route.delete('/api/course-type/:id', 'CourseTypeController.destroy').middleware('auth:admin')   // Admin
