@@ -122,7 +122,7 @@ class MercadoPagoController {
     }
   }
 
-  async updatePayment (data) {
+  async updatePayment(data) {
     // Set access token do MERCADOPAGO
     MERCADOPAGO.configure({
       access_token: Env.get('ACCESS_KEY_MP')
@@ -215,7 +215,7 @@ class MercadoPagoController {
         case 'accredited':
           data.payment.status = statusDetail
           data.payment.message = 'Pronto, seu pagamento foi aprovado!'
-          data.invite_link = course.invite_link ? course.invite_link : null
+          this.sendCourseLinkEmail(course_id, student_email)
           break;
         case 'pending_contingency':
           data.payment.status = statusDetail
@@ -250,9 +250,49 @@ class MercadoPagoController {
           data: data
         }, (message) => {
           message
-            .to('leohenricardoso@gmail.com')
+            .to(data.student.email)
             .from(Env.get('EMAIL_SMTP'))
             .subject('Acadêmico - Atualização de status')
+        })
+      }
+
+      return true
+    } catch (error) {
+      Logger.error(error)
+      return error
+    }
+  }
+
+  async sendCourseLinkEmail(course_id, student_email) {
+    try {
+      let data = {}
+
+      // Busca dados do curso pelo id
+      var course = await Course.findOrFail(course_id)
+
+      // Busca estudante pelo email
+      var student = await Student.findBy('email', student_email)
+
+      if (course == undefined || student == undefined) {
+        return
+      }
+
+      data.course = course
+      data.student = student
+
+      if (
+        data.course.invite_link != undefined &&
+        data.course.invite_link != '' &&
+        data.course.invite_link != null
+      ) {
+
+        await Mail.send('emails.sendCourseLinkAutomatic', {
+          data: data
+        }, (message) => {
+          message
+            .to('leohenricardoso@gmail.com')
+            .from(Env.get('EMAIL_SMTP'))
+            .subject('Acadêmico - Acesso ao curso')
         })
       }
 
