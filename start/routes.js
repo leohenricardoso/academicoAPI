@@ -103,6 +103,7 @@ Route.get('/api/images/:path', 'BannerController.downloadImage')    // Free
 Route.post('/api/send-contact-email', 'SendEmailController.sendContactEmail').middleware('auth:admin')   // Admin
 Route.post('/api/send-buy-email/:courseId', 'SendEmailController.sendShopEmail')   // Free
 Route.post('/api/send-course-invite-qrcode/:courseId/:studentId', 'SendEmailController.sendInviteToPresentialCourse').middleware('auth:admin')   // Admin
+Route.post('/api/send-link-manual', 'SendEmailController.sendCourseLinkEmailByAdmin').middleware('auth:admin')   // Admin
 
 /** Mercado Pago */
 Route.post('/api/mercadopago/cc_create', 'MercadoPagoController.createPayment')   // Free

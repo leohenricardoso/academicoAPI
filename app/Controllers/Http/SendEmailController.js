@@ -20,6 +20,9 @@ class SendEmailController {
     response,
     auth
   }) {
+    if (!auth.user.id) {
+      return response.status(401)
+    }
     try {
       let data = {}
       const req = request.post()
