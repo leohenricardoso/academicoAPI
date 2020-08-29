@@ -65,7 +65,7 @@ class SendEmailController {
       payment.merge(data)
       const savedPayment = await payment.save()
 
-      Logger.info(savedPayment)
+      Logger.info(payment)
 
       return true
     } catch (error) {
