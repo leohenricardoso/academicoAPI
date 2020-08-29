@@ -52,8 +52,7 @@ class SendEmailController {
         data: data
       }, (message) => {
         message
-          // .to(data.student.email)
-          .to('leohenricardoso@gmail.com')
+          .to(data.student.email)
           .from(Env.get('EMAIL_SMTP'))
           .subject('Acadêmico - Acesso ao curso')
       })
