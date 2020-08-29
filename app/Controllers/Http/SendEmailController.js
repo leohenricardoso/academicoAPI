@@ -13,6 +13,9 @@ const Course = use('App/Models/Course')
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 const Student = use('App/Models/Student')
 
+/** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
+const MercadoPagoModel = use('App/Models/MercadoPago')
+
 class SendEmailController {
 
   async sendCourseLinkEmailByAdmin({
