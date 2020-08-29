@@ -27,7 +27,7 @@ class SendEmailController {
       return response.status(401)
     }
     try {
-      let data = {}
+      var data = {}
       const req = request.post()
 
       // Busca dados do curso pelo id
@@ -63,10 +63,9 @@ class SendEmailController {
         process_invite_link: true
       }
       payment.merge(data)
-      Logger.info(payment)
       await payment.save()
 
-      return true
+      return payment
     } catch (error) {
       Logger.error(error)
       return error
