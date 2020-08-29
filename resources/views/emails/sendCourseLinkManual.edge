@@ -1,0 +1,29 @@
+<h2> Olá {{ data.student.full_name }} </h2>
+
+Abaixo você terá acesso aos dados do curso:
+<br>
+@if(data.course.invite_link)
+    @if(data.course.type_id != 3)
+        <h4>
+            Link para acesso ao curso: {{ data.course.invite_link }}
+        </h4>
+    @endif
+    @if(data.course.type_id == 3)
+        <h4>
+            Ingresso do curso: {{ data.course.invite_link }} <br>
+            Obs: Entrada apenas com documento de identificação.
+        </h4>
+    @endif
+@endif
+<h4>Dados do curso:</h4>
+@if(data.course.type_id == 3)
+    <p>Rua: {{ data.course.address_street }}</p>
+    <p>Número: {{ data.course.address_number }}</p>
+    <p>Bairro: {{ data.course.address_neighborhood }}</p>
+    <p>Cidade: {{ data.course.address_city }}</p>
+    <p>Estado: {{ data.course.address_state }}</p>
+    <p>Informações adicionais: {{ data.course.address_additional_info }}</p>
+    <p>CEP: {{ data.course.address_postcode }}</p>
+@endif
+<p>Nome: {{ data.course.name }}</p>
+<p>Descrição: {{ data.course.description }}</p>

@@ -15,6 +15,58 @@ const Student = use('App/Models/Student')
 
 class SendEmailController {
 
+  async sendCourseLinkEmailByAdmin({
+    request,
+    response,
+    auth
+  }) {
+    try {
+      let data = {}
+      const req = request.post()
+
+      // Busca dados do curso pelo id
+      var course = await Course.findOrFail(req.course_id)
+
+      // Busca estudante pelo email
+      var student = await Student.findOrFail(req.student_id)
+
+      if (course == undefined || student == undefined) {
+        return
+      }
+
+      data.course = course
+      data.student = student
+      data.link = req.link
+
+      if (data.link == undefined || data.link == null) {
+        return
+      }
+
+      await Mail.send('emails.sendCourseLinkManual', {
+        data: data
+      }, (message) => {
+        message
+          // .to(data.student.email)
+          .to('leohenricardoso@gmail.com')
+          .from(Env.get('EMAIL_SMTP'))
+          .subject('Acadêmico - Acesso ao curso')
+      })
+
+      const payment = await MercadoPagoModel.findBy('id', req.payment_id)
+      data = {
+        process_invite_link: true
+      }
+      payment.merge(data)
+      await payment.save()
+
+
+      return true
+    } catch (error) {
+      Logger.error(error)
+      return error
+    }
+  }
+
   async sendContactEmail({
     request,
     response,
