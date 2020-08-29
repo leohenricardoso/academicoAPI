@@ -60,7 +60,7 @@ class SendEmailController {
 
       const payment = await MercadoPagoModel.findBy('transaction_id', req.payment_id)
       data = {
-        process_invite_link: true
+        process_invite_link: 1
       }
       payment.merge(data)
       await payment.save()
