@@ -132,8 +132,10 @@ class MercadoPagoController {
     const paymentPostbackData = paymentPostback.response
 
     const payment = await MercadoPagoModel.findBy('transaction_id', data.id)
+    var paymentModelId
 
     if (payment) {
+      paymentModelId = payment.id
       // Caso o status do pagamento for diferente do salvo no banco, irá atualizar as
       // informações no banco de dados
       if (payment.status != paymentPostbackData.status) {
@@ -188,12 +190,13 @@ class MercadoPagoController {
         data: jsonData
       })
 
+      paymentModelId = mercadopago_model.id
     }
 
-    this.sendPaymentEmail(paymentPostbackData.metadata.course_id, paymentPostbackData.metadata.student_email, paymentPostbackData.status_detail)
+    this.sendPaymentEmail(paymentPostbackData.metadata.course_id, paymentPostbackData.metadata.student_email, paymentPostbackData.status_detail, paymentModelId)
   }
 
-  async sendPaymentEmail(course_id, student_email, statusDetail) {
+  async sendPaymentEmail(course_id, student_email, statusDetail, paymentModelId) {
     try {
       let data = {}
 
@@ -215,7 +218,7 @@ class MercadoPagoController {
         case 'accredited':
           data.payment.status = statusDetail
           data.payment.message = 'Pronto, seu pagamento foi aprovado!'
-          this.sendCourseLinkEmail(course_id, student_email)
+          this.sendCourseLinkEmail(course_id, student_email, paymentModelId)
           break;
         case 'pending_contingency':
           data.payment.status = statusDetail
@@ -263,7 +266,7 @@ class MercadoPagoController {
     }
   }
 
-  async sendCourseLinkEmail(course_id, student_email) {
+  async sendCourseLinkEmail(course_id, student_email, paymentModelId) {
     try {
       let data = {}
 
@@ -294,6 +297,13 @@ class MercadoPagoController {
             .from(Env.get('EMAIL_SMTP'))
             .subject('Acadêmico - Acesso ao curso')
         })
+
+        const payment = await MercadoPagoModel.findBy('id', paymentModelId)
+        data = {
+          process_invite_link: true
+        }
+        payment.merge(data)
+        await payment.save()
       }
 
       return true
