@@ -29,7 +29,6 @@ class SendEmailController {
     try {
       let data = {}
       const req = request.post()
-      Logger.info(req)
 
       // Busca dados do curso pelo id
       var course = await Course.findOrFail(req.course_id)
@@ -59,13 +58,14 @@ class SendEmailController {
           .subject('Acadêmico - Acesso ao curso')
       })
 
-      const payment = await MercadoPagoModel.findBy('id', req.payment_id)
+      const payment = await MercadoPagoModel.findOrFail(req.payment_id)
       data = {
         process_invite_link: true
       }
       payment.merge(data)
-      await payment.save()
+      const savedPayment = await payment.save()
 
+      Logger.info(savedPayment)
 
       return true
     } catch (error) {
