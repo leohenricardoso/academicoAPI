@@ -58,7 +58,7 @@ class SendEmailController {
           .subject('Acadêmico - Acesso ao curso')
       })
 
-      const payment = await MercadoPagoModel.findOrFail(req.payment_id)
+      const payment = await MercadoPagoModel.findBy('transaction_id', req.payment_id)
       data = {
         process_invite_link: true
       }
