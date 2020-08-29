@@ -381,7 +381,28 @@ class MercadoPagoController {
       return response.status(401)
     }
 
-    return await MercadoPagoModel.findOrFail(params.id)
+    return await MercadoPagoModel.findByOrFail(params.id)
+  }
+
+    /**
+   * Display a single paymentmercadopago.
+   * GET mercadopagos/:id
+   *
+   * @param {object} ctx
+   * @param {Params} ctx.params
+   * @param {Response} ctx.response
+   * @param {Auth} ctx.auth
+   */
+  async getPaymentbyTransactionId({
+    params,
+    response,
+    auth
+  }) {
+    if (!auth.user.id) {
+      return response.status(401)
+    }
+
+    return await MercadoPagoModel.findBy('transaction_id', params.id)
   }
 
   /**

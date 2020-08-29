@@ -111,6 +111,7 @@ Route.get('/api/mercadopago', 'MercadoPagoController.index').middleware('auth:ad
 Route.get('/api/mercadopago/credit/:pages/:limit', 'MercadoPagoController.getCreditCards').middleware('auth:admin')    // Admin
 Route.get('/api/mercadopago/credit-process/:pages/:limit', 'MercadoPagoController.getProcessPayments').middleware('auth:admin')    // Admin
 Route.get('/api/mercadopago/:id', 'MercadoPagoController.show').middleware('auth:admin')   // Admin
+Route.get('/api/mercadopago-transaction/:id', 'MercadoPagoController.getPaymentbyTransactionId').middleware('auth:admin')   // Admin
 Route.get('/api/mercadopago/pending-invite-link/:pages/:limit', 'MercadoPagoController.getPendingInvite').middleware('auth:admin')    // Admin
 Route.post('/api/mercadopago', 'MercadoPagoController.store').middleware('auth:admin')   // Admin
 Route.put('/api/mercadopago/:id', 'MercadoPagoController.update').middleware('auth:admin')   // Admin
