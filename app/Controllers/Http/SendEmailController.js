@@ -26,6 +26,7 @@ class SendEmailController {
     try {
       let data = {}
       const req = request.post()
+      Logger.info(req)
 
       // Busca dados do curso pelo id
       var course = await Course.findOrFail(req.course_id)
