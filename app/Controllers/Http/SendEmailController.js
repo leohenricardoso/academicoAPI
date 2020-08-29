@@ -63,9 +63,8 @@ class SendEmailController {
         process_invite_link: true
       }
       payment.merge(data)
-      const savedPayment = await payment.save()
-
       Logger.info(payment)
+      await payment.save()
 
       return true
     } catch (error) {
