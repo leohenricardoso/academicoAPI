@@ -398,9 +398,6 @@ class MercadoPagoController {
     response,
     auth
   }) {
-    if (!auth.user.id) {
-      return response.status(401)
-    }
 
     return await MercadoPagoModel.findBy('transaction_id', params.id)
   }
