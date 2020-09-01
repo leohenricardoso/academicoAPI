@@ -76,13 +76,12 @@ Route.post('/api/course-type', 'CourseTypeController.store').middleware('auth:ad
 Route.put('/api/course-type/:id', 'CourseTypeController.update').middleware('auth:admin')   // Admin
 Route.delete('/api/course-type/:id', 'CourseTypeController.destroy').middleware('auth:admin')   // Admin
 
-/** Student *//*
 Route.get('/api/student', 'StudentController.index').middleware('auth:admin')   // Admin
 Route.get('/api/student/:id', 'StudentController.show').middleware('auth:admin')   // Admin
 Route.post('/api/student', 'StudentController.store').middleware('auth:admin')   // Admin
 Route.put('/api/student/:id', 'StudentController.update').middleware('auth:admin')   // Admin
 Route.delete('/api/student/:id', 'StudentController.destroy').middleware('auth:admin')   // Admin
-*/
+
 /** My Courses *//*
 Route.get('/api/my-course', 'MyCourseController.index').middleware('auth:admin')   // Admin
 Route.get('/api/my-course/:id', 'MyCourseController.show').middleware('auth:admin')   // Admin
