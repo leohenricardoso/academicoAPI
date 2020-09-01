@@ -33,7 +33,7 @@ Route.delete('/api/course-category/:id', 'CourseCategoryController.destroy').mid
 
 /** Newsletter */
 Route.post('/api/newsletter', 'NewsletterController.store')   // Free
-Route.post('/api/newsletter/:pages/:limit', 'NewsletterController.getNewsletter')   // Free
+Route.get('/api/newsletter/:pages/:limit', 'NewsletterController.getNewsletter')   // Free
 
 /** Speaker */
 Route.get('/api/speaker', 'CourseSpeakerController.index')   // Free
