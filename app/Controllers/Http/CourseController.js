@@ -326,6 +326,9 @@ class CourseController {
       .where({
         highlight: 1
       })
+      .where({
+        active: 1
+      })
       .paginate(params.pages, params.limit)
 
     return await courses
@@ -348,6 +351,9 @@ class CourseController {
       .from('courses')
       .where({
         recorded: 1
+      })
+      .where({
+        active: 1
       })
       .paginate(params.pages, params.limit)
 
