@@ -87,8 +87,6 @@ class MercadoPagoController {
       Logger.info(error);
     });
 
-    Logger.info(paymentReturn)
-
     if (!paymentReturn) {
       return null
     }
