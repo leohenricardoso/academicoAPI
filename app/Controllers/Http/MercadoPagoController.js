@@ -87,6 +87,8 @@ class MercadoPagoController {
       Logger.info(error);
     });
 
+    Logger.info(paymentReturn)
+
     if (!paymentReturn) {
       return null
     }
@@ -181,6 +183,7 @@ class MercadoPagoController {
         transaction_amount_refunded: paymentPostbackData.transaction_amount_refunded,
         total_fee_amount: paymentPostbackData.total_fee_amount,
         captured: paymentPostbackData.captured,
+        process_invite_link: 0,
         payer_doc: paymentPostbackData.payer_doc,
         notification_url: paymentPostbackData.notification_url,
         installments: paymentPostbackData.installments,
@@ -300,7 +303,7 @@ class MercadoPagoController {
 
         const payment = await MercadoPagoModel.findBy('id', paymentModelId)
         data = {
-          process_invite_link: true
+          process_invite_link: 1
         }
         payment.merge(data)
         await payment.save()
