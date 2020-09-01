@@ -195,8 +195,6 @@ class MercadoPagoController {
       paymentModelId = mercadopago_model.id
     }
 
-    Logger.info(mercadopago_model)
-
     this.sendPaymentEmail(paymentPostbackData.metadata.course_id, paymentPostbackData.metadata.student_email, paymentPostbackData.status_detail, paymentModelId)
   }
 
