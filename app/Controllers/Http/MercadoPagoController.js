@@ -115,6 +115,8 @@ class MercadoPagoController {
         this.updatePayment(req.data)
       }
 
+      Logger.info(req.data)
+
       return response.status(200)
 
     } catch (error) {
