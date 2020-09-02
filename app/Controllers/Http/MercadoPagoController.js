@@ -138,6 +138,7 @@ class MercadoPagoController {
     const paymentPostbackData = paymentPostback.response
 
     const payment = await MercadoPagoModel.findBy('transaction_id', data.id)
+    Logger.info(payment)
     var paymentModelId
 
     if (payment) {
