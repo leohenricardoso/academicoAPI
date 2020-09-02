@@ -30,6 +30,8 @@ class MercadoPagoController {
   }) {
     const req = request.all()
 
+    Logger.info(req.data)
+
     // Busca dados do curso pelo id
     const course = await Course.findOrFail(req.data.course)
 
@@ -111,11 +113,11 @@ class MercadoPagoController {
       const req = request.all()
       response.status(201).send('Created')
 
+      Logger.info(req.data)
+
       if (req.type = 'payment') {
         this.updatePayment(req.data)
       }
-
-      Logger.info(req.data)
 
       return response.status(200)
 
