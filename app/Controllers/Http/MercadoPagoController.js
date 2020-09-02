@@ -57,7 +57,9 @@ class MercadoPagoController {
       },
       notification_url: Env.get('MERCADOPAGO_URL_NOTIFICATION'),
       metadata: {
+        student_name: req.data.name,
         student_email: req.data.email,
+        student_cpf: req.data.identification_number,
         course_id: course.id
       },
       additional_info: {
@@ -112,7 +114,7 @@ class MercadoPagoController {
     try {
       const req = request.all()
       response.status(201).send('Created')
-
+      Logger.info('POSTBACK')
       Logger.info(req.data)
 
       if (req.type = 'payment') {
@@ -162,9 +164,9 @@ class MercadoPagoController {
       var student = await Student.findBy('email', paymentPostbackData.metadata.student_email)
       if (!student) {
         student = await Student.create({
-          full_name: data.name,
-          email: data.email,
-          cpf: data.identification_number
+          full_name: paymentPostbackData.metadata.student_name,
+          email: paymentPostbackData.metadata.student_email,
+          cpf: paymentPostbackData.metadata.student_cpf
         })
       }
 
