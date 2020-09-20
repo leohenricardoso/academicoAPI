@@ -134,7 +134,6 @@ class StudentController {
     auth
   }) {
     try {
-      Logger.info('entrou aqui')
       const filterRequest = request.post()
       var students
 
