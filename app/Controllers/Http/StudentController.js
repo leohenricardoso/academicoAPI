@@ -7,6 +7,7 @@
 const Student = use('App/Models/Student')
 
 const Database = use('Database')
+const Logger = use('Logger')
 /**
  * Resourceful controller for interacting with students
  */
@@ -126,37 +127,33 @@ class StudentController {
     await student.delete()
   }
 
-  /**
-   * Delete a student with id.
-   * DELETE students/:id
-   *
-   * @param {object} ctx
-   * @param {Params} ctx.params
-   * @param {Response} ctx.response
-   * @param {Auth} ctx.auth
-   */
-  async searchStudent ({ params, response, auth }) {
-    if (!auth.user.id) {
-      return response.status(401)
+  async searchStudent({
+    params,
+    response,
+    auth
+  }) {
+    try {
+
+      const filterRequest = request.post()
+      var students
+
+      if (filterRequest.student_email != undefined && filterRequest.student_email != null) {
+        students = await Database
+          .from('students')
+          .where(Database.raw("UPPER(email)"), 'LIKE', '%' + filterRequest.student_email + '%')
+          .orderBy('email', 'asc')
+          .paginate(params.pages, params.limit)
+      } else {
+        students = await Database
+          .from('students')
+          .orderBy('email', 'asc')
+          .paginate(params.pages, params.limit)
+      }
+
+      return students
+    } catch (error) {
+      Logger.info(error)
     }
-
-    const filterRequest = request.post()
-    var students
-
-    if (filterRequest.student_email != undefined && filterRequest.student_email != null) {
-      students = await Database
-      .from('students')
-      .where(Database.raw("UPPER(email)"), 'LIKE', '%' + filterRequest.student_email + '%')
-      .orderBy('email', 'asc')
-      .paginate(params.pages, params.limit)
-    } else {
-      students = await Database
-      .from('students')
-      .orderBy('email', 'asc')
-      .paginate(params.pages, params.limit)
-    }
-
-    return students
   }
 }
 
