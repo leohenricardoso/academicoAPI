@@ -5,6 +5,8 @@
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
 const Student = use('App/Models/Student')
+
+const Database = use('Database')
 /**
  * Resourceful controller for interacting with students
  */
@@ -101,6 +103,39 @@ class StudentController {
     }
     const student = await Student.findOrFail(params.id)
     await student.delete()
+  }
+
+  /**
+   * Delete a student with id.
+   * DELETE students/:id
+   *
+   * @param {object} ctx
+   * @param {Params} ctx.params
+   * @param {Response} ctx.response
+   * @param {Auth} ctx.auth
+   */
+  async searchByEmail ({ params, response, auth }) {
+    if (!auth.user.id) {
+      return response.status(401)
+    }
+
+    const filterRequest = request.post()
+    var students
+
+    if (filterRequest.student_email != undefined && filterRequest.student_email != null) {
+      students = await Database
+      .from('students')
+      .where(Database.raw("UPPER(email)"), 'LIKE', '%' + filterRequest.student_email + '%')
+      .orderBy('email', 'asc')
+      .paginate(params.pages, params.limit)
+    } else {
+      students = await Database
+      .from('students')
+      .orderBy('email', 'asc')
+      .paginate(params.pages, params.limit)
+    }
+
+    return students
   }
 }
 
