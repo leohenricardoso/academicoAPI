@@ -129,6 +129,7 @@ class StudentController {
 
   async searchStudent({
     params,
+    request,
     response,
     auth
   }) {
