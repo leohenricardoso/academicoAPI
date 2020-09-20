@@ -135,7 +135,7 @@ class StudentController {
    * @param {Response} ctx.response
    * @param {Auth} ctx.auth
    */
-  async searchByEmail ({ params, response, auth }) {
+  async searchStudent ({ params, response, auth }) {
     if (!auth.user.id) {
       return response.status(401)
     }

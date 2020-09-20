@@ -31,7 +31,7 @@ Route.post('/api/course-category', 'CourseCategoryController.store').middleware(
 Route.put('/api/course-category/:id', 'CourseCategoryController.update').middleware('auth:admin')   // Admin
 Route.delete('/api/course-category/:id', 'CourseCategoryController.destroy').middleware('auth:admin')   // Admin
 
-Route.post('/api/filterCourse/:pages/:limit', 'StudentController.searchByEmail').middleware(['auth'])   // Admin
+Route.post('/api/search-email/:pages/:limit', 'StudentController.searchStudent').middleware(['auth'])   // Admin
 
 /** Newsletter */
 Route.post('/api/newsletter', 'NewsletterController.store')   // Free
