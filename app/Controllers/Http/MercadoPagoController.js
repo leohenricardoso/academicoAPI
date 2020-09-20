@@ -4,10 +4,18 @@
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
+/** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 const MercadoPagoModel = use('App/Models/MercadoPago')
 const Logger = use('Logger')
-const MP = use('mercadopago')
+const MERCADOPAGO = use('mercadopago')
 const Env = use('Env')
+const Database = use('Database')
+const Mail = use('Mail')
+
+/** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
+const Course = use('App/Models/Course')
+/** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
+const Student = use('App/Models/Student')
 
 
 /**
@@ -20,33 +28,323 @@ class MercadoPagoController {
     response,
     auth
   }) {
-    if (!auth.user.id) {
-      return response.status(401)
-    }
     const req = request.all()
-    Logger.info(req.data)
 
+    // Busca dados do curso pelo id
+    const course = await Course.findOrFail(req.data.course)
+
+    // Prepara dados do curso para enviar ao MERCADOPAGO
+    let courseId = course.id
+    courseId = courseId.toString()
+    let courseCategoryLabel = course.category_label ? course.category_label : course.name
+    courseCategoryLabel = courseCategoryLabel.toString()
+
+    // Cria objeto de pagamento para ser enviado ao MERCADOPAGO
     const payment_data = {
-      transaction_amount: parseFloat(req.data.amount),
+      transaction_amount: req.data.amount,
       token: req.data.token,
-      description: req.data.course,
+      description: `${req.data.email} - ${course.name}`,
       installments: req.data.installment,
       payment_method_id: req.data.payment_method_id,
       payer: {
-        email: req.data.email
+        email: req.data.email,
+        identification: {
+          type: req.data.identification_type,
+          number: req.data.identification_number
+        }
+      },
+      notification_url: Env.get('MERCADOPAGO_URL_NOTIFICATION'),
+      metadata: {
+        student_name: req.data.name,
+        student_email: req.data.email,
+        student_cpf: req.data.identification_number,
+        course_id: course.id
+      },
+      additional_info: {
+        payer: {
+          first_name: req.data.name
+        },
+        items: [{
+          id: courseId,
+          title: course.name,
+          description: course.description,
+          picture_url: `${Env.get('URL_COURSE_IMG')}${course.image_path}`,
+          category_id: courseCategoryLabel,
+          quantity: 1,
+          unit_price: req.data.amount
+        }]
       }
     }
 
+    // Set access token do MERCADOPAGO
+    MERCADOPAGO.configurations.setAccessToken(Env.get('ACCESS_KEY_MP'))
 
-    MP.configurations.setAccessToken(Env.get('ACCESS_KEY_MP'))
-    MP.payment.save(
+    // Envia dados ao MERCADOPAGO para realizar pagamento
+    var paymentReturn = null
+    await MERCADOPAGO.payment.save(
       payment_data
     ).then(function (res) {
-      Logger.info(res);
-      response.send(res);
+      paymentReturn = res.response
     }).catch(function (error) {
       Logger.info(error);
     });
+
+    if (!paymentReturn) {
+      return null
+    }
+
+    return paymentReturn
+  }
+
+  /**
+   * Show a list of all mercadopagos.
+   * GET mercadopagos
+   *
+   * @param {object} ctx
+   * @param {Response} ctx.response
+   * @param {Auth} ctx.auth
+   */
+  postbackMP({
+    params,
+    response,
+    request
+  }) {
+    try {
+      const req = request.all()
+      response.status(201).send('Created')
+
+      if (req.type = 'payment') {
+        this.updatePayment(req.data)
+      }
+
+      return response.status(200)
+
+    } catch (error) {
+      Logger.error(error)
+    }
+  }
+
+  async updatePayment(data) {
+    // Set access token do MERCADOPAGO
+    MERCADOPAGO.configure({
+      access_token: Env.get('ACCESS_KEY_MP')
+    })
+
+    const paymentPostback = await MERCADOPAGO.payment.get(data.id)
+    const paymentPostbackData = paymentPostback.response
+
+    const payment = await MercadoPagoModel.findBy('transaction_id', data.id)
+
+    var paymentModelId
+
+    if (payment) {
+      paymentModelId = payment.id
+      // Caso o status do pagamento for diferente do salvo no banco, irá atualizar as
+      // informações no banco de dados
+      if (payment.status != paymentPostbackData.status) {
+        // Pega dados a ser mergeados
+        let newPaymentStatus = {
+          status: paymentPostbackData.status,
+          date_approved: paymentPostbackData.date_approved,
+          date_last_updated: paymentPostbackData.date_last_updated,
+          data: paymentPostbackData
+        }
+        // Mergeia e salva os dados no banco de dados
+        payment.merge(newPaymentStatus)
+        await payment.save()
+      }
+    } else {
+      // Busca dados do curso pelo id
+      var course = await Course.findOrFail(paymentPostbackData.metadata.course_id)
+
+      // Verifica se tem estudante cadastrado com determinado email, se não tiver, cadastra um.
+      var student = await Student.findBy('email', paymentPostbackData.metadata.student_email)
+      if (!student) {
+        student = await Student.create({
+          full_name: paymentPostbackData.metadata.student_name,
+          email: paymentPostbackData.metadata.student_email,
+          cpf: paymentPostbackData.metadata.student_cpf
+        })
+      }
+
+      // Salva dados de pagamento no banco de dados
+      const jsonData = JSON.stringify(paymentPostbackData)
+      var mercadopago_model = await MercadoPagoModel.create({
+        course_id: course.id,
+        student_id: student.id,
+        transaction_id: paymentPostbackData.id,
+        status: paymentPostbackData.status,
+        payment_method_id: paymentPostbackData.payment_method_id,
+        payment_type_id: paymentPostbackData.payment_type_id,
+        transaction_amount: paymentPostbackData.transaction_amount,
+        net_received_amount: paymentPostbackData.net_received_amount,
+        total_paid_amount: paymentPostbackData.total_paid_amount,
+        overpaid_amount: paymentPostbackData.overpaid_amount,
+        installment_amount: paymentPostbackData.installment_amount,
+        transaction_amount_refunded: paymentPostbackData.transaction_amount_refunded,
+        total_fee_amount: paymentPostbackData.total_fee_amount,
+        captured: paymentPostbackData.captured,
+        process_invite_link: 0,
+        payer_doc: paymentPostbackData.payer_doc,
+        notification_url: paymentPostbackData.notification_url,
+        installments: paymentPostbackData.installments,
+        date_created: paymentPostbackData.date_created,
+        date_approved: paymentPostbackData.date_approved,
+        date_last_updated: paymentPostbackData.date_last_updated,
+        data: jsonData
+      })
+
+      paymentModelId = mercadopago_model.id
+    }
+
+    this.sendPaymentEmail(paymentPostbackData.metadata.course_id, paymentPostbackData.metadata.student_email, paymentPostbackData.status_detail, paymentModelId)
+  }
+
+  async sendPaymentEmail(course_id, student_email, statusDetail, paymentModelId) {
+    try {
+      let data = {}
+
+      // Busca dados do curso pelo id
+      var course = await Course.findOrFail(course_id)
+
+      // Busca estudante pelo email
+      var student = await Student.findBy('email', student_email)
+
+      if (course == undefined || student == undefined) {
+        return
+      }
+
+      data.course = course
+      data.student = student
+      data.payment = {}
+
+      switch (statusDetail) {
+        case 'accredited':
+          data.payment.status = statusDetail
+          data.payment.message = 'Pronto, seu pagamento foi aprovado!'
+          this.sendCourseLinkEmail(course_id, student_email, paymentModelId)
+          break;
+        case 'pending_contingency':
+          data.payment.status = statusDetail
+          data.payment.message = 'Estamos processando o pagamento. Não se preocupe, em menos de 2 dias úteis informaremos por e-mail se foi creditado.'
+          break;
+        case 'pending_review_manual':
+          data.payment.status = statusDetail
+          data.payment.message = 'Estamos processando seu pagamento. Não se preocupe, em menos de 2 dias úteis informaremos por e-mail se foi creditado ou se necessitamos de mais informação.'
+          break;
+        case 'cc_rejected_blacklist':
+          data.payment.status = statusDetail
+          data.payment.message = 'Não pudemos processar seu pagamento.'
+          break;
+        case 'cc_rejected_card_error':
+          data.payment.status = statusDetail
+          data.payment.message = 'Não conseguimos processar seu pagamento.'
+          break;
+        case 'cc_rejected_high_risk':
+          data.payment.status = statusDetail
+          data.payment.message = 'Seu pagamento foi recusado. Escolha outra forma de pagamento. Recomendamos meios de pagamento em dinheiro. Entre em contato conosco para que possamos te ajudar!'
+          break;
+        case 'cc_rejected_other_reason':
+          data.payment.status = statusDetail
+          data.payment.message = 'Não foi possível processar seu pagamento, tente novamente com outro meio de pagamento.'
+          break;
+        default:
+          break;
+      }
+
+      if (data.payment.status != undefined && data.payment.status != null) {
+        await Mail.send('emails.paymentUpdate', {
+          data: data
+        }, (message) => {
+          message
+            .to(data.student.email)
+            .from(Env.get('EMAIL_SMTP'))
+            .subject('Acadêmico - Atualização de status')
+        })
+      }
+
+      return true
+    } catch (error) {
+      Logger.error(error)
+      return error
+    }
+  }
+
+  async sendCourseLinkEmail(course_id, student_email, paymentModelId) {
+    try {
+      let data = {}
+
+      // Busca dados do curso pelo id
+      var course = await Course.findOrFail(course_id)
+
+      // Busca estudante pelo email
+      var student = await Student.findBy('email', student_email)
+
+      if (course == undefined || student == undefined) {
+        return
+      }
+
+      data.course = course
+      data.student = student
+
+      if (
+        data.course.invite_link != undefined &&
+        data.course.invite_link != '' &&
+        data.course.invite_link != null
+      ) {
+
+        await Mail.send('emails.sendCourseLinkAutomatic', {
+          data: data
+        }, (message) => {
+          message
+            .to(data.student.email)
+            .from(Env.get('EMAIL_SMTP'))
+            .subject('Acadêmico - Acesso ao curso')
+        })
+
+        const payment = await MercadoPagoModel.findBy('id', paymentModelId)
+        data = {
+          process_invite_link: 1
+        }
+        payment.merge(data)
+        await payment.save()
+      }
+
+      return true
+    } catch (error) {
+      Logger.error(error)
+      return error
+    }
+  }
+
+  /**
+   * Show a list of all mercadopagos.
+   * GET mercadopagos
+   *
+   * @param {object} ctx
+   * @param {Response} ctx.response
+   * @param {Auth} ctx.auth
+   */
+  async updatePaymentStatus({
+    params,
+    response,
+    request
+  }) {
+    const req = request.post()
+
+    const payment_id = req.payment_id
+    const new_status = req.status
+
+    MERCADOPAGO.configure({
+      access_token: Env.get('ACCESS_KEY_MP')
+    })
+
+    const payment = await MERCADOPAGO.payment.update({
+      id: payment_id,
+      status: new_status
+    })
+
+    return payment
   }
 
   /**
@@ -68,30 +366,6 @@ class MercadoPagoController {
     return await MercadoPagoModel.all()
   }
 
-  /**
-   * Create/save a new paymentmercadopago.
-   * POST mercadopagos
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {Auth} ctx.auth
-   */
-  async store({
-    request,
-    response,
-    auth
-  }) {
-    if (!auth.user.id) {
-      return response.status(401)
-    }
-
-    const data = request.post()
-
-    const paymentmercadopago = await MercadoPagoModel.create({
-      ...data
-    })
-  }
 
   /**
    * Display a single paymentmercadopago.
@@ -111,7 +385,25 @@ class MercadoPagoController {
       return response.status(401)
     }
 
-    return await MercadoPagoModel.findOrFail(params.id)
+    return await MercadoPagoModel.findByOrFail(params.id)
+  }
+
+    /**
+   * Display a single paymentmercadopago.
+   * GET mercadopagos/:id
+   *
+   * @param {object} ctx
+   * @param {Params} ctx.params
+   * @param {Response} ctx.response
+   * @param {Auth} ctx.auth
+   */
+  async getPaymentbyTransactionId({
+    params,
+    response,
+    auth
+  }) {
+
+    return await MercadoPagoModel.findBy('transaction_id', params.id)
   }
 
   /**
@@ -141,29 +433,88 @@ class MercadoPagoController {
     return paymentmercadopago
   }
 
-  /**
-   * Delete a paymentmercadopago with id.
-   * DELETE mercadopagos/:id
-   *
-   * @param {object} ctx
-   * @param {Params} ctx.params
-   * @param {Response} ctx.response
-   * @param {Auth} ctx.auth
-   */
-  async destroy({
+  async checkoutPro({
     params,
     response,
-    auth
+    request
   }) {
-    if (!auth.user.id) {
-      return response.status(401)
+    MERCADOPAGO.configure({
+      access_token: Env.get('ACCESS_KEY_MP')
+    });
+    const req = request.post()
+    let preference = {
+      items: [{
+        title: req.course,
+        unit_price: req.amount,
+        quantity: 1,
+      }]
+    };
+    var teste = {
+      teste2: 'blabla'
     }
-    const paymentmercadopago = await MercadoPagoModel.findOrFail(params.id)
-    await paymentmercadopago.delete()
-  }
+    var data = {}
+    await MERCADOPAGO.preferences.create(preference)
+      .then(function (res) {
+        data.result = res.body
+      }).catch(function (error) {
+        data.result = false
+      });
 
-  teste() {
-    Logger.info('Teste')
+    return data
+  }
+  async getCreditCards({
+    auth,
+    response,
+    params
+  }) {
+    let mp = await Database
+      .from('mercado_pagos')
+      .where({
+        payment_type_id: 'credit_card'
+      })
+      .innerJoin('courses', 'mercado_pagos.course_id', 'courses.id')
+      .innerJoin('students', 'mercado_pagos.student_id', 'students.id')
+      .orderBy('mercado_pagos.id', 'desc')
+      .paginate(params.pages, params.limit)
+
+    return mp
+  }
+  async getProcessPayments({
+    auth,
+    response,
+    params
+  }) {
+    let mp = await Database
+      .from('mercado_pagos')
+      .where({
+        status: 'in_process'
+      })
+      .innerJoin('courses', 'mercado_pagos.course_id', 'courses.id')
+      .innerJoin('students', 'mercado_pagos.student_id', 'students.id')
+      .orderBy('mercado_pagos.id', 'desc')
+      .paginate(params.pages, params.limit)
+
+    return mp
+  }
+  async getPendingInvite({
+    auth,
+    response,
+    params
+  }) {
+    let mp = await Database
+      .from('mercado_pagos')
+      .whereNot({
+        process_invite_link: 1
+      })
+      .where({
+        status: 'approved'
+      })
+      .innerJoin('courses', 'mercado_pagos.course_id', 'courses.id')
+      .innerJoin('students', 'mercado_pagos.student_id', 'students.id')
+      .orderBy('mercado_pagos.id', 'desc')
+      .paginate(params.pages, params.limit)
+
+    return mp
   }
 }
 

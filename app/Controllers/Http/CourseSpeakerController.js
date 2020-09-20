@@ -6,6 +6,7 @@
 
 const Speaker = use('App/Models/CourseSpeaker')
 const Database = use('Database')
+const Helpers = use('Helpers')
 
 /**
  * Resourceful controller for interacting with coursespeakers
@@ -23,10 +24,6 @@ class CourseSpeakerController {
     response,
     auth
   }) {
-    if (!auth.user.id) {
-      return response.status(401)
-    }
-
     return await Speaker.all()
   }
 
@@ -53,6 +50,8 @@ class CourseSpeakerController {
     const speaker = await Speaker.create({
       ...data
     })
+
+    return speaker
   }
 
   /**
@@ -69,10 +68,6 @@ class CourseSpeakerController {
     response,
     auth
   }) {
-    if (!auth.user.id) {
-      return response.status(401)
-    }
-
     return await Speaker.findOrFail(params.id)
   }
 
@@ -137,10 +132,6 @@ class CourseSpeakerController {
     response,
     auth
   }) {
-    if (!auth.user.id) {
-      return response.status(401)
-    }
-
     const speakers = await Database
       .from('course_speakers')
       .orderBy('name', 'asc')
@@ -163,10 +154,6 @@ class CourseSpeakerController {
     response,
     auth
   }) {
-    if (!auth.user.id) {
-      return response.status(401)
-    }
-
     const req = request.only(['name'])
 
     const speakers = await Database
@@ -176,6 +163,46 @@ class CourseSpeakerController {
       .paginate(params.pages, params.limit)
 
     return speakers
+  }
+  async saveImage({
+    params,
+    request,
+    response,
+    auth
+  }) {
+
+    if (!auth.user.id) {
+      return response.status(401)
+    }
+
+    const speaker = await Speaker.findOrFail(params.id)
+
+    const image = request.file('image', {
+      types: ['image'],
+      size: '2mb'
+    })
+
+    await image.move(Helpers.publicPath('img/speaker'), {
+      name: `${Date.now()}-${image.clientName}`
+    })
+
+    if (!image.moved()) {
+      return image.errors()
+    }
+
+    let data = {
+      image_path: `${image.fileName}`
+    }
+
+    speaker.merge(data)
+    await speaker.save()
+    return speaker
+  }
+  async downloadImage({
+    params,
+    response
+  }) {
+    return response.download(Helpers.publicPath(`img/speaker/${params.path}`))
   }
 }
 

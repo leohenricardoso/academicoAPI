@@ -23,9 +23,6 @@ class CourseCategoryController {
     response,
     auth
   }) {
-    if (!auth.user.id) {
-      return response.status(401)
-    }
     return await Category.all()
   }
 
@@ -70,10 +67,6 @@ class CourseCategoryController {
     response,
     auth
   }) {
-    if (!auth.user.id) {
-      return response.status(401)
-    }
-
     return await Category.findOrFail(params.id)
   }
 
@@ -124,9 +117,21 @@ class CourseCategoryController {
     if (!auth.user.id) {
       return response.status(401)
     }
-
     const category = await Category.findOrFail(params.id)
     await category.delete()
+  }
+
+  async getCategories({
+    auth,
+    response,
+    params
+  }) {
+    let category = await Database
+      .from('course_categories')
+      .orderBy('course_categories.id', 'asc')
+      .paginate(params.pages, params.limit)
+
+    return category
   }
 }
 

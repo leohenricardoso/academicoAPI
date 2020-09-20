@@ -13,11 +13,72 @@ const Course = use('App/Models/Course')
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 const Student = use('App/Models/Student')
 
+/** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
+const MercadoPagoModel = use('App/Models/MercadoPago')
+
 class SendEmailController {
 
-  async sendContactEmail({
-    request
+  async sendCourseLinkEmailByAdmin({
+    request,
+    response,
+    auth
   }) {
+    if (!auth.user.id) {
+      return response.status(401)
+    }
+    try {
+      var data = {}
+      const req = request.post()
+
+      // Busca dados do curso pelo id
+      var course = await Course.findOrFail(req.course_id)
+
+      // Busca estudante pelo email
+      var student = await Student.findOrFail(req.student_id)
+
+      if (course == undefined || student == undefined) {
+        return
+      }
+
+      data.course = course
+      data.student = student
+      data.link = req.link
+
+      if (data.link == undefined || data.link == null) {
+        return
+      }
+
+      await Mail.send('emails.sendCourseLinkManual', {
+        data: data
+      }, (message) => {
+        message
+          .to(data.student.email)
+          .from(Env.get('EMAIL_SMTP'))
+          .subject('Acadêmico - Acesso ao curso')
+      })
+
+      const payment = await MercadoPagoModel.findBy('transaction_id', req.payment_id)
+      data = {
+        process_invite_link: 1
+      }
+      payment.merge(data)
+      await payment.save()
+
+      return payment
+    } catch (error) {
+      Logger.error(error)
+      return error
+    }
+  }
+
+  async sendContactEmail({
+    request,
+    response,
+    auth
+  }) {
+    if (!auth.user.id) {
+      return response.status(401)
+    }
     try {
       const data = request.post()
 
@@ -70,8 +131,13 @@ class SendEmailController {
 
   async sendInviteToPresentialCourse({
     params,
-    request
+    request,
+    response,
+    auth
   }) {
+    if (!auth.user.id) {
+      return response.status(401)
+    }
     try {
       const student = await Student.findOrFail(params.studentId)
       const course = await Course.findOrFail(params.courseId)
@@ -101,7 +167,7 @@ class SendEmailController {
           .to(student.email)
           .from(Env.get('EMAIL_SMTP'))
           .subject('Acadêmico Cursos - ' + course.name)
-          //.attach(Helpers.tmpPath(`qrcode/${fileName}`))
+        //.attach(Helpers.tmpPath(`qrcode/${fileName}`))
       })
 
       //await Drive.delete(`qrcode/${fileName}`)

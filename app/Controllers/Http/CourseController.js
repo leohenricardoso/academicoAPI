@@ -24,13 +24,12 @@ class CourseController {
    * @param {Response} ctx.response
    * @param {Auth} ctx.auth
    */
-  async index ({ response, auth }) {
-    if(!auth.user.id) {
-      return response.status(401)
-    }
-
-      return await Course.all()
-    }
+  async index({
+    response,
+    auth
+  }) {
+    return await Course.all()
+  }
 
   /**
    * Create/save a new course.
@@ -41,8 +40,12 @@ class CourseController {
    * @param {Response} ctx.response
    * @param {Auth} ctx.auth
    */
-  async store ({ request, response, auth }) {
-    if(!auth.user.id) {
+  async store({
+    request,
+    response,
+    auth
+  }) {
+    if (!auth.user.id) {
       return response.status(401)
     }
 
@@ -57,10 +60,19 @@ class CourseController {
     let speaker = await Speaker.findOrFail(data['speaker_id'])
     data['speaker_label'] = speaker['name']
 
+    if (data['base_amount']) {
+      data['base_amount'] = parseFloat(data['base_amount']).toFixed(2)
+    }
+
+    if (data['discount_amount']) {
+      data['discount_amount'] = parseFloat(data['discount_amount']).toFixed(2)
+    }
 
     const course = await Course.create({
       ...data
     })
+
+    return course
   }
 
   /**
@@ -72,14 +84,13 @@ class CourseController {
    * @param {Response} ctx.response
    * @param {Auth} ctx.auth
    */
-  async show ({ params, response, auth }) {
-    if (!auth.user.id) {
-      return response.status(401)
-    }
+  async show({
+    params,
+    response,
+    auth
+  }) {
     let course = await Course.findOrFail(params.id)
-
     return course
-
   }
 
   /**
@@ -92,7 +103,12 @@ class CourseController {
    * @param {Response} ctx.response
    * @param {Auth} ctx.auth
    */
-  async update ({ params, request, response, auth }) {
+  async update({
+    params,
+    request,
+    response,
+    auth
+  }) {
     if (!auth.user.id) {
       return response.status(401)
     }
@@ -124,34 +140,40 @@ class CourseController {
    * @param {Response} ctx.response
    * @param {Auth} ctx.auth
    */
-  async saveImage ({ params, request, response, auth }) {
+  async saveImage({
+    params,
+    request,
+    response,
+    auth
+  }) {
 
     if (!auth.user.id) {
       return response.status(401)
     }
+  try {
+      const image = request.file('image', {
+        types: ['image'],
+        size: '2mb'
+      })
+      await image.move(Helpers.publicPath('img/course'), {
+        name: `${Date.now()}-${image.clientName}`
+      })
 
-    const course = await Course.findOrFail(params.id)
+      if (!image.moved()) {
+        return image.errors()
+      }
 
-    const image = request.file('image', {
-      types: ['image'],
-      size: '2mb'
-    })
+     let course = await Course
+      .query()
+      .where('id', params.id)
+      .update({ image_path: `${image.fileName}` })
 
-    await image.move(Helpers.publicPath('img/course'),{
-      name: `${Date.now()}-${image.clientName}`
-    })
+      return course
 
-    if (!image.moved()) {
-       return image.errors()
+    } catch (err) {
+      Logger.info(err)
+      return err
     }
-
-    let data = {
-      image_path: `${image.fileName}`
-    }
-
-    course.merge(data)
-    await course.save()
-    return course
   }
 
   /**
@@ -163,7 +185,11 @@ class CourseController {
    * @param {Response} ctx.response
    * @param {Auth} ctx.auth
    */
-  async destroy ({ params, response, auth }) {
+  async destroy({
+    params,
+    response,
+    auth
+  }) {
     if (!auth.user.id) {
       return response.status(401)
     }
@@ -179,17 +205,43 @@ class CourseController {
    * @param {Auth} ctx.request
    * @param {Response} ctx.response
    */
-  async getNameAsc({ auth, response, params }) {
-    if (!auth.user.id) {
-      return response.status(401)
-    }
+  async getNameAsc({
+    auth,
+    response,
+    params
+  }) {
     let courses = await Database
-    .from('courses')
-    .where({
-      active: 1
-    })
-    .orderBy('name', 'asc')
-    .paginate(params.pages, params.limit)
+      .from('courses')
+      .where({
+        active: 1
+      })
+      .orderBy('name', 'asc')
+      .paginate(params.pages, params.limit)
+
+    return await courses
+
+  }
+
+    /**
+   * Get courses with name-asc.
+   * name-asc
+   *
+   * @param {object} ctx
+   * @param {Auth} ctx.request
+   * @param {Response} ctx.response
+   */
+  async getNameAscNotActive({
+    auth,
+    response,
+    params
+  }) {
+    let courses = await Database
+      .from('courses')
+      .where({
+        active: 0
+      })
+      .orderBy('name', 'asc')
+      .paginate(params.pages, params.limit)
 
     return await courses
 
@@ -209,10 +261,6 @@ class CourseController {
     response,
     auth
   }) {
-    if (!auth.user.id) {
-      return response.status(401)
-    }
-
     const filterRequest = request.post()
     var filters = {}
     var order = 'name'
@@ -244,17 +292,17 @@ class CourseController {
 
     if (courseName) {
       courses = await Database
-      .from('courses')
-      .where(filters)
-      .where(Database.raw("UPPER(name)"), 'LIKE', '%' + courseName + '%')
-      .orderBy(order, orderDirection)
-      .paginate(params.pages, params.limit)
+        .from('courses')
+        .where(filters)
+        .where(Database.raw("UPPER(name)"), 'LIKE', '%' + courseName + '%')
+        .orderBy(order, orderDirection)
+        .paginate(params.pages, params.limit)
     } else {
       courses = await Database
-      .from('courses')
-      .where(filters)
-      .orderBy(order, orderDirection)
-      .paginate(params.pages, params.limit)
+        .from('courses')
+        .where(filters)
+        .orderBy(order, orderDirection)
+        .paginate(params.pages, params.limit)
     }
 
     return courses
@@ -268,16 +316,20 @@ class CourseController {
    * @param {Auth} ctx.request
    * @param {Response} ctx.response
    */
-  async getHighlight({ auth, response, params }) {
-    if (!auth.user.id) {
-      return response.status(401)
-    }
+  async getHighlight({
+    auth,
+    response,
+    params
+  }) {
     let courses = await Database
-    .from('courses')
-    .where({
-      highlight: 1
-    })
-    .paginate(params.pages, params.limit)
+      .from('courses')
+      .where({
+        highlight: 1
+      })
+      .where({
+        active: 1
+      })
+      .paginate(params.pages, params.limit)
 
     return await courses
   }
@@ -290,21 +342,28 @@ class CourseController {
    * @param {Auth} ctx.request
    * @param {Response} ctx.response
    */
-  async getRecorded({ auth, response, params }) {
-    if (!auth.user.id) {
-      return response.status(401)
-    }
+  async getRecorded({
+    auth,
+    response,
+    params
+  }) {
     let courses = await Database
-    .from('courses')
-    .where({
-      recorded: 1
-    })
-    .paginate(params.pages, params.limit)
+      .from('courses')
+      .where({
+        recorded: 1
+      })
+      .where({
+        active: 1
+      })
+      .paginate(params.pages, params.limit)
 
     return await courses
   }
 
-  async downloadImage ({ params, response }) {
+  async downloadImage({
+    params,
+    response
+  }) {
     return response.download(Helpers.publicPath(`img/course/${params.path}`))
   }
 }

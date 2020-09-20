@@ -36,10 +36,6 @@ class NewsletterController {
    * @param {Auth} ctx.auth
    */
   async store ({ request, response, auth }) {
-    if(!auth.user.id) {
-      return response.status(401)
-    }
-
     const data = request.only([
       'email',
       'active'
@@ -110,6 +106,18 @@ class NewsletterController {
     }
     const newsletter = await Newsletter.findOrFail(params.id)
     await newsletter.delete()
+  }
+
+  async getNewsletter({
+    auth,
+    response,
+    params
+  }) {
+    let news = await Database
+      .from('newsletters')
+      .paginate(params.pages, params.limit)
+
+    return news
   }
 }
 
