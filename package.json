@@ -32,7 +32,7 @@
     "mysql": "^2.18.1",
     "qrcode": "^1.4.4",
     "sendgrid": "^5.2.3",
-    "url-parse": "^1.4.7"
+    "url-parse": "^1.5.2"
   },
   "devDependencies": {},
   "autoload": {
